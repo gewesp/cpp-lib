@@ -1,0 +1,93 @@
+0 0: zoom 0: global = 128 128; tile = 0 0 128 128
+0 0: zoom 1: global = 256 256; tile = 1 1 0 0
+0 0: zoom 3: global = 1024 1024; tile = 4 4 0 0
+47 8: zoom 0: global = 133.6888889 90.04191318; tile = 0 0 133 90
+47 8: zoom 1: global = 267.3777778 180.0838264; tile = 1 0 11 180
+47 8: zoom 3: global = 1069.511111 720.3353055; tile = 4 2 45 208
+47 8: zoom 10: global = 136897.4222 92202.9191; tile = 534 360 193 42
+-30 -133: zoom 0: global = 33.42222222 150.3807458; tile = 0 0 33 150
+-30 -133: zoom 1: global = 66.84444444 300.7614915; tile = 0 1 66 44
+-30 -133: zoom 3: global = 267.3777778 1203.045966; tile = 1 4 11 179
+-30 -133: zoom 10: global = 34224.35556 153989.8837; tile = 133 601 176 133
+-85.0511 -179.999999: zoom 0: global = 7.111111139e-07 255.9997628; tile = 0 0 0 255
+-85.0511 -179.999999: zoom 1: global = 1.422222228e-06 511.9995255; tile = 0 1 0 255
+-85.0511 -179.999999: zoom 3: global = 5.688888911e-06 2047.998102; tile = 0 7 0 255
+-85.0511 -179.999999: zoom 10: global = 0.0007281777807 262143.7571; tile = 0 1023 0 255
+85.0511 180: zoom 0: global = 256 0.0002372360574; tile = 0 0 255 0
+85.0511 180: zoom 1: global = 512 0.0004744721148; tile = 1 0 255 0
+85.0511 180: zoom 3: global = 2048 0.001897888459; tile = 7 0 255 0
+85.0511 180: zoom 10: global = 262144 0.2429297228; tile = 1023 0 255 0
+89 0: zoom 0: global = 0 0; tile = 0 0 0 0
+89 0: zoom 1: global = 0 0; tile = 0 0 0 0
+89 0: zoom 3: global = 0 0; tile = 0 0 0 0
+89 0: zoom 10: global = 0 0; tile = 0 0 0 0
+0 -190: zoom 0: global = 0 0; tile = 0 0 0 0
+0 -190: zoom 1: global = 0 0; tile = 0 0 0 0
+0 -190: zoom 3: global = 0 0; tile = 0 0 0 0
+0 -190: zoom 10: global = 0 0; tile = 0 0 0 0
+(NOTICE) Static info for tileset: Test
+(NOTICE) Tile directory: 
+(NOTICE) Northwest corner: 47.8 4.8
+(NOTICE) Southeast corner: 43.7 12
+(NOTICE) Min zoom level: 1
+(NOTICE) Max zoom level: 10
+(NOTICE) Value size [Bytes]: 4
+(NOTICE) Storage estimate per tile [MB]: 0.262144
+(NOTICE) Maximum possible storage estimate [MB]: 146.276352
+(NOTICE) Maximum possible number of tiles: 558
+(NOTICE) Tile coordinate limits:
+(NOTICE) Zoom 1: 1 <= x && x <= 1 && 0 <= y && y <= 0
+(NOTICE) Zoom 2: 2 <= x && x <= 2 && 1 <= y && y <= 1
+(NOTICE) Zoom 3: 4 <= x && x <= 4 && 2 <= y && y <= 2
+(NOTICE) Zoom 4: 8 <= x && x <= 8 && 5 <= y && y <= 5
+(NOTICE) Zoom 5: 16 <= x && x <= 17 && 11 <= y && y <= 11
+(NOTICE) Zoom 6: 32 <= x && x <= 34 && 22 <= y && y <= 23
+(NOTICE) Zoom 7: 65 <= x && x <= 68 && 44 <= y && y <= 46
+(NOTICE) Zoom 8: 131 <= x && x <= 136 && 89 <= y && y <= 93
+(NOTICE) Zoom 9: 262 <= x && x <= 273 && 178 <= y && y <= 186
+(NOTICE) Zoom 10: 525 <= x && x <= 546 && 356 <= y && y <= 373
+(NOTICE) Dynamic info for tileset: Test
+(NOTICE) Number of allocated tiles: 196 (35.12544803%)
+(NOTICE) Allocated storage estimate [MB]: 51.380224
+(NOTICE) Dynamic info for tileset: Test
+(NOTICE) Number of allocated tiles: 284 (50.89605735%)
+(NOTICE) Allocated storage estimate [MB]: 74.448896
+(NOTICE) Dynamic info for tileset: Test
+(NOTICE) Number of allocated tiles: 343 (61.46953405%)
+(NOTICE) Allocated storage estimate [MB]: 89.915392
+(NOTICE) Dynamic info for tileset: Test
+(NOTICE) Number of allocated tiles: 395 (70.78853047%)
+(NOTICE) Allocated storage estimate [MB]: 103.54688
+(NOTICE) Dynamic info for tileset: Test
+(NOTICE) Number of allocated tiles: 418 (74.91039427%)
+(NOTICE) Allocated storage estimate [MB]: 109.576192
+(NOTICE) Dynamic info for tileset: Test
+(NOTICE) Number of allocated tiles: 444 (79.56989247%)
+(NOTICE) Allocated storage estimate [MB]: 116.391936
+(NOTICE) Dynamic info for tileset: Test
+(NOTICE) Number of allocated tiles: 465 (83.33333333%)
+(NOTICE) Allocated storage estimate [MB]: 121.89696
+(NOTICE) Dynamic info for tileset: Test
+(NOTICE) Number of allocated tiles: 481 (86.20071685%)
+(NOTICE) Allocated storage estimate [MB]: 126.091264
+(NOTICE) Dynamic info for tileset: Test
+(NOTICE) Number of allocated tiles: 490 (87.81362007%)
+(NOTICE) Allocated storage estimate [MB]: 128.45056
+(NOTICE) Dynamic info for tileset: Test
+(NOTICE) Number of allocated tiles: 504 (90.32258065%)
+(NOTICE) Allocated storage estimate [MB]: 132.120576
+(NOTICE) Dynamic info for tileset: Test
+(NOTICE) Number of allocated tiles: 512 (91.7562724%)
+(NOTICE) Allocated storage estimate [MB]: 134.217728
+(NOTICE) Dynamic info for tileset: Test
+(NOTICE) Number of allocated tiles: 517 (92.65232975%)
+(NOTICE) Allocated storage estimate [MB]: 135.528448
+(NOTICE) Dynamic info for tileset: Test
+(NOTICE) Number of allocated tiles: 521 (93.36917563%)
+(NOTICE) Allocated storage estimate [MB]: 136.577024
+(NOTICE) Dynamic info for tileset: Test
+(NOTICE) Number of allocated tiles: 524 (93.90681004%)
+(NOTICE) Allocated storage estimate [MB]: 137.363456
+(NOTICE) Dynamic info for tileset: Test
+(NOTICE) Number of allocated tiles: 527 (94.44444444%)
+(NOTICE) Allocated storage estimate [MB]: 138.149888

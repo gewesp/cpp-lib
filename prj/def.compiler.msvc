@@ -1,0 +1,16 @@
+#
+# Microsoft Visual C++.  TODO: Needs update
+#
+
+CXX      = cl
+CXXFLAGS = /Zc:forScope /EHsc /wd4244 /wd4258 /MT
+DEBUG = /Zi
+# TODO:  Add .NET optimize flags here.
+OPTIMIZE = /DNDEBUG
+
+WINSOCK = /link ws2_32.lib
+
+CREATELIB = link /lib $(OBJECTS) /out:$(CPP_LIB)
+RANLIB = echo
+
+DONT_KNOW_SYMLINKS = 1

@@ -1,0 +1,41 @@
+/*
+ *
+ * Configuration file example, style variant.
+ * 
+ * This file should be read with the config_style() grammar.
+ *
+ * $Id: registry-test.conf.var,v 1.1.1.1 2005/03/20 14:03:16 gwesp Exp $
+ *
+ */
+
+// Play around to see which error messages are produced.
+
+logfile = "foo.log"  // Everything after a two slashes (//) is ignored.
+
+engine = foo
+// engine = bar
+
+// flag = false
+flag = true
+
+port   = 4711
+host_1 = "192.168.0.282"
+host_2 = "1.2.3.4"
+// host_2 = "non.existent.domain"
+
+magic_constant = 3.1415926
+
+// The comma in lists is optional.
+
+normal_vector = { 1 , 2.5  3 }
+
+matrix = {
+   1234    0   -189
+     2   3.24    1
+   -150    0   1e6
+}
+
+list = { { 1 , 2 , 3 }  "world"  { 1 , 2 } }
+// list = { { 1 , 2 , 3 } , "  " , { 1 , 2 } }
+// list = { { 1 , 2 , 3 } , 1 , { 1 , 2 } }
+// list = abc

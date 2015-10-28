@@ -1,0 +1,1 @@
+scripts/run-fast-tests.sh

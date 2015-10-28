@@ -1,0 +1,12 @@
+#
+# Platform definition: Windows
+#
+
+WINDOWS_STUFF = yes
+POSIX_STUFF   = no
+POSIX1B_STUFF = no
+
+OBJ_EXTENSION = obj
+LIB_EXTENSION = lib
+
+PLATFORM = windows_xp

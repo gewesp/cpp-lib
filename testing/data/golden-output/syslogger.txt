@@ -1,0 +1,138 @@
+Testing with stdout echo
+2015-02-14T09:43:48Z (INFO): Program initialized
+2015-02-14T09:43:48Z (INFO): Counting from 1 to 5
+2015-02-14T09:43:48Z (INFO): 1
+2015-02-14T09:43:48Z (INFO): 2
+2015-02-14T09:43:48Z (INFO): 3
+2015-02-14T09:43:48Z (INFO): 4
+2015-02-14T09:43:48Z (INFO): 5
+2015-02-14T09:43:48Z (INFO): Done counting
+2015-02-14T09:43:48Z (NOTICE): Log priority ...
+2015-02-14T09:43:48Z (INFO): ... auto-resets to INFO
+2015-02-14T09:43:48Z (NOTICE): Log everything >= DEBUG
+2015-02-14T09:43:48Z (DEBUG): DEBUG
+2015-02-14T09:43:48Z (INFO): INFO
+2015-02-14T09:43:48Z (NOTICE): NOTICE
+2015-02-14T09:43:48Z (WARNING): WARNING
+2015-02-14T09:43:48Z (ERROR): ERROR
+2015-02-14T09:43:48Z (CRITICAL): CRITICAL
+2015-02-14T09:43:48Z (ALERT): ALERT
+2015-02-14T09:43:48Z (NOTICE): Log everything >= NOTICE
+2015-02-14T09:43:48Z (NOTICE): NOTICE
+2015-02-14T09:43:48Z (WARNING): WARNING
+2015-02-14T09:43:48Z (ERROR): ERROR
+2015-02-14T09:43:48Z (CRITICAL): CRITICAL
+2015-02-14T09:43:48Z (ALERT): ALERT
+2015-02-14T09:43:48Z (NOTICE): Log everything >= ERROR
+2015-02-14T09:43:48Z (ERROR): ERROR
+2015-02-14T09:43:48Z (CRITICAL): CRITICAL
+2015-02-14T09:43:48Z (ALERT): ALERT
+2015-02-14T09:43:48Z (NOTICE): Also empty messages are printed
+2015-02-14T09:43:48Z (NOTICE): XXX
+2015-02-14T09:43:48Z (NOTICE): XX
+2015-02-14T09:43:48Z (NOTICE): X
+2015-02-14T09:43:48Z (NOTICE): 
+2015-02-14T09:43:48Z (NOTICE): X
+2015-02-14T09:43:48Z (NOTICE): XX
+2015-02-14T09:43:48Z (NOTICE): XXX
+2015-02-14T09:43:48Z (EMERGENCY): Hi there.  Don't worry, it's just a cpp-lib/syslogger test!
+2015-02-14T09:43:48Z (NOTICE): Very long lines get split.
+2015-02-14T09:43:48Z (NOTICE): xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+2015-02-14T09:43:48Z (INFO): xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+2015-02-14T09:43:48Z (NOTICE): End of xxxxxxForgot std::endl!
+2015-02-14T09:43:48Z (NOTICE): Exiting...
+Disabling stdout echo
+Re-enabling stdout echo
+2015-02-14T09:43:48Z (INFO): Counting from 1 to 5
+2015-02-14T09:43:48Z (INFO): 1
+2015-02-14T09:43:48Z (INFO): 2
+2015-02-14T09:43:48Z (INFO): 3
+2015-02-14T09:43:48Z (INFO): 4
+2015-02-14T09:43:48Z (INFO): 5
+2015-02-14T09:43:48Z (INFO): Done counting
+2015-02-14T09:43:48Z (NOTICE): Log priority ...
+2015-02-14T09:43:48Z (INFO): ... auto-resets to INFO
+2015-02-14T09:43:48Z (NOTICE): Log everything >= DEBUG
+2015-02-14T09:43:48Z (DEBUG): DEBUG
+2015-02-14T09:43:48Z (INFO): INFO
+2015-02-14T09:43:48Z (NOTICE): NOTICE
+2015-02-14T09:43:48Z (WARNING): WARNING
+2015-02-14T09:43:48Z (ERROR): ERROR
+2015-02-14T09:43:48Z (CRITICAL): CRITICAL
+2015-02-14T09:43:48Z (ALERT): ALERT
+2015-02-14T09:43:48Z (NOTICE): Log everything >= NOTICE
+2015-02-14T09:43:48Z (NOTICE): NOTICE
+2015-02-14T09:43:48Z (WARNING): WARNING
+2015-02-14T09:43:48Z (ERROR): ERROR
+2015-02-14T09:43:48Z (CRITICAL): CRITICAL
+2015-02-14T09:43:48Z (ALERT): ALERT
+2015-02-14T09:43:48Z (NOTICE): Log everything >= ERROR
+2015-02-14T09:43:48Z (ERROR): ERROR
+2015-02-14T09:43:48Z (CRITICAL): CRITICAL
+2015-02-14T09:43:48Z (ALERT): ALERT
+2015-02-14T09:43:48Z (NOTICE): Also empty messages are printed
+2015-02-14T09:43:48Z (NOTICE): XXX
+2015-02-14T09:43:48Z (NOTICE): XX
+2015-02-14T09:43:48Z (NOTICE): X
+2015-02-14T09:43:48Z (NOTICE): 
+2015-02-14T09:43:48Z (NOTICE): X
+2015-02-14T09:43:48Z (NOTICE): XX
+2015-02-14T09:43:48Z (NOTICE): XXX
+2015-02-14T09:43:48Z (EMERGENCY): Hi there.  Don't worry, it's just a cpp-lib/syslogger test!
+2015-02-14T09:43:48Z (NOTICE): Very long lines get split.
+2015-02-14T09:43:48Z (NOTICE): xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+2015-02-14T09:43:48Z (INFO): xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+2015-02-14T09:43:48Z (NOTICE): End of xxxxxxForgot std::endl!
+2015-02-14T09:43:48Z (NOTICE): Exiting...
+2015-02-14T09:43:48Z syslogger-test (NOTICE): Testing with a tag
+Testing without stdout echo
+Testing direct (unformatted) output to stdout
+Program initialized
+Counting from 1 to 5
+1
+2
+3
+4
+5
+Done counting
+(NOTICE) Log priority ...
+... auto-resets to INFO
+(NOTICE) Log everything >= DEBUG
+(DEBUG) DEBUG
+(INFO) INFO
+(NOTICE) NOTICE
+(WARNING) WARNING
+(ERROR) ERROR
+(CRITICAL) CRITICAL
+(ALERT) ALERT
+(NOTICE) Log everything >= NOTICE
+(DEBUG) DEBUG
+(INFO) INFO
+(NOTICE) NOTICE
+(WARNING) WARNING
+(ERROR) ERROR
+(CRITICAL) CRITICAL
+(ALERT) ALERT
+(NOTICE) Log everything >= ERROR
+(DEBUG) DEBUG
+(INFO) INFO
+(NOTICE) NOTICE
+(WARNING) WARNING
+(ERROR) ERROR
+(CRITICAL) CRITICAL
+(ALERT) ALERT
+(DEBUG) If this message appears in output, something is WRONG!!!!
+(NOTICE) Also empty messages are printed
+(NOTICE) XXX
+(NOTICE) XX
+(NOTICE) X
+(NOTICE) 
+(NOTICE) X
+(NOTICE) XX
+(NOTICE) XXX
+(EMERGENCY) Hi there.  Don't worry, it's just a cpp-lib/syslogger test!
+(NOTICE) Very long lines get split.
+(NOTICE) xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+(NOTICE) End of xxxxxx(NOTICE) Forgot std::endl!
+(NOTICE) Exiting...
+(NOTICE) NOTICE message(DEBUG) DEBUG message

@@ -1,0 +1,12 @@
+(NOTICE) Starting server: Reverse version 0.26
+(NOTICE) Mode: Test
+(NOTICE) Maximum backlog: 0
+(NOTICE) Connection timeout [s]: 60
+(NOTICE) Maximum line length: 1000
+500 Welcome to the REVERSE server.
+501 Please type the strings you would like to have reversed.
+501 Max idle time: 60s
+501 Type ``quit'' to end the session.
+olleh
+dlrow
+550 Goodbye!

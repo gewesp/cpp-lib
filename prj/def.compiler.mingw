@@ -1,0 +1,21 @@
+#
+# MinGW under cygwin
+#
+
+#
+# The gcc man page says:  Code that relies on thread-safe exception
+# handling must compile and link all code with the -mthreads option.
+# 
+
+MTFLAGS = -mthreads
+CXX      = i686-pc-mingw32-g++ -mwin32
+CXXFLAGS = -Wall
+DEBUG = -g -O0 -fno-inline
+OPTIMIZE = -O9 -DNDEBUG -Wno-unused
+
+
+WINSOCK = -lwsock32
+
+RANLIB = i686-pc-mingw32-ranlib.exe
+
+DONT_KNOW_SYMLINKS = 1

@@ -1,0 +1,12 @@
+(NOTICE) Geoid initialization: Reading data from ../data/ww15mgh.grd
+geoid @ 47 8: 51.85300064
+geoid @ 52 -3: 49.1629982
+geoid @ -30 0: 21.4090004
+geoid @ -35 -122: -11.7510004
+geoid @ -34 142: 5.676000118
+geoid @ 90 8: 13.60599995
+geoid @ 100 8: 13.60599995
+geoid @ 52 -3: 49.1629982
+geoid @ 52 357: 49.1629982
+geoid @ 52 360: 46.29999924
+geoid @ 52 370: 46.29999924

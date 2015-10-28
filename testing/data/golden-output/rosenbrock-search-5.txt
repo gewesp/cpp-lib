@@ -1,0 +1,21 @@
+Searching non-trivial minima of the 5-dimensional Rosenbrock function.
+Starting at x0 = -0.463818    2.3453  -17.7138    5.6065  -1.14253
+Found minimum at: -0.962051  0.935739  0.880714  0.777878  0.605094
+Starting at x0 =  2.63712 -7.27944  3.98595  11.5547  1.10215
+Found minimum at: 1 1 1 1 1
+Starting at x0 =  12.7457 -4.46841 -9.49443  7.60682 -5.25276
+Found minimum at: 1 1 1 1 1
+Starting at x0 =  15.8596 -7.29081 -24.5912 -7.88707 -4.39781
+Found minimum at: 1 1 1 1 1
+Starting at x0 =   11.1922  -5.28956  -3.82589   4.39587 -0.213062
+Found minimum at: 1 1 1 1 1
+Starting at x0 =  22.0886 -2.71003 -1.87389 -22.0144 -9.59349
+Found minimum at: 1 1 1 1 1
+Starting at x0 = 0.384726  15.5502  14.5433  10.2533 -1.43275
+Found minimum at: 1 1 1 1 1
+Starting at x0 = 16.1561 2.97497 11.0886 5.39499 5.38945
+Found minimum at: 1 1 1 1 1
+Starting at x0 =   7.45743 -0.281488  -15.8599   18.7643  -5.13857
+Found minimum at: 1 1 1 1 1
+Starting at x0 =    5.69861   -4.82398    7.68493 -0.0369248    2.49386
+Found minimum at: -0.962051  0.935739  0.880714  0.777878  0.605093

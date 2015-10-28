@@ -1,0 +1,7 @@
+(NOTICE) Airport data: Reading from data/input/openaip_airports_switzerland_ch.aip
+(NOTICE) Airport data: Read 77 entries
+query: 47 8 800; nearest: LSPG/1; dist: 21851.58174
+query: 47.649445 8.387971 800; nearest: LSPF/1; dist: 11383.71416
+query: 47.148548 9.043032 400; nearest: LSZX/1; dist: 2592.104791
+query: 47.079476 9.062301 500; nearest: LSMF/1; dist: 205.547376
+query: 0 0 0; nearest: LSEZ/8; dist: 5039423.701

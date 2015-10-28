@@ -1,0 +1,24 @@
+Testing dupes
+Crash regression test
+30 update/query pairs; elements: 30; average result set size: 1
+1 update/query pairs; elements: 1; average result set size: 1
+Frequent updates of few IDs
+OK
+Arbitrary result set size
+100000 update/query pairs; elements: 63211; average result set size: 5.62742
+100000 update/query pairs; elements: 86681; average result set size: 10.6539
+100000 update/query pairs; elements: 95061; average result set size: 12.4798
+100000 update/query pairs; elements: 98279; average result set size: 13.1721
+100000 update/query pairs; elements: 99351; average result set size: 13.427
+100000 update/query pairs; elements: 99752; average result set size: 13.4918
+100000 update/query pairs; elements: 99908; average result set size: 13.5281
+100000 update/query pairs; elements: 99967; average result set size: 13.5357
+Result size: Maximum 3
+100000 update/query pairs; elements: 63211; average result set size: 2.72928
+100000 update/query pairs; elements: 86681; average result set size: 2.9988
+Creating 100000 random points
+Performing 10000 k-nearest-neighbor queries with k = 100
+Creating 100000 random points
+Performing 10000 k-nearest-neighbor queries with k = 200
+Creating 100000 random points
+Performing 10000 k-nearest-neighbor queries with k = 300

@@ -1,0 +1,15 @@
+47 8 800
+47.649445 8.387971 800
+47.148548 9.043032 400
+47.079476 9.062301 500
+0 0 0
+
+##
+## Comments below
+##
+
+Data source: http://ourairports.com/data/airports.csv
+Used LibreOffice to remove unneeded colums
+
+Last entry: results in EDWT, Jade-Weser, which has lat/lon off by
+a factor of 100

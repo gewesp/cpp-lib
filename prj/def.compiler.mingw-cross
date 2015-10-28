@@ -1,0 +1,13 @@
+#
+# MinGW as a cross compiler e.g. on Linux
+#
+
+MTFLAGS = -mthreads
+CXX      = mingw32-g++
+CXXFLAGS = -Wall
+DEBUG    = -g -O0 -fno-inline
+OPTIMIZE = -O9 -DNDEBUG -Wno-unused
+
+WINSOCK = -lwsock32 -lws2_32
+
+RANLIB = mingw32-ranlib

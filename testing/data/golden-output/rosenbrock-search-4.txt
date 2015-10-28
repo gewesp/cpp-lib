@@ -1,0 +1,21 @@
+Searching non-trivial minima of the 4-dimensional Rosenbrock function.
+Starting at x0 = -0.463818    2.3453  -17.7138    5.6065
+Found minimum at: 1 1 1 1
+Starting at x0 = -1.14253  2.63712 -7.27944  3.98595
+Found minimum at: -0.775659  0.613094  0.382063  0.145972
+Starting at x0 =  11.5547  1.10215  12.7457 -4.46841
+Found minimum at: 1 1 1 1
+Starting at x0 = -9.49443  7.60682 -5.25276  15.8596
+Found minimum at: 1 1 1 1
+Starting at x0 = -7.29081 -24.5912 -7.88707 -4.39781
+Found minimum at: 1 1 1 1
+Starting at x0 =  11.1922 -5.28956 -3.82589  4.39587
+Found minimum at: 1 1 1 1
+Starting at x0 = -0.213062   22.0886  -2.71003  -1.87389
+Found minimum at: 1 1 1 1
+Starting at x0 = -22.0144 -9.59349 0.384726  15.5502
+Found minimum at: -0.775659  0.613093  0.382063  0.145972
+Starting at x0 =  14.5433  10.2533 -1.43275  16.1561
+Found minimum at: 1 1 1 1
+Starting at x0 = 2.97497 11.0886 5.39499 5.38945
+Found minimum at: 1 1 1 1

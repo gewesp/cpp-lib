@@ -1,0 +1,21 @@
+#
+# $Id: def.includes,v 1.10 2014/07/07 19:09:57 gwesp Exp $
+#
+
+#
+# Just point this to some unpacked Boost distribution.
+#
+# CAUTION: Avoid setting /usr/include if multiple compilers (e.g., MinGW
+# and cygwin) are installed on a system, otherwise the compiler might
+# use the wrong system includes, leading to absurd problems.
+#
+
+
+# BOOST_INCLUDES = -I../../boost_1_33_1
+# BOOST_INCLUDES = -Ic:/boost/boost_1_49_0
+# BOOST_INCLUDES = -I/Users/gwesp/software/boost_1_47_0
+  BOOST_INCLUDES = -I/opt/local/include -I$(HOME)/src/boost_1_58_0
+  EIGEN_INCLUDES = -I/opt/local/include/eigen3 -I/usr/include/eigen3
+  PNGPP_INCLUDES = -I$(HOME)/src/png++-0.2.5
+
+THIRD_PARTY_INCLUDES = $(BOOST_INCLUDES) $(PNGPP_INCLUDES) $(EIGEN_INCLUDES)

@@ -1,0 +1,217 @@
+Orig: 47 8 1234.5
+Delta (provided): 10000
+    0
+  100
+Delta (computed): 10000
+    0
+  100
+Orig: 47 8 1234.5
+Delta (provided):      0
+-10000
+  -100
+Delta (computed):      0
+-10000
+  -100
+Orig: 47 8 1234.5
+Delta (provided):   12345
+-123434
+  -4711
+Delta (computed):   12345
+-123434
+  -4711
+Equator
+Bearing, distance from pt1 0/34 to pt2 -1/33 (SW): 225, 157422; pt2 - pt1 = -111319
+-111319
+      0
+Bearing, distance from pt1 0/34 to pt2 -1/34 (S): 180, 111318; pt2 - pt1 = -111319
+      0
+      0
+Bearing, distance from pt1 0/34 to pt2 -1/35 (SE): 135, 157422; pt2 - pt1 = -111319
+ 111319
+      0
+Bearing, distance from pt1 0/34 to pt2 0/33 (W): 270, 111318; pt2 - pt1 =       0
+-111319
+      0
+Bearing, distance from pt1 0/34 to pt2 0/34 (): 0, 0; pt2 - pt1 = 0
+0
+0
+Bearing, distance from pt1 0/34 to pt2 0/35 (E): 90, 111318; pt2 - pt1 =      0
+111319
+     0
+Bearing, distance from pt1 0/34 to pt2 1/33 (NW): 315, 157423; pt2 - pt1 =  111319
+-111319
+   -100
+Bearing, distance from pt1 0/34 to pt2 1/34 (N): 0, 111319; pt2 - pt1 = 111319
+     0
+  -100
+Bearing, distance from pt1 0/34 to pt2 1/35 (NE): 45, 157423; pt2 - pt1 = 111319
+111319
+  -100
+Central Europe
+Bearing, distance from pt1 45.5/7.8 to pt2 44.5/6.8 (SW): 215.027, 136333; pt2 - pt1 =  -111319
+-78024.9
+       0
+Bearing, distance from pt1 45.5/7.8 to pt2 44.5/7.8 (S): 180, 111318; pt2 - pt1 = -111319
+      0
+      0
+Bearing, distance from pt1 45.5/7.8 to pt2 44.5/8.8 (SE): 144.973, 136333; pt2 - pt1 = -111319
+78024.9
+      0
+Bearing, distance from pt1 45.5/7.8 to pt2 45.5/6.8 (W): 270, 78023.9; pt2 - pt1 =        0
+-78024.9
+       0
+Bearing, distance from pt1 45.5/7.8 to pt2 45.5/7.8 (): 0, 0; pt2 - pt1 = 0
+0
+0
+Bearing, distance from pt1 45.5/7.8 to pt2 45.5/8.8 (E): 90, 78023.9; pt2 - pt1 =       0
+78024.9
+      0
+Bearing, distance from pt1 45.5/7.8 to pt2 46.5/6.8 (NW): 324.973, 135539; pt2 - pt1 =   111319
+-78024.9
+    -100
+Bearing, distance from pt1 45.5/7.8 to pt2 46.5/7.8 (N): 0, 111319; pt2 - pt1 = 111319
+     0
+  -100
+Bearing, distance from pt1 45.5/7.8 to pt2 46.5/8.8 (NE): 35.027, 135539; pt2 - pt1 =  111319
+78024.9
+   -100
+West of Greenwich
+Bearing, distance from pt1 0/-120 to pt2 -1/-121 (SW): 225, 157422; pt2 - pt1 = -111319
+-111319
+      0
+Bearing, distance from pt1 0/-120 to pt2 -1/-120 (S): 180, 111318; pt2 - pt1 = -111319
+      0
+      0
+Bearing, distance from pt1 0/-120 to pt2 -1/-119 (SE): 135, 157422; pt2 - pt1 = -111319
+ 111319
+      0
+Bearing, distance from pt1 0/-120 to pt2 0/-121 (W): 270, 111318; pt2 - pt1 =       0
+-111319
+      0
+Bearing, distance from pt1 0/-120 to pt2 0/-120 (): 0, 0; pt2 - pt1 = 0
+0
+0
+Bearing, distance from pt1 0/-120 to pt2 0/-119 (E): 90, 111318; pt2 - pt1 =      0
+111319
+     0
+Bearing, distance from pt1 0/-120 to pt2 1/-121 (NW): 315, 157423; pt2 - pt1 =  111319
+-111319
+   -100
+Bearing, distance from pt1 0/-120 to pt2 1/-120 (N): 0, 111319; pt2 - pt1 = 111319
+     0
+  -100
+Bearing, distance from pt1 0/-120 to pt2 1/-119 (NE): 45, 157423; pt2 - pt1 = 111319
+111319
+  -100
+South America
+Bearing, distance from pt1 -33/-120 to pt2 -34/-121 (SW): 219.986, 144940; pt2 - pt1 =  -111319
+-93360.4
+       0
+Bearing, distance from pt1 -33/-120 to pt2 -34/-120 (S): 180, 111318; pt2 - pt1 = -111319
+      0
+      0
+Bearing, distance from pt1 -33/-120 to pt2 -34/-119 (SE): 140.014, 144940; pt2 - pt1 = -111319
+93360.4
+      0
+Bearing, distance from pt1 -33/-120 to pt2 -33/-121 (W): 270, 93359.2; pt2 - pt1 =        0
+-93360.4
+       0
+Bearing, distance from pt1 -33/-120 to pt2 -33/-120 (): 0, 0; pt2 - pt1 = 0
+0
+0
+Bearing, distance from pt1 -33/-120 to pt2 -33/-119 (E): 90, 93359.2; pt2 - pt1 =       0
+93360.4
+      0
+Bearing, distance from pt1 -33/-120 to pt2 -32/-121 (NW): 320.014, 145621; pt2 - pt1 =   111319
+-93360.4
+    -100
+Bearing, distance from pt1 -33/-120 to pt2 -32/-120 (N): 0, 111319; pt2 - pt1 = 111319
+     0
+  -100
+Bearing, distance from pt1 -33/-120 to pt2 -32/-119 (NE): 39.9856, 145621; pt2 - pt1 =  111319
+93360.4
+   -100
+400km up 
+Bearing, distance from pt1 45/7 to pt2 44/6 (SW): 215.264, 145304; pt2 - pt1 =  -111319
+-78714.8
+       0
+Bearing, distance from pt1 45/7 to pt2 44/7 (S): 180, 118299; pt2 - pt1 = -111319
+      0
+      0
+Bearing, distance from pt1 45/7 to pt2 44/8 (SE): 144.736, 145304; pt2 - pt1 = -111319
+78714.8
+      0
+Bearing, distance from pt1 45/7 to pt2 45/6 (W): 270, 83650.2; pt2 - pt1 =        0
+-78714.8
+       0
+Bearing, distance from pt1 45/7 to pt2 45/7 (): 0, 0; pt2 - pt1 = 0
+0
+0
+Bearing, distance from pt1 45/7 to pt2 45/8 (E): 90, 83650.2; pt2 - pt1 =       0
+78714.8
+      0
+Bearing, distance from pt1 45/7 to pt2 46/6 (NW): 324.736, 144462; pt2 - pt1 =   111319
+-78714.8
+    -100
+Bearing, distance from pt1 45/7 to pt2 46/7 (N): 0, 118300; pt2 - pt1 = 111319
+     0
+  -100
+Bearing, distance from pt1 45/7 to pt2 46/8 (NE): 35.2644, 144462; pt2 - pt1 =  111319
+78714.8
+   -100
+Very north
+Bearing, distance from pt1 88.9/30 to pt2 87.9/29 (SW): 181.1, 111357; pt2 - pt1 =  -111319
+-2137.05
+       0
+Bearing, distance from pt1 88.9/30 to pt2 87.9/30 (S): 180, 111318; pt2 - pt1 = -111319
+      0
+      0
+Bearing, distance from pt1 88.9/30 to pt2 87.9/31 (SE): 178.9, 111357; pt2 - pt1 = -111319
+2137.05
+      0
+Bearing, distance from pt1 88.9/30 to pt2 88.9/29 (W): 270, 2137.02; pt2 - pt1 =        0
+-2137.05
+       0
+Bearing, distance from pt1 88.9/30 to pt2 88.9/30 (): 0, 0; pt2 - pt1 = 0
+0
+0
+Bearing, distance from pt1 88.9/30 to pt2 88.9/31 (E): 90, 2137.02; pt2 - pt1 =       0
+2137.05
+      0
+Bearing, distance from pt1 88.9/30 to pt2 89.9/29 (NW): 358.9, 111321; pt2 - pt1 =   111319
+-2137.05
+    -100
+Bearing, distance from pt1 88.9/30 to pt2 89.9/30 (N): 0, 111319; pt2 - pt1 = 111319
+     0
+  -100
+Bearing, distance from pt1 88.9/30 to pt2 89.9/31 (NE): 1.0998, 111321; pt2 - pt1 =  111319
+2137.05
+   -100
+speed = 0 = 0; course = 0 = 0; vs = -10; v_ned =  0
+ 0
+10
+speed = 10 = 10; course = 0 = 0; vs = 1; v_ned = 10
+ 0
+-1
+speed = 10 = 10; course = 90 = 90; vs = 1; v_ned = 6.12323e-16
+         10
+         -1
+speed = 10 = 10; course = 270 = 270; vs = 1; v_ned = -1.83697e-15
+         -10
+          -1
+$GPRMC,180321,A,4730.0000,N,00820.0000,E,20.0,45.0,120215,,*18
+$GPGGA,180321,4730.0000,N,00820.0000,E,1,08,4.7,420.0,M,0.0,M,,*7C
+$GPRMC,180321,A,4730.0000,N,12100.0000,W,20.0,45.0,120215,,*02
+$GPGGA,180321,4730.0000,N,12100.0000,W,1,08,4.7,0.0,M,0.0,M,,*60
+$GPRMC,180321,A,3320.0000,S,00000.0000,E,20.0,45.0,120215,,*0D
+$GPGGA,180321,3320.0000,S,00000.0000,E,1,08,4.7,-10.0,M,0.0,M,,*73
+$GPRMC,180321,A,4723.1438,S,00851.3829,E,20.0,45.0,120215,,*0F
+$GPGGA,180321,4723.1438,S,00851.3829,E,1,08,4.7,0.0,M,0.0,M,,*6D
+$GPRMC,,V,,,,,,,,,,N*53
+$GPGGA,,,,,,0,,,,,,,,*66
+Potential altitude gain with horz. speed 25 m/s: 31.8661
+Potential altitude gain with vert. speed 25 m/s: 31.8661
+Potential altitude gain with horz. speed 50 m/s: 127.465
+Potential altitude gain with vert. speed 50 m/s: 127.465
+Potential altitude gain with horz. speed 79 m/s: 318.202
+Potential altitude gain with vert. speed 79 m/s: 318.202

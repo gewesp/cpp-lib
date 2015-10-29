@@ -164,15 +164,17 @@ __Boost, png++ and Eigen are used in a header-only way.__
 
 #### Setup on Ubuntu
 
-  `ln -s def.compiler.clang-3.6 def.compiler`
-
-  `ln -s def.platform.linux-clang-libc++ def.platform`
+  ```
+  ln -s def.compiler.clang-3.6 def.compiler
+  ln -s def.platform.linux-clang-libc++ def.platform
+  ```
 
 #### Setup on MacOS X (Darwin)
 
-  `ln -s def.compiler.clang def.compiler`
-
-  `ln -s def.platform.darwin def.platform`
+  ```
+  ln -s def.compiler.clang def.compiler
+  ln -s def.platform.darwin def.platform
+  ```
 
 #### Compile
 

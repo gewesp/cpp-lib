@@ -11,10 +11,6 @@ Technologies GmbH, Switzerland under an Apache license.
   Documentation is by comments in the header files, we may move to doxygen
 in the future.  See also the tests for example usage.
 
-## Error reporting
-
-  Errors are reported as exceptions derived from `std::exception` with a 
-meaningful `what()` message.
 
 ## Components
 
@@ -136,6 +132,11 @@ or not ready for production.
 
 * `cpl::detail_`         : Private namespace for implementation details.  Do
   not use those in client code.
+
+## Error reporting
+
+  Errors are reported as exceptions derived from `std::exception` with a 
+meaningful `what()` message.
 
 
 ## Supported platforms

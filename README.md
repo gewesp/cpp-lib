@@ -157,37 +157,46 @@ __Boost, png++ and Eigen are used in a header-only way.__
 
 ### Build
 
-1.  `cd prj`
+- `cd prj`
 
-2.  Create symbolic links appropriate for your system or copy the files:
-Setup on Ubuntu:
+- Create symbolic links appropriate for your system or copy the files:
+
+
+#### Setup on Ubuntu
 
   `ln -s def.compiler.clang-3.6 def.compiler`
+
   `ln -s def.platform.linux-clang-libc++ def.platform`
 
-Setup on MacOS X (Darwin):
+#### Setup on MacOS X (Darwin)
 
   `ln -s def.compiler.clang def.compiler`
+
   `ln -s def.platform.darwin def.platform`
 
-3.  Use `make` to build the library.  Type `make tests` to build the tests.
+#### Compile
 
-4.  Use `export debug=true; make; make tests` to build a debug version of 
+- `make -j4 tests` to build the library and tests.
+
+-  Use `export debug=true; make; make tests` to build a debug version of 
   the library and the tests.
   Release and debug versions are kept in separate directories.
 
   __Always use the same `debug` setting (true or false) for `make`,
   `make tests` and `make clean`.__
 
-5.  To run the tests:
+#### Test
+
   `cd testing/`
+
   `./run-all-tests.sh`
 
   Test output is written to `testing/data/golden-output`.  Run
   `git diff` to look out for unexpected changes.
 
-6.  Use `make clean` to delete object files and executables.
 
+#### Clean
+ Use `make clean` to delete object files and executables.
 
   __The supplied Makefile assumes GNU make.__
 

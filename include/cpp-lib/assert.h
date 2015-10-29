@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+// Component: UTIL
+//
 
 #ifndef CPP_LIB_ASSERT_H
 #define CPP_LIB_ASSERT_H

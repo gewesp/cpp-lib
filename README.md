@@ -4,14 +4,12 @@
 
   Cpp-lib is a general purpose library of ISO C++ functions and classes.
 It is provided free of charge and without any implied warranty by KISS 
-Technologies GmbH, Zuerich, Switzerland.  Please see the file `LICENSE`
-for details.
+Technologies GmbH, Switzerland under an Apache license.
 
-  Most of the functionality has associated tests which also serve as usage
-examples.
+## Documentation
 
-Documentation is by comments in the header files, we may move to doxygen
-in the future.
+  Documentation is by comments in the header files, we may move to doxygen
+in the future.  See also the tests for example usage.
 
 ## Error reporting
 
@@ -20,21 +18,23 @@ meaningful `what()` message.
 
 ## Components
 
-The functionality of cpp-lib is roughly organized into components which
-are listed below.
+Cpp-lib is organized into the components listed below.
 
 Each header file has a comment of the form
 
   `// Component: <component name>`
 
-at its top.  A component name of UNSUPPORTED indicates that this is
-functionality we consider not ready for public consumption, or it is only used
-internally for testing.
+at its top.  UNSUPPORTED is used for functions used only internally
+or not ready for production.
 
 ### AERONAUTICS
 
-- Open Glider Network client and APRS parsing
+- Open Glider Network (APRS and DDB) client
 - IGC file parsing
+
+### CGI
+
+- CGI parameter parsing and URI unescaping
 
 ### CRYPT
 
@@ -42,9 +42,25 @@ internally for testing.
 - A streambuf filter for transparent reading and writing of encrypted
   files based on arbitrary block ciphers in cipher feedback mode (CFB).
 
+### DISPATCH
+
+- A dispatch queue, modeled after Grand Central Dispatch (GCD)
+
 ### GNSS
 
-- Latitude/Longitude/Altitude data structure and supporting functions.
+- Latitude/Longitude/Altitude data structure and related functions.
+- Conversion between WGS84 and MSL altitudes (Earth Geoid Model).
+- A geographic database with spatial search and openAIP input
+  (suitable for airport reference points).
+
+### HTTP
+
+- A very simple HTTP client
+
+### MAP
+
+- Web Mercator tile mapping
+
 
 ### MATH
 
@@ -55,6 +71,8 @@ internally for testing.
   of [minimize] [4]).
 - Unconstrained multidimensional minimization without gradients (see
   [Nelder/Mead] [5], [downhill simplex][6], [Wolfram] [7]).
+- A spatial index based on boost::rtree.
+
 
 ### NETWORK
 
@@ -85,6 +103,7 @@ internally for testing.
   on-the-fly reloading of modified files.
 - Simple timekeeping and sleep() calls.
 - Powering off and rebooting the computer.
+- A powerful syslog(3)-based logging facility.
 
 ### UTIL
 
@@ -92,7 +111,6 @@ internally for testing.
   options with or without arguments.
 - Generic stream buffer templates.
 - Resource handler templates.
-- Miscellaneous helper classes and functions.
 - Physical constants and units.
 
 ### VARLIST
@@ -103,15 +121,18 @@ internally for testing.
 ### Namespaces/component association
 
 * `cpl::crypt`           : CRYPT
+* `cpl::dispatch`        : DISPATCH
 * `cpl::gnss`            : GNSS
+* `cpl::igc`             : AERONAUTICS
 * `cpl::ogn`             : AERONAUTICS
+* `cpl::map`             : MAP
 * `cpl::math`            : MATH
 * `cpl::util`            : UTIL, VARLIST, REGISTRY, REALTIME, SYSUTIL
 * `cpl::units`           : UTIL
-
-* `cpl::util::file`      : SYSUTIL
-* `cpl::util::network`   : NETWORK
 * `cpl::util::container` : UTIL
+* `cpl::util::file`      : SYSUTIL
+* `cpl::util::log`       : SYSUTIL
+* `cpl::util::network`   : NETWORK
 
 * `cpl::detail_`         : Private namespace for implementation details.  Do
   not use those in client code.
@@ -335,8 +356,8 @@ Please see TODO.md.
 - Seamless integration with the C++ standard library.  E.g., the TCP and
   serial interface provide standard C++ streambufs.
 
-- RAII (resource acquisition is initialization).  Any constructor will
-  either result in a ready-to-use object or throw.
+- RAII (resource acquisition is initialization).  Constructors
+  either yield a ready-to-use object or throw.
 
 - Better safe than sorry.  Assertions even in tight loops.
 

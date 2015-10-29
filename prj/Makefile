@@ -150,7 +150,7 @@ endif
 
 ifeq ($(PNG_STUFF),yes)
 TESTS   += $(PNG_TESTS)
-LDFLAGS += `libpng-config --ldflags`
+LDFLAGS += $(shell libpng-config --ldflags)
 endif
 
 ifeq ($(POSIX_STUFF),yes)

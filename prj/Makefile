@@ -119,6 +119,7 @@ TESTS =				                                \
 	$(BIN_DIR)/udp-test	                        	\
 	$(BIN_DIR)/utc-test	                        	\
 	$(BIN_DIR)/tcp-test					\
+	$(BIN_DIR)/ogn-minimal                                  \
 	$(BIN_DIR)/ogn-test                                     \
 	$(BIN_DIR)/rosenbrock-search		        	\
 	$(BIN_DIR)/sched-thread-test  		        	\

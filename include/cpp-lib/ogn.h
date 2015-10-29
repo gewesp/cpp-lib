@@ -401,7 +401,7 @@ void login(
 // Gets the vehicle database from OGN DDB with optional URL.
 // Logs to log.
 // Doesn't throw, but logs errors to log.  Returns an empty DB on errors.
-// If URL doesn't start with "http", assumes a file
+// If URL doesn't start with "http", reads a local file
 vehicle_db get_vehicle_database_ddb(
     std::ostream& log,
     std::string const& url = default_ddb_url());

@@ -1,0 +1,23 @@
+language: cpp
+compiler: gcc
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - boost-latest
+
+    packages:
+    - g++-5
+    - libboost1.55-dev
+    - libeigen3-dev
+    - libpng++-dev
+
+before_script:
+- (cd prj && ln -s def.compiler.gcc-5-ubuntu-14 def.compiler)
+- (cd prj && ln -s def.platform.linux def.platform)
+
+script:
+- (cd prj && make -j6)
+- (cd prj && make tests -j6)
+- (cd testing && ./run-all-tests.sh)

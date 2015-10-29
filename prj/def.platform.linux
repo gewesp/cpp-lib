@@ -10,6 +10,6 @@ PNG_STUFF     = yes
 OBJ_EXTENSION = o
 LIB_EXTENSION = a
 
-PLATFORM_LIB =
+PLATFORM_LIB = -lrt -lpthread
 
 PLATFORM = linux

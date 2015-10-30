@@ -155,7 +155,10 @@ template<typename T, typename IT> T read_raw(IT& it) {
     buf[i] = *it;
     ++it;
   }
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
   return *reinterpret_cast<T const*>(&buf[0]);
+#pragma GCC diagnostic pop 
 }
 
 template<typename IT> void write(IT& it, double const v) 

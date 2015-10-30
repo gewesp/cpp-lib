@@ -33,7 +33,9 @@ value element(int const i) {
   std::minstd_rand mstd(i);
   std::uniform_int_distribution<int> I(0, 999999);
 
-  return std::make_pair(point{i, i + 1}, I(mstd));
+  // Avoid narrowing warning
+  auto const ii = static_cast<double>(i);
+  return std::make_pair(point{ii, ii + 1}, I(mstd));
 }
 
 void crash_regression(std::ostream& os, tree& tr, int n) {

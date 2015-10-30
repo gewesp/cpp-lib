@@ -6,9 +6,16 @@
 # sudo apt-get update
 # sudo apt-get install g++-5
 #
+# Reason for -Wno...:
+# -Wno-unused-parameter: Boost
+# -Wno-ignored-qualifiers: png++
+# -Wno-enum-compare: Eigen
+# -Wno-deprecated-declarations: ??
+#
+#
 
 CXX      = g++-5 -std=c++11 -save-temps
-CXXFLAGS = -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-ignored-qualifiers -Wno-unused-local-typedefs
+CXXFLAGS = -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-ignored-qualifiers -Wno-unused-local-typedefs -Wno-enum-compare
 MTFLAGS  =
 DEBUG    = -g -O0 -fno-inline
 OPTIMIZE = -O9 -DNDEBUG

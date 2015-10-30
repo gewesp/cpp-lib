@@ -12,9 +12,8 @@
 # -Wno-enum-compare: Eigen
 # -Wno-deprecated-declarations: ??
 #
-#
 
-CXX      = g++-5 -std=c++11 -save-temps
+CXX      = g++-5 -std=c++11
 CXXFLAGS = -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-ignored-qualifiers -Wno-unused-local-typedefs -Wno-enum-compare
 MTFLAGS  =
 DEBUG    = -g -O0 -fno-inline

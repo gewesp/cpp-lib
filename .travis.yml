@@ -18,6 +18,7 @@ before_script:
 - (cd prj && ln -s def.platform.linux def.platform)
 
 script:
-- (cd prj && make -j6)
-- (cd prj && make tests -j6)
-- (cd testing && ./run-all-tests.sh)
+- (cd prj     && export debug=false && make tests -j6    )
+- (cd testing && export debug=false && ./run-all-tests.sh)
+- (cd prj     && export debug=true  && make tests -j6    )
+- (cd testing && export debug=true  && ./run-all-tests.sh)

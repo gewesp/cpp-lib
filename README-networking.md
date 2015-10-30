@@ -88,7 +88,7 @@ support IPv6.
 
 ## Bugs
 
-Please see TODO.md for known bugs and TODO items.
+See TODO.md. 
 
 [1]: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1925.pdf
 [2]: http://en.wikipedia.org/wiki/IPv6_address

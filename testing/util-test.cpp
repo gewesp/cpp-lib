@@ -369,12 +369,14 @@ void test_datetime() {
     double const t = r(mstd);
     std::string const s = cpl::util::format_datetime(t);
     double const tt = cpl::util::parse_datetime(s);
+    double const ttt = cpl::util::parse_datetime(s.substr(0, 10), "%F");
     std::cout << s << " " 
               << cpl::util::format_date(tt) << " "
               << cpl::util::format_time_no_z(tt) << " "
               << std::fmod(t, 60) 
               << std::endl;
     always_assert(std::fabs(t - tt) <= 1);
+    always_assert(std::fabs(t - ttt) <= cpl::units::day());
   }
 
   std::cout << format_date(r(mstd)) << std::endl;

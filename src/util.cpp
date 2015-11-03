@@ -209,6 +209,8 @@ double cpl::util::utc() {
 std::tm cpl::util::utc_tm(double const t) {
   std::time_t const t1 = t + 0.5;
   std::tm ret;
+  // Better safe than sorry: Set members to 0
+  cpl::util::clear(ret);
   if (NULL == ::gmtime_r(&t1, &ret)) {
     cpl::detail_::strerror_exception("gmtime()", errno);
   }
@@ -259,8 +261,11 @@ std::string cpl::util::format_time_hh_mmt(double const& dt) {
 
 double cpl::util::parse_datetime(
     std::string const& s, char const* format) {
-  
   std::tm t2;
+
+  // Set members to 0.  Absolutely necessary here since strptime()
+  // may leave fields untouched, depending on the format.
+  cpl::util::clear(t2);
 
   const char* const buf = s.c_str();
   const char* const res = strptime(buf, format, &t2);

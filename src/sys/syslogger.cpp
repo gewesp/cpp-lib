@@ -65,10 +65,10 @@ std::ostream& cpl::util::log::operator<<(
 
 // No-op for non-sysloggers
 std::ostream& cpl::util::log::operator<<(
-    std::ostream& os, cpl::detail_::prio_setter const ps) {
+    std::ostream& os, cpl::detail_::prio_setter const& ps) {
   auto const ptr = dynamic_cast<syslogger*>(&os);
   if (ptr) {
-    ptr->minlevel(ps.p);
+    ptr->set_minlevel(ps);
   }
   return os;
 }
@@ -76,8 +76,9 @@ std::ostream& cpl::util::log::operator<<(
 cpl::detail_::syslog_writer::syslog_writer(
     std::string const& tag,
     std::ostream* const echo)
-  : minlevel (::cpl::util::log::default_prio()),
-    currlevel(::cpl::util::log::default_prio()),
+  : minlevel_syslog(::cpl::util::log::default_prio()),
+    minlevel_echo  (::cpl::util::log::default_prio()),
+    currlevel      (::cpl::util::log::default_prio()),
     echo_(echo) {
   // If we have a tag, make it "<tag> ", else ""
   if (tag.size() > 0) {
@@ -100,16 +101,16 @@ int cpl::detail_::syslog_writer::write(char const* const buf, int const n) {
 
   assert(last >= 0);
 
-  if (currlevel <= minlevel) {
+  if (currlevel <= minlevel_syslog) {
     syslog(LOG_EMERG + static_cast<int>(currlevel),
            "%s(%s): %.*s", tag(), to_string(currlevel), last, buf);
+  }
 
-    if (echo_) {
-      *echo_ << cpl::util::format_datetime(echo_clock_()) << ' '
-             << tag() << '(' << to_string(currlevel) << "): ";
-      std::copy(buf, buf + last, std::ostreambuf_iterator<char>(*echo_));
-      *echo_ << std::endl;
-    }
+  if (echo_ && currlevel <= minlevel_echo) {
+    *echo_ << cpl::util::format_datetime(echo_clock_()) << ' '
+           << tag() << '(' << to_string(currlevel) << "): ";
+    std::copy(buf, buf + last, std::ostreambuf_iterator<char>(*echo_));
+    *echo_ << std::endl;
   }
 
   // Reset log level

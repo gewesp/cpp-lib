@@ -56,6 +56,11 @@ inline prio default_prio() { return prio::INFO; }
 // Textual representation of the given value.
 char const* to_string(prio);
 
+// Flags for setminprio(): Set minimum priority for syslog, echo
+// stream or both.
+unsigned short constexpr SYSLOG = 1;
+unsigned short constexpr ECHO   = 2;
+unsigned short constexpr BOTH   = SYSLOG | ECHO;
 
 } // log
 
@@ -65,13 +70,16 @@ char const* to_string(prio);
 namespace detail_ {
 
 struct prio_setter {
-  cpl::util::log::prio p;
+  // The priority to set
+  cpl::util::log::prio const p;
+  // Set SYSLOG, ECHO or both priorities
+  unsigned short const which;
 };
 
 struct syslog_writer {
 
   // Better be explicit
-  syslog_writer()                = delete ;
+  syslog_writer()                      = delete ;
   syslog_writer(syslog_writer const& ) = delete ;
   syslog_writer(syslog_writer      &&) = delete ;
 
@@ -83,8 +91,10 @@ struct syslog_writer {
   int write(char const* buf, int n);
   void shutdown_write() {}
 
-  // Minimum level to log
-  cpl::util::log::prio minlevel;
+  // Minimum level to log on syslog
+  cpl::util::log::prio minlevel_syslog;
+  // Minimum level to log on echo stream
+  cpl::util::log::prio minlevel_echo  ;
 
   // Currently set log level (e.g. os << cpl::util::CRIT;)
   cpl::util::log::prio currlevel;
@@ -167,21 +177,26 @@ struct syslogger : cpl::util::file::owning_ostream<syslogstreambuf> {
   }
 
   // Log level selection
-  void minlevel(prio const newlevel) 
-  { buffer().reader_writer().minlevel = newlevel; }
+  void set_minlevel(cpl::detail_::prio_setter const& ps) {
+    if (ps.which & SYSLOG) 
+    { buffer().reader_writer().minlevel_syslog = ps.p; }
+    if (ps.which & ECHO  ) 
+    { buffer().reader_writer().minlevel_echo   = ps.p; }
+  }
 } ;
 
 // Sets minimal log priority, e.g.
 // sl << setminprio(prio::ERR) to log only important messages.
-inline cpl::detail_::prio_setter setminprio(prio const p) {
-  return cpl::detail_::prio_setter{p};
+inline cpl::detail_::prio_setter setminprio(
+    prio const p, unsigned short const which = BOTH) {
+  return cpl::detail_::prio_setter{p, which};
 }
 
 // Sets priority for current message
 std::ostream& operator<<(std::ostream&, prio);
 
 // Sets min prio, use setminprio() above.
-std::ostream& operator<<(std::ostream&, cpl::detail_::prio_setter);
+std::ostream& operator<<(std::ostream&, cpl::detail_::prio_setter const&);
 
 // Logs an error, format:
 // ERROR: msg: what

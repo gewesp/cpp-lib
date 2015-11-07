@@ -10,5 +10,3 @@ if [ Darwin = `uname` ] ; then
   afconvert -d LEI16 -f caff --verbose $GOLDEN_DIR/triad.snd -o $TESTDIR/triad.caf
   open $TESTDIR
 fi
-
-$BIN_DIR/syslogger-test                     > $GOLDEN_DIR/syslogger.txt

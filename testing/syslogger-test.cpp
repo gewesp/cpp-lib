@@ -86,10 +86,14 @@ void test(std::ostream& sl) {
   sl << prio::NOTICE << "" << std::endl;
   sl << prio::NOTICE << "X" << std::endl;
   sl << prio::NOTICE << "XX" << std::endl;
-  sl << prio::NOTICE << "XXX" << std::endl;
 
-  // Broadcast to all users according to man syslog(3).  Use sparingly.
-  sl << prio::EMERG
+  // Don't log the XXX to echo
+  sl << setminprio(prio::ALERT, ECHO);
+  sl << prio::NOTICE << "XXX" << std::endl;
+  sl << setminprio(prio::INFO);
+
+  sl << setminprio(prio::EMERG, SYSLOG);
+  sl << prio::ALERT
      << "Hi there.  Don't worry, it's just a cpp-lib/syslogger test!"
      << std::endl;
 

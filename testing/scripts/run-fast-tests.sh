@@ -61,3 +61,5 @@ contents!
 __EOF__
 
 $BIN_DIR/file-test --fileops                > $GOLDEN_DIR/fileops.txt
+
+$BIN_DIR/syslogger-test                     > $GOLDEN_DIR/syslogger.txt

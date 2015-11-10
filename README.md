@@ -161,7 +161,7 @@ for embedded applications.
 - GNU make (BSD make does *not* work)
 - The [BOOST] [1] header files.
 - The [Eigen] [10] library
-- If `PNG_STUFF` is enabled: libpng [8] and png++ [9]
+- If `PNG_STUFF` is enabled: [libpng] [8] and [png++] [9]
 
 __Boost, png++ and Eigen are used in a header-only way.__
 

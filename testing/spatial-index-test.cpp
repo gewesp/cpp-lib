@@ -282,6 +282,16 @@ int main() {
     test_index(std::cout, idx, 2, 100000, 100000, 89.0, 1.0, 3);
     erase_all(idx);
 
+    std::cout << "Avg. result size: 250.5 (only even time values)\n";
+    test_index(std::cout, idx, 1, 1000, 1000000000, 89.0, 1000.0, 100000,
+               time_even);
+    erase_all(idx);
+
+    std::cout << "Avg. result size: ~6 (only even time values)\n";
+    test_index(std::cout, idx, 1, 1000, 1000000000, 89.0, 1000.0, 6,
+               time_even);
+    erase_all(idx);
+
     // k-NN queries
     test_nearest(std::cout, 100000, 89.0, 10000, 100);
     test_nearest(std::cout, 100000, 89.0, 10000, 200);

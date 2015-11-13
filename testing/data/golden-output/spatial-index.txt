@@ -16,6 +16,10 @@ Arbitrary result set size
 Result size: Maximum 3
 100000 update/query pairs; elements: 63211; average result set size: 2.72928
 100000 update/query pairs; elements: 86681; average result set size: 2.9988
+Avg. result size: 250.5 (only even time values)
+1000 update/query pairs; elements: 1000; average result set size: 250.5
+Avg. result size: ~6 (only even time values)
+1000 update/query pairs; elements: 1000; average result set size: 5.97
 Creating 100000 random points
 Performing 10000 k-nearest-neighbor queries with k = 100
 Creating 100000 random points

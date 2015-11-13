@@ -31,7 +31,8 @@ namespace cpl {
 namespace cgi {
 
 // Transforms e.g. demo%3Amain into demo:main and returns the unescaped
-// string.  If throw_on_errors is true, throws on malformed input.
+// string.  If throw_on_errors is true, throws on malformed input,
+// otherwise returns an incompletely decoded string. 
 std::string uri_decode(
     std::string const& escaped, bool throw_on_errors = false);
 
@@ -45,8 +46,9 @@ std::map<std::string, std::string> parse_query(std::string const&);
 // Doesn't touch p otherwise.
 template<typename T, typename M>
 void set_value(M const& params, T& p, std::string const& name) {
-  if (params.end() != params.find(name)) {
-    p = boost::lexical_cast<T>(params.at(name));
+  auto const it = params.find(name);
+  if (params.end() != it) {
+    p = boost::lexical_cast<T>(cpl::cgi::uri_decode(*it));
   }
 }
 

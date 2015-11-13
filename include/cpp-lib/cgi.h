@@ -48,7 +48,7 @@ template<typename T, typename M>
 void set_value(M const& params, T& p, std::string const& name) {
   auto const it = params.find(name);
   if (params.end() != it) {
-    p = boost::lexical_cast<T>(cpl::cgi::uri_decode(*it));
+    p = boost::lexical_cast<T>(cpl::cgi::uri_decode(it->second));
   }
 }
 

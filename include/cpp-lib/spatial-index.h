@@ -91,10 +91,13 @@ template<typename ID, typename T, typename TR = spatial_index_traits<T>,
   typedef TR    traits_type;
   typedef STRAT strategy   ;
 
+  // Functions value_type -> bool
+  typedef std::function<bool(value_type const&)> value_predicate;
+
   // Type for the 'primary' index id_type -> value_type
   // Note: Using unordered_map<> doesn't yield a significant speed
   // improvement.
-  typedef std::map<id_type, T> id_map;
+  typedef std::map<id_type, value_type> id_map;
 
   // Iterator into primary index.  Used for query() results, see below.
   typedef typename id_map::const_iterator primary_iterator;
@@ -106,7 +109,7 @@ template<typename ID, typename T, typename TR = spatial_index_traits<T>,
   typedef std::pair<point, primary_iterator> tree_element;
 
   // The tree type used for the spatial index
-  typedef boost::geometry::index::rtree<tree_element, STRAT> tree;
+  typedef boost::geometry::index::rtree<tree_element, STRAT> tree_type;
 
   // Validate structure, currently size only
   void validate(char const* const msg) const {
@@ -155,6 +158,10 @@ template<typename ID, typename T, typename TR = spatial_index_traits<T>,
       tr.remove(std::make_pair(pt, const_iterator{it}));
       return map.erase(it);
     }
+  }
+
+  inline static bool true_predicate(value_type const&) {
+    return true;
   }
 
 #if 0
@@ -287,23 +294,29 @@ template<typename ID, typename T, typename TR = spatial_index_traits<T>,
   // Finds the points in the query box b and writes their positions in the
   // primary index to the output iterator oit.  I must be an iterator to
   // primary_iterator, e.g. std::back_inserter<std::vector<primary_iterator> >
-  // Optionally, max_results limits the number of query results.
+  // Optionally, max_results limits the number of query results
+  // and pred restricts the result set to values fulfilling
+  // the predicate.
+  // TODO: Could use boost::geometry::index::satisfies() somehow.
   template<typename I>
   void query(box const& b, I oit, 
-             long const max_results = std::numeric_limits<long>::max()) const {
+             long const max_results = std::numeric_limits<long>::max(),
+             value_predicate const& pred = true_predicate) const {
     validate("before query");
     long n_results = 0;
 
     // The query result iterates over tree elements from which we extract
     // the back references to the primary index.
     auto it = boost::geometry::index::qbegin( 
-        tr, boost::geometry::index::within(b));
+        tr,   boost::geometry::index::within(b));
     auto const end = boost::geometry::index::qend(tr);
     while (it != end && n_results < max_results) {
-      *oit = it->second;
+      if (pred(it->second->second)) {
+        *oit = it->second;
+        ++oit;
+        ++n_results;
+      }
       ++it;
-      ++oit;
-      ++n_results;
     }
   }
 
@@ -327,7 +340,7 @@ private:
     tr.insert(std::make_pair(pt, it));
   }
 
-  tree   tr ;
+  tree_type tr;
   id_map map;
 };
 

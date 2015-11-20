@@ -414,13 +414,12 @@ struct aprs_parser {
 //
 // Example format:
 // ICA3D28CB>APRS,qAS,EDMC:/175426h4829.84N/01014.30E'353/122/A=002467 id053D28CB -078fpm +0.4rot 6.0dB 0e +2.3kHz gps2x2
-// TODO: Not yet parsed are:
-// - Error count (0e, 1e etc.)
-// - gps2x2 (what is this?)
-// If UTC is given and >= 0, it must represent the UTC seconds since
-// 00:00 January 1, 1970.  In this case, the current date is added to
-// the time given in the APRS packet.  Otherwise, the time field
-// in acft will be set only based on the HHMMSS from the APRS packet.
+//
+// If utc is given and >= 0, it must represent the UTC seconds since
+// 00:00 January 1, 1970.  In this case, the date implied in utc
+// is attached to the (time-only) HHMMSS field from the APRS packet
+// to compute acft.second.pta.time.  If utc < 0, the date in
+// acft.second.pta.time will be January 1st, 1970.  
 bool parse_aprs_aircraft(
     std::string const& line, 
     aircraft_rx_info_and_name& acft,

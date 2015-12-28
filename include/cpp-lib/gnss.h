@@ -293,6 +293,11 @@ std::vector<lat_lon_alt> coordinates_from_kml(
     std::string const& filename,
     std::string const& tag);
 
+// Reads lon,lat,alt pairs (CAUTION: lon and lat swapped as customary 
+// in KML) and returns coordinates.
+std::vector<lat_lon_alt> coordinates_from_lon_lat_alt(
+    std::istream& iss);
+
 ////////////////////////////////////////////////////////////////////////
 // A simple geoid model
 ////////////////////////////////////////////////////////////////////////

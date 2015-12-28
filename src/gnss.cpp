@@ -297,13 +297,8 @@ double cpl::gnss::potential_altitude(
   return alt + v2 / (2 * cpl::units::gravitation());
 }
 
-std::vector<cpl::gnss::lat_lon_alt> cpl::gnss::coordinates_from_kml(
-    std::string const& filename,
-    std::string const& tag) {
-  boost::property_tree::ptree pt;
-  boost::property_tree::read_xml(filename, pt);
-
-  std::istringstream iss{pt.get<std::string>(tag)};
+std::vector<cpl::gnss::lat_lon_alt> cpl::gnss::coordinates_from_lon_lat_alt(
+    std::istream& iss) {
   std::vector<cpl::gnss::lat_lon_alt> ret;
   char c1, c2;
   double lat, lon, alt;
@@ -312,11 +307,21 @@ std::vector<cpl::gnss::lat_lon_alt> cpl::gnss::coordinates_from_kml(
   while (iss >> lon >> c1 >> lat >> c2 >> alt) {
     if (c1 != ',' || c2 != ',') {
       throw 
-        std::runtime_error("failure reading KML coordinates from " + filename);
+        std::runtime_error("syntax error reading KML coordinates");
     }
     ret.push_back(cpl::gnss::lat_lon_alt{lat, lon, alt});
   }
   return ret;
+}
+
+std::vector<cpl::gnss::lat_lon_alt> cpl::gnss::coordinates_from_kml(
+    std::string const& filename,
+    std::string const& tag) {
+  boost::property_tree::ptree pt;
+  boost::property_tree::read_xml(filename, pt);
+  std::istringstream iss{pt.get<std::string>(tag)};
+
+  return cpl::gnss::coordinates_from_lon_lat_alt(iss);
 }
 
 ////////////////////////////////////////////////////////////////////////

@@ -37,6 +37,10 @@ bool blank( std::string const& s ) {
 
 }
 
+std::string default_user_agent() {
+  return "CPL/0.9.1 httpclient/0.9.1 (EXPERIMENTAL)";
+}
+
 
 void wget1( 
   std::ostream& log       ,
@@ -46,7 +50,7 @@ void wget1(
   std::string const& host ,
   std::string const& port = "80" ,
   std::string const& from = "ano@nymous.com" ,
-  std::string const& user_agent = "KISS/2015 httpclient/0.83"
+  std::string const& user_agent = default_user_agent()
 ) {
   
   connection c( host , port ) ;

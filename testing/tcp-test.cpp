@@ -22,15 +22,20 @@
 #include <stdexcept>
 #include <algorithm>
 #include <memory>
+#include <random>
 #include <thread>
 
 #include <cassert>
 
+#include "cpp-lib/gnss.h"
 #include "cpp-lib/http.h"
+#include "cpp-lib/map.h"
+#include "cpp-lib/registry.h"
+#include "cpp-lib/util.h"
 #include "cpp-lib/sys/network.h"
 #include "cpp-lib/sys/server.h"
 #include "cpp-lib/sys/syslogger.h"
-#include "cpp-lib/util.h"
+#include "cpp-lib/sys/util.h"
 
 
 // Daytime server, note that these may be replaced by UDP sometime soon,
@@ -39,6 +44,7 @@ std::string const DAYTIME_SERVER = "time.nist.gov" ;
 std::string const DAYTIME_PORT   = "daytime"       ;
 
 using namespace cpl::util::network ;
+using namespace cpl::util::log ;
 
 
 void usage( std::string const& name ) {
@@ -57,6 +63,7 @@ void usage( std::string const& name ) {
 "                     to stdout as soon as it appears.\n"
 "wget     URL:        Request URL using HTTP/1.0 and dump the content\n"
 "                     (including HTTP headers!) to stdout.\n"
+"tiles    config:     Download map tiles as per config.\n"
   ;
 
 }
@@ -232,6 +239,59 @@ void telnet(
   receiver_thread.join() ;
 }
 
+void tiles(std::ostream& sl, std::string const& config) {
+  cpl::util::registry const reg(config);
+
+  auto const tsp = cpl::map::tileset_parameters_from_registry(reg);
+  tsp.validate();
+  auto const    url_pattern = reg.check_string("url_pattern");
+  auto const local_pattern  = reg.check_string("local_pattern" );
+  auto const tmpfile        = reg.check_string("tmpfile" );
+  double const max_delay = reg.get_default("max_delay", 1.0);
+  cpl::util::verify_bounds(max_delay, "max_delay", 0.0, 1e9);
+
+  cpl::map::tile_mapper const tm(tsp);
+
+  std::minstd_rand rng;
+  std::uniform_real_distribution<> U(0.0, max_delay);
+
+  for (int zoom = tsp.maxzoom; zoom >= tsp.maxzoom; --zoom) {
+
+  auto const se_tile = tm.get_tile_coordinates(zoom, tsp.south_east);
+  auto const nw_tile = tm.get_tile_coordinates(zoom, tsp.north_west);
+
+  long const dx = se_tile.x - nw_tile.x;
+  long const dy = se_tile.y - nw_tile.y;
+  cpl::util::verify(dx >= 0, "assertion error");
+  cpl::util::verify(dy >= 0, "assertion error");
+
+  sl << prio::INFO << "Zoom level " << zoom 
+     << ": Downloading " << (dx + 1) * (dy + 1)
+     << " tile(s)" << std::endl;
+
+  cpl::util::sleep(3.0);
+
+  for (long y = nw_tile.y; y <= se_tile.y; ++y) {
+  for (long x = nw_tile.x; x <= se_tile.x; ++x) {
+    char url  [1000] = "";
+    char local[1000] = "";
+
+    std::sprintf(url  ,   url_pattern.c_str(), zoom, x, y);
+    std::sprintf(local, local_pattern.c_str(), zoom, x, y);
+
+    // TODO: Don't download files that already exist
+    auto localfile = cpl::util::file::open_write(
+        tsp.tile_directory + "/"
+        + local);
+
+    // Download and write file
+    cpl::http::wget(sl, localfile, url);
+    cpl::util::sleep(U(rng));
+  }}
+
+  }
+}
+
 int main( int argc , char const* const* const argv ) {
 
   try {
@@ -314,6 +374,12 @@ int main( int argc , char const* const* const argv ) {
 
     if( 3 != argc ) { usage( argv[ 0 ] ) ; return 1 ; }
     cpl::http::wget( std::cerr , std::cout , argv[ 2 ] ) ;
+
+  } else if( "tiles" == command ) { 
+    if( 3 != argc ) { usage( argv[ 0 ] ) ; return 1 ; }
+    cpl::util::log::syslogger sl;
+    sl.set_echo_stream(&std::cerr);
+    tiles( sl, argv[ 2 ] ) ;
 
   } else {
     

@@ -95,46 +95,6 @@ inline int default_tilesize() {
   return 256;
 }
 
-// Web Mercator coordinate transformations
-// TODO: Should be named tile_coordinate_mapper
-struct tile_mapper {
-  // Construct with given tile size, power of 2 between 256 and 2048
-  tile_mapper(int tilesize = default_tilesize());
-
-  // Returns: Global coordinates at given zoom level
-  // Zoom: 10 for thermal heat maps
-  global_coordinates get_global_coordinates(
-      int zoom, cpl::gnss::lat_lon const& ll) const;
-
-  // Gets tile coordinates for given global coordinates.
-  tile_coordinates get_tile_coordinates(
-      global_coordinates const& gc) const;
-
-  // Gets tile coordinates for given global coordinates.
-  tile_coordinates get_tile_coordinates(
-      int const zoom, cpl::gnss::lat_lon const& ll) const {
-    return get_tile_coordinates(get_global_coordinates(zoom, ll));
-  }
-
-  // Gets pixel coordinates for given global coordinates.  If already
-  // computed, supply the tile coordinates to improve performance.
-  pixel_coordinates get_pixel_coordinates(
-      global_coordinates const& gc, tile_coordinates const& tc) const;
-
-  full_coordinates get_full_coordinates(
-      int const zoom,
-      cpl::gnss::lat_lon const& ll) const {
-    auto const gc = get_global_coordinates(zoom, ll);
-    auto const tc = get_tile_coordinates(gc);
-    return full_coordinates{tc, get_pixel_coordinates(gc, tc)}; 
-  }
-
-  // Returns: tile size
-  int tilesize() const { return tilesize_; }
-
-private:
-  int tilesize_;
-};
 
 struct tileset_parameters {
 
@@ -191,6 +151,51 @@ tileset_parameters tileset_parameters_from_registry(
     cpl::util::registry const& reg,
     tileset_parameters const& defaults = tileset_parameters{});
 
+// Web Mercator coordinate transformations
+// TODO: Should be named tile_coordinate_mapper
+struct tile_mapper {
+  // Construct with given tile size, power of 2 between 256 and 2048
+  tile_mapper(int tilesize = default_tilesize());
+
+  tile_mapper(tileset_parameters const& params)
+  : tile_mapper(params.tilesize) {}
+
+  // Returns: Global coordinates at given zoom level
+  // Zoom: 10 for thermal heat maps
+  global_coordinates get_global_coordinates(
+      int zoom, cpl::gnss::lat_lon const& ll) const;
+
+  // Gets tile coordinates for given global coordinates.
+  tile_coordinates get_tile_coordinates(
+      global_coordinates const& gc) const;
+
+  // Gets tile coordinates for given global coordinates.
+  tile_coordinates get_tile_coordinates(
+      int const zoom, cpl::gnss::lat_lon const& ll) const {
+    return get_tile_coordinates(get_global_coordinates(zoom, ll));
+  }
+
+  // Gets pixel coordinates for given global coordinates.  If already
+  // computed, supply the tile coordinates to improve performance.
+  pixel_coordinates get_pixel_coordinates(
+      global_coordinates const& gc, tile_coordinates const& tc) const;
+
+  full_coordinates get_full_coordinates(
+      int const zoom,
+      cpl::gnss::lat_lon const& ll) const {
+    auto const gc = get_global_coordinates(zoom, ll);
+    auto const tc = get_tile_coordinates(gc);
+    return full_coordinates{tc, get_pixel_coordinates(gc, tc)}; 
+  }
+
+  // Returns: tile size
+  int tilesize() const { return tilesize_; }
+
+private:
+  int tilesize_;
+};
+
+typedef tile_mapper tile_coordinate_mapper;
 
 //
 // Supports:

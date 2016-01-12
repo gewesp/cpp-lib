@@ -22,6 +22,10 @@
 - Use more C++11/C++14 features as they become available, e.g.
   `<random>`
 
+- Make sure that floating point random numbers from std::random are 
+  deterministic *across platforms* (they're used a lot in tests!).  Better yet, 
+  make test outcomes independent of concrete random number sequence.
+
 - Refactor `convert()/check_...` etc. in registry.h.  Too much overloading
   is going on.  Name `T const& convert( any& )` `extract`.  Name the template
   `convert_template()`.

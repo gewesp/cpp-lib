@@ -8,7 +8,8 @@
 # use the wrong system includes, leading to absurd problems.
 #
 
-  BOOST_INCLUDES = -I$(HOME)/src/boost_1_58_0
+# BOOST_INCLUDES = -I$(HOME)/src/boost_1_58_0
+  BOOST_INCLUDES = -I$(HOME)/src/boost_1_60_0
   EIGEN_INCLUDES = -I/opt/local/include/eigen3 -I/usr/include/eigen3 -I/usr/local/include/eigen3
   PNGPP_INCLUDES = -I$(HOME)/src/png++-0.2.5 -I/usr/include/png++ -I/usr/local/include/png++
 

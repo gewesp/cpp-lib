@@ -165,15 +165,24 @@ for embedded applications.
 
 __Boost, png++ and Eigen are used in a header-only way.__
 
+- Installing dependencies on Ubuntu:
+  * `sudo apt-get install libeigen3-dev`
+  * `sudo apt-get install libpng++-dev`
+
 - Installing clang++ on Ubuntu (example: Version 3.6):
   * `sudo apt-get install clang-3.6`
   * `sudo apt-get install libc++-dev`
   * `sudo apt-get install libc++abi-dev`
 
+- Installing g++-5 on old Ubuntu versions (e.g. 14.04):
+  `sudo add-apt-repository ppa:ubuntu-toolchain-r/test`
+  `sudo apt-get update`
+  `sudo apt-get install g++-5`
+
 ### Tested versions
 
-- Boost: 1.58.0
-- libpng: 1.6.18 (`libpng-config --version`)
+- Boost: 1.58.0, 1.60.0 (`#include "boost/version.hpp"`)
+- libpng: 1.2.50, 1.6.18 (`libpng-config --version`)
 - png++: 0.2.5
 - Eigen: 3.2.5
 

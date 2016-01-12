@@ -255,7 +255,7 @@ void tiles(std::ostream& sl, std::string const& config) {
   std::minstd_rand rng;
   std::uniform_real_distribution<> U(0.0, max_delay);
 
-  for (int zoom = tsp.maxzoom; zoom >= tsp.maxzoom; --zoom) {
+  for (int zoom = tsp.maxzoom; zoom >= tsp.minzoom; --zoom) {
 
   auto const se_tile = tm.get_tile_coordinates(zoom, tsp.south_east);
   auto const nw_tile = tm.get_tile_coordinates(zoom, tsp.north_west);

@@ -279,10 +279,15 @@ void tiles(std::ostream& sl, std::string const& config) {
     std::sprintf(url  ,   url_pattern.c_str(), zoom, x, y);
     std::sprintf(local, local_pattern.c_str(), zoom, x, y);
 
-    // TODO: Don't download files that already exist
-    auto localfile = cpl::util::file::open_write(
-        tsp.tile_directory + "/"
-        + local);
+    std::string const filename = tsp.tile_directory + "/" + local;
+
+    if (cpl::util::file::exists(filename)) {
+      sl << prio::INFO << "File " << filename << " exists, skipping"
+         << std::endl;
+      continue;
+    }
+
+    auto localfile = cpl::util::file::open_write(filename);
 
     // Download and write file
     cpl::http::wget(sl, localfile, url);

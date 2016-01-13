@@ -45,6 +45,9 @@ void chdir( std::string const& ) ;
 // Gets current working directory (absolute path name).
 std::string getcwd() ;
 
+// Returns true if file exists and is readable
+bool exists( std::string const& ) ;
+
 // Links source to destination (hard link), throws in case of errors.
 // Destination must not exist.
 void link( std::string const& source , std::string const& destination ) ;

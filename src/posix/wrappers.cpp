@@ -66,6 +66,10 @@ std::string cpl::util::file::getcwd() {
   return buf;
 }
 
+bool cpl::util::file::exists( std::string const& name ) {
+  return 0 == ::access(name.c_str(), R_OK | F_OK);
+}
+
 void cpl::util::file::link(
     std::string const& src, std::string const& dest) {
   int const res = ::link(src.c_str(), dest.c_str());

@@ -38,8 +38,15 @@ namespace cpl {
 
 namespace gnss {
 
-// A lat/lon based point query structure for nearest-point queries
-// Internally uses a 3D ECEF based tree
+//
+// A lat/lon based query structure for nearest-point queries.
+//
+// Internally, it uses a 3D ECEF (Earth-centered, Earth fixed coordinate
+// system) based tree.
+//
+// The first template argument is the type for values, lat/lon is
+// considered the key.
+//
 template <typename T,
          typename STRAT = boost::geometry::index::quadratic<4> >
 struct geodb {
@@ -55,23 +62,31 @@ struct geodb {
   // The tree type used for the spatial index
   typedef boost::geometry::index::rtree<tree_element, strategy> tree_type;
 
+  // Creates a database with a given name and radius (default to Earth).
+  // The DB name should reflect the contents or purpose of the DB.
   geodb(std::string const& name = "(unnamed)",
         double const& R = cpl::units::earth_radius())
   : dbname_(name),
     radius_(R)
   {}
 
+  // Returns planet radius [m]
   double radius() const { return radius_; }
+
+  // Returns database name
   double name  () const { return dbname_; }
 
+  // Returns number of stored DB elements
   long size() const { return tr.size(); }
 
   // Adds a the given element
-  // CAUTION: This *does* take altitude into account.  If this is not
-  // wanted, just set all altitudes to zero.
+  // CAUTION: Being ECEF-based, the DB *does* take altitude into account.
+  // If this is not required or wanted, just set all altitudes to zero
+  // (including queries).
   void add_element(cpl::gnss::lat_lon_alt const&, value_type const&);
 
-  // Finds closest element to lla, returns associated value
+  // Finds max_results nearest element(s) to lla and returns the associated 
+  // value(s) together with the respective 3D distance.
   value_and_distance_vector nearest(
       cpl::gnss::lat_lon_alt const& lla, 
       int max_results = 1) const;

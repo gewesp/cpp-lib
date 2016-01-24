@@ -45,7 +45,8 @@ or not ready for production.
 ### GNSS
 
 - Latitude/Longitude/Altitude data structure and related functions.
-- Conversion between WGS84 and MSL altitudes (Earth Geoid Model).
+- Undulation conversion between WGS84 and MSL altitudes (Earth Geoid Model,
+  function `geoid_height()`).
 - A geographic database with spatial search and openAIP input
   (suitable for airport reference points).
 

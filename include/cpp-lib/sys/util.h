@@ -160,7 +160,7 @@ struct watched_registry : registry {
 
   bool read_if_modified() {
 
-    if ( !w.get() ) {
+    if ( !has_config_file() ) {
       throw std::runtime_error( 
           "watched_registry: No file to watch or I/O error" );
     }
@@ -176,7 +176,11 @@ struct watched_registry : registry {
 
   }
 
-  bool active() const { return w.get(); }
+  // Deprecated: Use has_config_file() instead
+  bool active() const { return has_config_file(); }
+
+  // Was the object initialized with a config file to watch?
+  bool has_config_file() const { return w.get(); }
 
 private:
 

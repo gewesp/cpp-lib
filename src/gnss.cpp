@@ -217,6 +217,22 @@ void cpl::gnss::validate_lat_lon(lat_lon const& ll) {
   }
 }
 
+void cpl::gnss::validate_lat_lon_bounding_box(lat_lon_bounding_box const& bb) {
+  validate_lat_lon(bb.north_west);
+  validate_lat_lon(bb.south_east);
+  cpl::util::verify(   bb.north_west.lat > bb.south_east.lat
+                    && bb.north_west.lon < bb.south_east.lon,
+                    "NW corner of tileset must be north/west of SE");
+}
+
+// TODO: Date line...
+bool cpl::gnss::inside(
+    cpl::gnss::lat_lon              const& ll,
+    cpl::gnss::lat_lon_bounding_box const& bb) {
+  return  bb.north_west.lat >= ll.lat && ll.lat >= bb.south_east.lat 
+       && bb.north_west.lon <= ll.lon && ll.lon <= bb.south_east.lon;
+}
+
 cpl::gnss::lat_lon_alt cpl::gnss::operator+(
     cpl::gnss::lat_lon_alt const& lla,
     cpl::matrix::vector_3_t const& delta_ned) {

@@ -63,6 +63,15 @@ struct lat_lon {
   double lon;
 };
 
+struct lat_lon_bounding_box {
+  lat_lon north_west;
+  lat_lon south_east;
+};
+
+// Returns true iff ll lies inside bb.
+// TODO: Date line...
+bool inside(lat_lon const& ll, lat_lon_bounding_box const& bb);
+
 struct motion {
   motion() : speed(0), course(0), vertical_speed(0) {}
 
@@ -154,6 +163,7 @@ struct fix : position_time, satinfo {
 // Validates lat/lon pair: [-90, 90] x [-180, 180]
 // Throws on errors.
 void validate_lat_lon(lat_lon const& ll);
+void validate_lat_lon_bounding_box(lat_lon_bounding_box const&);
 
 inline bool valid(position_time const& pt) {
   return pt.time > 0;

@@ -96,6 +96,7 @@ inline int default_tilesize() {
 }
 
 
+// TODO: Use gnss bounding box struct here
 struct tileset_parameters {
 
   tileset_parameters() {}

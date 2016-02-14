@@ -187,6 +187,9 @@ std::ostream& operator<<(std::ostream&, lat_lon const&);
 // Write data, format: lat lon alt
 std::ostream& operator<<(std::ostream&, lat_lon_alt const&);
 
+// Write data, format: north_west: lat lon; south_east: lat lon
+std::ostream& operator<<(std::ostream&, lat_lon_bounding_box const&);
+
 // Write data, format: position_time satinfo
 std::ostream& operator<<(std::ostream&, fix const&);
 

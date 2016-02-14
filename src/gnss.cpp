@@ -60,6 +60,14 @@ std::ostream& cpl::gnss::operator<<(
 }
 
 std::ostream& cpl::gnss::operator<<(
+    std::ostream& os, cpl::gnss::lat_lon_bounding_box const& bb) {
+  os << "north_west: "   << bb.north_west
+     << "; south_east: " << bb.south_east
+  ;
+  return os;
+}
+
+std::ostream& cpl::gnss::operator<<(
     std::ostream& os, cpl::gnss::position_time const& pt) {
   os.precision(10);
   os << pt.time << " "

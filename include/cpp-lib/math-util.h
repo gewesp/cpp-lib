@@ -653,6 +653,12 @@ struct modulo_exponential_moving_average {
   // T default_discrete_state() const
   // { return std::numeric_limits<T>::quiet_NaN(); }
 
+  // Provide a default constructor for good measure...
+  modulo_exponential_moving_average()
+  : C{T(1.0)},
+    M{T(1.0)}
+  {}
+
   modulo_exponential_moving_average(T const& C, T const& M, 
       InvalidStateFunction const& invalid = InvalidStateFunction{})
   : C{C},

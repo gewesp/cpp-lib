@@ -476,6 +476,8 @@ struct table {
 
   void check_index( index_type const& i ) const {
 
+    cpl::util::mark_unused( i ) ;
+
     for( int j = 0 ; j < dimension() ; ++j )
     { assert( i[ j ] < size()[ j ] ) ; }
 
@@ -485,6 +487,8 @@ struct table {
   // Check index so that we can still add 1 in each coordinate.
 
   void check_index_1( index_type const& i ) const {
+
+    cpl::util::mark_unused( i ) ;
 
     for( int j = 0 ; j < dimension() ; ++j )
     { assert( size()[ j ] >= 1 &&  i[ j ] < size()[ j ] - 1 ) ; }

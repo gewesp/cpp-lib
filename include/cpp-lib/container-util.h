@@ -67,7 +67,10 @@ template< typename T > struct rvector {
 
 private :
 
-  void check_index( size_type const i ) const { assert( i < v.size() ) ; }
+  void check_index( size_type const i ) const { 
+    cpl::util::mark_unused( i ) ;
+    assert( i < v.size() ) ; 
+  }
 
   std::vector< T > v ;
 

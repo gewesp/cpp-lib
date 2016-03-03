@@ -227,7 +227,7 @@ void test_crash_regression(std::ostream& os) {
 }
 
 // Index supports duplicate points, as long as the ID is different.
-void test_duplicates(std::ostream& os, my_index& idx) {
+void test_duplicates(my_index& idx) {
   cpl::gnss::position_time const pt1{1, 2, 0, 0};
   cpl::gnss::position_time const pt2{3, 4, 0, 0};
   id_type const id1 = 1;
@@ -262,10 +262,10 @@ int main() {
     { 
       std::cout << "Testing dupes" << std::endl;
       my_index idx;
-      test_duplicates(std::cout, idx);
-      test_duplicates(std::cout, idx);
-      test_duplicates(std::cout, idx);
-      test_duplicates(std::cout, idx);
+      test_duplicates(idx);
+      test_duplicates(idx);
+      test_duplicates(idx);
+      test_duplicates(idx);
     }
     test_crash_regression(std::cout);
     test_funky(std::cout);

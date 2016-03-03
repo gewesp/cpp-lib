@@ -59,7 +59,8 @@ void test_image1(int const size_x, int const size_y, std::string const& name) {
 }
 
 
-int main(int const argc, const char* const* const argv) {
+// int main(int const argc, const char* const* const argv) {
+int main() {
   try {
 
   test_image1(300, 200, "test1.png");

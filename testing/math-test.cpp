@@ -127,8 +127,8 @@ void test_modulo_exp_avg(std::ostream& os) {
 void test_wip_1(std::ostream& os, 
     cpl::math::weighted_inner_product<2> const& dot,
     double const x1, double const x2, double const y1, double const y2) {
-  std::cout << dot(cpl::matrix::column_vector(x1, x2),
-                   cpl::matrix::column_vector(y1, y2)) << std::endl;
+  os << dot(cpl::matrix::column_vector(x1, x2),
+            cpl::matrix::column_vector(y1, y2)) << std::endl;
 }
 
 void test_wip(std::ostream& os) {

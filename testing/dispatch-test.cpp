@@ -35,7 +35,8 @@ void test_dispatch() {
 } // anonymous namespace
 
 
-int main( int const argc , char const * const * const argv ) {
+// int main( int const argc , char const * const * const argv ) {
+int main() {
 
   try {
     test_dispatch();

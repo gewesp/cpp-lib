@@ -26,6 +26,7 @@
 
 #include <cassert>
 
+#include "cpp-lib/util.h"
 
 namespace cpl {
 
@@ -128,7 +129,10 @@ template< typename T , std::size_t max_size > struct capped_vector {
 
 private :
 
-  void check_index( size_type const i ) const { assert( i < size() ) ; }
+  void check_index( size_type const i ) const { 
+    cpl::util::mark_unused( i ) ;
+    assert( i < size() ) ;
+  }
 
   std::size_t size_ ;
 

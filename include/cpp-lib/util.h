@@ -284,6 +284,16 @@ struct uninitialized {} ;
 
 
 //
+// Marks a value as being unused in order to avoid compiler warnings.
+//
+
+template< typename T >
+void mark_unused( T const& t ) {
+  static_cast< void >( t ) ;
+}
+
+
+//
 // Pair operators
 //
 

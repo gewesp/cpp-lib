@@ -907,6 +907,8 @@ std::size_t remainder(
   o_it                                         x 
 ) {
 
+  cpl::util::mark_unused( end ) ;
+
   assert( 
     static_cast< unsigned long >( std::distance( y , end ) ) == t.dimension()
   ) ;
@@ -1192,6 +1194,7 @@ template< typename alg >
 typename alg::result_type const 
 cpl::math::interpolator< alg >::operator()
 ( argument_type const& y , argument_type const& end ) const {
+  cpl::util::mark_unused( end ) ;
 
   assert
   ( static_cast< unsigned long >( std::distance( y , end ) ) == x.size() ) ;

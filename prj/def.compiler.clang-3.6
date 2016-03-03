@@ -4,8 +4,7 @@
 # sudo apt-get install clang-3.6
 #
 
-WARNINGS_IGNORE =                \
-  -Wno-unused-parameter -Wno-deprecated-register -Wno-ignored-qualifiers -Wno-unused-local-typedef
+WARNINGS_IGNORE =
 CXX      = clang++-3.6
 LANGFLAGS = -std=c++11 -stdlib=libc++
 CXXFLAGS = -Wall -Wextra $(WARNINGS_IGNORE)

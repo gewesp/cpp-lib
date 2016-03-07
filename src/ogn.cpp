@@ -349,7 +349,7 @@ bool cpl::ogn::parse_aprs_station(
       "%*[^A]"  // cse/spd, not parsed for stations that are normally, well,
                 // stationary
       "A=%lf "  // altitude [ft]
-      "%30s "   // Specials: CPU, RAM, vx.y.z, NTP, each up to 20 characters
+      "%30s "   // Specials: CPU, RAM, vx.y.z, NTP, each up to 30 characters
       "%30s "
       "%30s "
       "%30s "

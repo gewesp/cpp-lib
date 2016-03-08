@@ -22,6 +22,7 @@
 // - ftp://ftp.tapr.org/aprssig/aprsspec/spec/aprs101/APRS101.pdf
 // - http://www.aprs.org/APRS-docs/PROTOCOL.TXT
 // - http://www.aprs-dl.de/?APRS_Detailwissen:SSID%2BSymbole
+// - http://www.aprs-is.net/q.aspx (qAS, qAC, qAR, ...)
 // - http://wiki.glidernet.org/wiki:subscribe-to-ogn-data
 // - List of OGN clients: http://glidern1.glidernet.org:14501/
 //

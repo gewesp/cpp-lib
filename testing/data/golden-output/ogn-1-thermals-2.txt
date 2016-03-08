@@ -251,10 +251,15 @@ KEEPALIVE Regression: Tried to parse too many fields
 KEEPALIVE APRS + RELAY* --- no RX info
 KEEPALIVE Should fail --- relay but still has an error value
 # WARNING: Couldn't parse: OGNA4863D>APRS,RELAY*,qAS,EPLR:/101723h5113.10N/02223.56E'000/000/A=000794 !W15! id07A4863D +000fpm +0.0rot FL004.17 0e
-KEEPALIVE 0.2.5 packets
+KEEPALIVE 0.2.5: Status packets, recognizable by the GLIDERNx:>,
+KEEPALIVE as opposed to GLIDERNx:/
 # WARNING: Couldn't parse: LFNC>APRS,TCPIP*,qAC,GLIDERN1:>065238h v0.2.5.ARM CPU:0.1 RAM:1369.5/2121.3MB NTP:0.5ms/-4.2ppm +29.0C RF:+68+1.0ppm/+0.72dB/+11.7dB@10km[4615]
 # WARNING: Couldn't parse: Voiron>APRS,TCPIP*,qAC,GLIDERN2:>065318h v0.2.5.RPI-GPU CPU:1.1 RAM:170.6/458.6MB NTP:0.6ms/-10.3ppm +29.3C RF:+61-1.0ppm/+2.07dB/+17.1dB@10km[377]
 # WARNING: Couldn't parse: LFHV>APRS,TCPIP*,qAC,GLIDERN1:>065405h v0.2.5.RPI-GPU CPU:0.7 RAM:240.0/458.7MB NTP:0.9ms/-14.7ppm +25.6C RF:+55-0.0ppm/-0.06dB
+KEEPALIVE qAR examples---Fail (probably server bug)---they tend to run into
+KEEPALIVE preceding line...
+# WARNING: Couldn't parse: FLRDDAFFD>APRS,qAS,LFNZ:/1635FLRDDAFFE>APRS,qAR:/165040h4145.96N/00453.68E'000/000/A=000354 !W95! id06DDEFFA -019fpm +0.0rot 43.0dB 0e -4.2kHz gps3x4
+# WARNING: Couldn't parse: FLRDDA631>APRS,qAS,LFNZ:/160149h4345.65N/00454.31E'020/049/A=001286 !W6FLRDDEFFA>APRS,qAR:/161054h4345.72N/00452.49E'065/061/A=001522 !W65! id06DDEFFA -672fpm +1.4rot 14.2dB 0e -5.2kHz gps3x4
 (NOTICE) Static info for tileset: thermals
 (NOTICE) Tile directory: 
 (NOTICE) Northwest corner: 47.8 4.8

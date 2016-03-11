@@ -269,7 +269,7 @@ void cpl::ogn::login(
 
 }
 
-cpl::ogn::aprs_parser::~aprs_parser() {
+cpl::ogn::ddb_handler::~ddb_handler() {
   if (query_thread_active) {
     cpl::util::log::syslogger log;
     // TODO: Proper synchronization
@@ -281,7 +281,7 @@ cpl::ogn::aprs_parser::~aprs_parser() {
   }
 }
 
-void cpl::ogn::aprs_parser::set_vdb(cpl::ogn::vehicle_db&& new_vdb) {
+void cpl::ogn::ddb_handler::set_vdb(cpl::ogn::vehicle_db&& new_vdb) {
   if (new_vdb.size() > 0) {
     std::lock_guard<std::mutex> vdb_lock(vdb_mutex);
     vdb = std::move(new_vdb);
@@ -289,7 +289,7 @@ void cpl::ogn::aprs_parser::set_vdb(cpl::ogn::vehicle_db&& new_vdb) {
   }
 }
 
-void cpl::ogn::aprs_parser::query_thread_function() {
+void cpl::ogn::ddb_handler::query_thread_function() {
   cpl::util::log::syslogger log;
   log << cpl::util::log::prio::NOTICE
       << "OGN: DDB query thread started, interval: "
@@ -304,7 +304,7 @@ void cpl::ogn::aprs_parser::query_thread_function() {
   }
 }
 
-cpl::ogn::aprs_parser::aprs_parser(
+cpl::ogn::ddb_handler::ddb_handler(
     std::ostream& log,
     double const query_interval,
     std::string const& initial_vdb)
@@ -325,9 +325,19 @@ cpl::ogn::aprs_parser::aprs_parser(
   }
 
   if (query_thread_active) {
-    query_thread = std::thread{&aprs_parser::query_thread_function, this};
+    query_thread = std::thread{&ddb_handler::query_thread_function, this};
   }
 }
+
+namespace {
+
+
+
+
+
+
+} // end anonymous namespace
+
 
 bool cpl::ogn::parse_aprs_station(
     const std::string& line, 
@@ -574,7 +584,7 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
 
   // qAR / qAS: See 'q Construct', http://www.aprs-is.net/q.aspx
   // It's either qAS,<relay> or qAR for directly received packets
-  // OGN doesn't use qAR (?)
+  // OGN only uses qAS, no qAR for stations (?)
   const char* const format = 
       "%40[^>]"
       ">APRS%8[RELAY*,]qAS,"
@@ -790,15 +800,22 @@ postprocess:
   // Pawel June 22, 2015: Standard turn 180deg/min == 3deg/sec.
   acft.second.mot.turnrate = 3 * turn_rate_rot;
 
+  apply(acft);
+
+  return true;
+}
+
+void cpl::ogn::ddb_handler::apply(
+    cpl::ogn::aircraft_rx_info_and_name& acft) {
+
+  std::lock_guard<std::mutex> lock(vdb_mutex);
   if (has_nontrivial_vdb) {
-    std::lock_guard<std::mutex> lock(vdb_mutex);
     auto const it = vdb.find(unqualified_id(acft.first));
     if (vdb.end() != it) {
       acft.second.data = it->second;
     }
   }
 
-  return true;
 }
 
 // DDB functions

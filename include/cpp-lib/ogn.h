@@ -407,7 +407,7 @@ vehicle_db get_vehicle_database_ddb(
     std::ostream& log,
     std::string const& url = default_ddb_url());
 
-struct aprs_parser {
+struct ddb_handler {
 
 // Parses an APRS line containing aircraft info and stores data in acft,
 // converting units as appropriate.
@@ -432,7 +432,7 @@ bool parse_aprs_aircraft(
   // callsigns, tracking flags etc.
   // If initial_vdb is given and nonempty, reads a vehicle DB from
   // the given file/URL on startup.
-  aprs_parser(std::ostream& log,
+  ddb_handler(std::ostream& log,
               double query_interval = default_ddb_query_interval(),
               std::string const& initial_vdb = "");
 
@@ -440,7 +440,11 @@ bool parse_aprs_aircraft(
   void set_vdb(cpl::ogn::vehicle_db&& new_db);
 
   // Join thread...
-  ~aprs_parser();
+  ~ddb_handler();
+
+  // If we have a DDB, apply it to the given aircraft record,
+  // i.e. set its callsign from the ID.
+  void apply(aircraft_rx_info_and_name&);
 
 private:
   double query_interval;
@@ -453,6 +457,9 @@ private:
 
   void query_thread_function();
 };
+
+// For compatibility with earlier API version
+using aprs_parser = ddb_handler;
   
 // Parses an APRS line containing receiver station info 
 // and stores data in stat.
@@ -461,7 +468,7 @@ private:
 // Example format:
 // LFLO>APRS,TCPIP*,qAC,GLIDERN2:/175435h4603.32NI00359.99E&/A=001020 CPU:0.6 RAM:340.6/492.2MB NTP:0.6ms/-30.5ppm +67.0C RF:+46-1.2ppm/+0.3dB
 // See parse_aprs_aircraft() for the utc parameter.
-// TODO: Only station name, position and time are currently parsed.
+// TODO: Only station name, position, time and NTP are currently parsed.
 bool parse_aprs_station(
     std::string const& line, 
     station_info_and_name& stat,

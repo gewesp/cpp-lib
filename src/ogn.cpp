@@ -574,6 +574,7 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
 
   // qAR / qAS: See 'q Construct', http://www.aprs-is.net/q.aspx
   // It's either qAS,<relay> or qAR for directly received packets
+  // OGN doesn't use qAR (?)
   const char* const format = 
       "%40[^>]"
       ">APRS%8[RELAY*,]qAS,"

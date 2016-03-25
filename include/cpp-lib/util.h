@@ -1315,21 +1315,36 @@ private:
 // Some simple thread-safe structures
 ////////////////////////////////////////////////////////////////////////
 
+//
+// A thread-safe queue that can have multiple writers and multiple
+// readers.
+//
 // Heavily modified, based on a reply from
 // http://stackoverflow.com/questions/15278343/c11-thread-safe-queue
+// See also:
+// http://en.cppreference.com/w/cpp/thread/condition_variable
+//
+
 template <class T> struct safe_queue {
   void push(T&& t) {
-    std::lock_guard<std::mutex> lock{m};
-    q.push(t);
+    {
+      std::lock_guard<std::mutex> lock{m};
+      q.push(std::move(t));
+    }
+    // "(the lock does not need to be held for notification)"
     c.notify_one();
   }
 
   T pop_front() {
     std::unique_lock<std::mutex> lock{m};
+
+    // If q.empty(), this was a spurious wakeup
+    // http://en.cppreference.com/w/cpp/thread/condition_variable/wait
     while (q.empty()) {
       c.wait(lock);
     }
 
+    // lock is re-acquired after waiting, so we're good to go
     T const t = q.front();
     q.pop();
     return t;

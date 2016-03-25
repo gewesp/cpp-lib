@@ -35,6 +35,7 @@
 #include <ostream>
 #include <sstream>
 #include <string>
+#include <type_traits>
 #include <queue>
 #include <vector>
 
@@ -879,6 +880,42 @@ write_list(
   }
 }
 
+//
+// Writes a JSON style key-value pair
+//
+// Usage:
+// std::cout << cpl::util::json("foo", 123);
+// -> "foo": 123
+// std::cout << cpl::util::json("hello", "world");
+// -> "hello": "world"
+//
+
+template <typename T> struct json_wrapper {
+  std::string const& key;
+  T           const& value;
+  json_wrapper(std::string const& k, T const& v)
+  : key(k), value(v) {}
+};
+
+template<typename T>
+inline json_wrapper<T> json(std::string const& key, T const& value) {
+  return json_wrapper<T>(key, value);
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, json_wrapper<T> const& j) {
+  os << '"' << j.key << "\": ";
+  if (   std::is_same<T, std::string>::value
+      || std::is_same<T, const char*>::value) {
+    os << '"';
+  }
+  os << j.value;
+  if (   std::is_same<T, std::string>::value 
+      || std::is_same<T, const char*>::value) {
+    os << '"';
+  }
+  return os;
+}
 
 //
 // Read characters from is until either is goes bad or the given

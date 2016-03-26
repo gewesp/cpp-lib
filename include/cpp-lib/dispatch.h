@@ -18,8 +18,36 @@
 // C++11 implementation of the part of Grand Central Dispatch that's
 // well-defined and useful.
 //
-// References
-// [1] man dispatch
+// Usage:
+// * For synchronising access to a contended resource, use a queue with
+//   one worker thread:
+// 
+//   resource res;
+//   dispatch_queue serializer(1);
+//   void process() {
+//     while (auto x = get_input()) { 
+//       serializer.push([x, &res] { res.process_input(x); });
+//     }
+//   }
+//   
+//   std::thread t1( process );
+//   std::thread t2( process );
+//   // Calls to res.process_input() are serialised in q's worker thread
+//
+// * For distributing independent tasks to worker n threads, e.g. download
+//   files in parallel:
+//
+//   void download_files(std::vector<std::string> const& files,
+//                       const int n_threads) {
+//     dispatch_queue pool(n_threads);
+//     for (auto const& f : files) {
+//       pool.dispatch([f] { download(f); });
+//     }
+//     // dispatch_queue destructor waits for all downloads to finish
+//   }
+//
+// Notes:
+// * Carefully consider call by reference/value in capture lists!
 //
 
 
@@ -39,20 +67,30 @@ namespace dispatch {
 typedef std::function<void()> task;
 
 struct dispatch_queue {
-  // Creates a dispatch_queue with its own dispatch thread to
-  // execute tasks.
-  dispatch_queue();
+  // Creates a dispatch_queue (thread pool).  Creates and starts n threads
+  // to asynchronously execute tasks added by dispatch().
+  // TODO: Allow to specify maximum number of waiting tasks before dispatch()
+  // blocks?
+  explicit dispatch_queue(int n = 1);
 
   // Causes the dispatching thread to exit after all queued tasks have
   // been executed.
   ~dispatch_queue();
 
-  // Adds a new task for execution, FIFO order.
-  void dispatch_sync(task&& t);
+  // Deprecated synonym for dispatch()!  The function is not synchronous,
+  // it will return immediately.
+  void dispatch_sync(task&& t) { dispatch(std::move(t)); }
+
+  // Adds a new task for execution execution by the next available thread.
+  // FIFO order is guaranteed if num_workers() == 1. Currently, dispatch()
+  // never blocks, but see the for the constructor.
+  void dispatch(task&& t);
 
   // Noncopyable
   dispatch_queue           (dispatch_queue const&) = delete;
   dispatch_queue& operator=(dispatch_queue const&) = delete;
+
+  int num_workers() const { return workers.size(); }
 
 private:
   // Second argument: Whether another task will follow this one.
@@ -62,7 +100,7 @@ private:
   void thread_function();
 
   cpl::util::safe_queue<task_and_continue> tasks;
-  std::thread th;
+  std::vector<std::thread> workers;
 };
 
 } // namespace dispatch

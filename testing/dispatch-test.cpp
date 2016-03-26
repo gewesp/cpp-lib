@@ -28,7 +28,7 @@ void test_dispatch() {
   cpl::dispatch::dispatch_queue disq;
 
   for (int i = 0; i < 50; ++i) {
-    disq.dispatch_sync([i]{ std::cout << i << std::endl; });
+    disq.dispatch([i]{ std::cout << i << std::endl; });
   }
 }
 

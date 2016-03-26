@@ -19,18 +19,31 @@
 
 // Make sure that tasks is initialized before the thread is
 // started!
-cpl::dispatch::dispatch_queue::dispatch_queue() 
-  : tasks{},
-    th{&dispatch_queue::thread_function, this}
-{}
-
-cpl::dispatch::dispatch_queue::~dispatch_queue() {
-  // Signal 'EOF'
-  tasks.push(task_and_continue{[]{}, false});
-  th.join();
+// Initialize thread pool
+cpl::dispatch::dispatch_queue::dispatch_queue(int const n_threads)
+  : tasks{} {
+  cpl::util::verify(n_threads >= 1, 
+      "thread pool: must have at least one worker thread");
+  workers.reserve(n_threads);
+  for (int i = 0; i < n_threads; ++i) {
+    workers.push_back(std::thread(&dispatch_queue::thread_function, this));
+  }
 }
 
-void cpl::dispatch::dispatch_queue::dispatch_sync(cpl::dispatch::task&& t) {
+// TODO: allow detaching?
+cpl::dispatch::dispatch_queue::~dispatch_queue() {
+  // Signal 'EOF' to all workers---one thread will pop
+  // only one task wiht continue set to false
+  for (int i = 0; i < num_workers(); ++i) {
+    tasks.push(task_and_continue{[]{}, false});
+  }
+  // Join all workers
+  for (int i = 0; i < num_workers(); ++i) {
+    workers[i].join();
+  }
+}
+
+void cpl::dispatch::dispatch_queue::dispatch(cpl::dispatch::task&& t) {
   tasks.push(task_and_continue{std::move(t), true});
 }
 

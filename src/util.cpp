@@ -237,7 +237,7 @@ std::string cpl::util::format_time_hh_mm(double const& dt,
 
   char ret[30];
   if (h < 0.1 && skip_hour) {
-    sprintf(ret, "%.02f", m);
+    sprintf(ret, "%02.0lf", m);
   } else {
     sprintf(ret, "%.0lf:%02.0lf", h, m);
   }
@@ -254,7 +254,7 @@ std::string cpl::util::format_time_hh_mmt(double const& dt,
   double const m = (dt - h * cpl::units::hour()) / cpl::units::minute();
 
   char ret[30];
-  if (h < .1 && skip_hour) {
+  if (h < 0.1 && skip_hour) {
     sprintf(ret, "%04.1lf", m);
   } else {
     sprintf(ret, "%.0lf:%04.1lf", h, m);

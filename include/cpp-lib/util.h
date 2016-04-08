@@ -101,6 +101,10 @@ inline const char* time_format_hh_mm() {
   return "%H:%M";
 }
 
+inline const char* time_format_hh_mm_ss() {
+  return "%H:%M:%S";
+}
+
 //
 // Returns a textual representation of the UTC date/time given in t
 // ([s] since January 1, 1970).  The format is as for strftime(3).

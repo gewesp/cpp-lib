@@ -385,15 +385,18 @@ void test_datetime() {
 
 template<typename F>
 void test_format_time(F const& f, std::ostream& os) {
-  os << f(0)       << std::endl;
-  os << f(10.1)    << std::endl;
-  os << f(6)       << std::endl;
-  os << f(60)      << std::endl;
-  os << f(4711)    << std::endl;
+  os << f(0, true)       << std::endl;
+  os << f(10.1, true)    << std::endl;
+  os << f(6, true)       << std::endl;
+  os << f(60, true)      << std::endl;
+  os << f(4711, true)    << std::endl;
 
-  os << f(123.34)  << std::endl;
-  os << f(3 * 3600 + 1234) << std::endl;
-  os << f(11 * 3600 + 353) << std::endl;
+  os << f(123.34, true)  << std::endl;
+  os << f(3 * 3600 + 1234, true) << std::endl;
+  os << f(11 * 3600 + 353, true) << std::endl;
+
+  os << f(23  , false) << std::endl;
+  os << f(7.1 , false) << std::endl;
 }
 
 

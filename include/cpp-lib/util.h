@@ -141,11 +141,13 @@ inline std::string format_time( double const t )
 
 //
 // Formats dt [s] as [H:]MM[.t] (hours, minutes and
-// tenths of minutes (for the second variant))
+// tenths of minutes (second variant))
+//
+// If skip_hour is set, only print minutes if dt < 60.
 //
 
-std::string format_time_hh_mmt( double const& dt ) ;
-std::string format_time_hh_mm ( double const& dt ) ;
+std::string format_time_hh_mmt( double const& dt , bool skip_hour = true) ;
+std::string format_time_hh_mm ( double const& dt , bool skip_hour = true) ;
 
 //
 // Same as the above, but no 'Z' at the end (it's still UTC)

@@ -228,15 +228,16 @@ std::string cpl::util::format_datetime(
   return ret;
 }
 
-std::string cpl::util::format_time_hh_mm(double const& dt) {
+std::string cpl::util::format_time_hh_mm(double const& dt,
+                                         bool const skip_hour) {
   assert( dt >= 0 ) ;
 
   double const h = std::floor(dt / cpl::units::hour());
   double const m = (dt - h * cpl::units::hour()) / cpl::units::minute();
 
   char ret[30];
-  if (h < .1) {
-    sprintf(ret, "%.0lf", m);
+  if (h < 0.1 && skip_hour) {
+    sprintf(ret, "%.02f", m);
   } else {
     sprintf(ret, "%.0lf:%02.0lf", h, m);
   }
@@ -244,14 +245,16 @@ std::string cpl::util::format_time_hh_mm(double const& dt) {
 }
 
 
-std::string cpl::util::format_time_hh_mmt(double const& dt) {
+std::string cpl::util::format_time_hh_mmt(double const& dt,
+                                          bool const skip_hour) {
+    
   assert( dt >= 0 ) ;
 
   double const h = std::floor(dt / cpl::units::hour());
   double const m = (dt - h * cpl::units::hour()) / cpl::units::minute();
 
   char ret[30];
-  if (h < .1) {
+  if (h < .1 && skip_hour) {
     sprintf(ret, "%04.1lf", m);
   } else {
     sprintf(ret, "%.0lf:%04.1lf", h, m);

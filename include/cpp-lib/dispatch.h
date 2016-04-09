@@ -23,7 +23,7 @@
 //   one worker thread:
 // 
 //   resource res;
-//   dispatch_queue serializer(1);
+//   thread_pool serializer(1);
 //   void process() {
 //     while (auto x = get_input()) { 
 //       serializer.push([x, &res] { res.process_input(x); });
@@ -39,11 +39,11 @@
 //
 //   void download_files(std::vector<std::string> const& files,
 //                       const int n_threads) {
-//     dispatch_queue pool(n_threads);
+//     thread_pool pool(n_threads);
 //     for (auto const& f : files) {
 //       pool.dispatch([f] { download(f); });
 //     }
-//     // dispatch_queue destructor waits for all downloads to finish
+//     // thread_pool destructor waits for all downloads to finish
 //   }
 //
 // Notes:
@@ -66,16 +66,16 @@ namespace dispatch {
 
 typedef std::function<void()> task;
 
-struct dispatch_queue {
-  // Creates a dispatch_queue (thread pool).  Creates and starts n threads
-  // to asynchronously execute tasks added by dispatch().
+struct thread_pool {
+  // Creates and starts n threads to asynchronously execute tasks added 
+  // by dispatch().
   // TODO: Allow to specify maximum number of waiting tasks before dispatch()
   // blocks?
-  explicit dispatch_queue(int n = 1);
+  explicit thread_pool(int n = 1);
 
   // Causes the dispatching thread to exit after all queued tasks have
   // been executed.
-  ~dispatch_queue();
+  ~thread_pool();
 
   // Deprecated synonym for dispatch()!  The function is not synchronous,
   // it will return immediately.
@@ -87,8 +87,8 @@ struct dispatch_queue {
   void dispatch(task&& t);
 
   // Noncopyable
-  dispatch_queue           (dispatch_queue const&) = delete;
-  dispatch_queue& operator=(dispatch_queue const&) = delete;
+  thread_pool           (thread_pool const&) = delete;
+  thread_pool& operator=(thread_pool const&) = delete;
 
   int num_workers() const { return workers.size(); }
 
@@ -102,6 +102,9 @@ private:
   cpl::util::safe_queue<task_and_continue> tasks;
   std::vector<std::thread> workers;
 };
+
+// DEPRECATED:  Use thread_pool instead!
+using dispatch_queue = thread_pool;
 
 } // namespace dispatch
 

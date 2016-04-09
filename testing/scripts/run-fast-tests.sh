@@ -2,7 +2,6 @@
 
 . scripts/testenv.sh
 
-$BIN_DIR/dispatch-test                      > $GOLDEN_DIR/dispatch.txt
 $BIN_DIR/gnss-test unittest                 > $GOLDEN_DIR/gnss.txt
 $BIN_DIR/map-test                           > $GOLDEN_DIR/map.txt
 $BIN_DIR/math-test                          > $GOLDEN_DIR/math.txt

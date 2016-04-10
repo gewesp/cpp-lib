@@ -385,6 +385,8 @@ void test_datetime() {
 
 template<typename F>
 void test_format_time(F const& f, std::ostream& os) {
+  os << f(3600, true)       << std::endl;
+  os << f(3599.999, true)   << std::endl;
   os << f(0, true)       << std::endl;
   os << f(10.1, true)    << std::endl;
   os << f(6, true)       << std::endl;

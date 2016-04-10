@@ -232,8 +232,12 @@ std::string cpl::util::format_time_hh_mm(double const& dt,
                                          bool const skip_hour) {
   assert( dt >= 0 ) ;
 
-  double const h = std::floor(dt / cpl::units::hour());
-  double const m = (dt - h * cpl::units::hour()) / cpl::units::minute();
+  double h = std::floor(dt / cpl::units::hour());
+  double m = std::round((dt - h * cpl::units::hour()) / cpl::units::minute());
+  if (m >= 59.99) {
+    m = 0;
+    ++h;
+  }
 
   char ret[30];
   if (h < 0.1 && skip_hour) {
@@ -250,8 +254,14 @@ std::string cpl::util::format_time_hh_mmt(double const& dt,
     
   assert( dt >= 0 ) ;
 
-  double const h = std::floor(dt / cpl::units::hour());
-  double const m = (dt - h * cpl::units::hour()) / cpl::units::minute();
+  double h = std::floor(dt / cpl::units::hour());
+  // Round to nearest 10th of minute
+  double m = 0.1 * std::round(
+      10 * (dt - h * cpl::units::hour()) / cpl::units::minute());
+  if (m >= 59.99) {
+    m = 0;
+    ++h;
+  }
 
   char ret[30];
   if (h < 0.1 && skip_hour) {

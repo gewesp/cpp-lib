@@ -224,6 +224,11 @@ lat_lon_alt ecef_to_lla
 lat_lon_alt operator+(
     lat_lon_alt const& lla, cpl::matrix::vector_3_t const& delta_ned);
 
+inline lat_lon_alt const& operator+=(
+    lat_lon_alt& lla, cpl::matrix::vector_3_t const& delta_ned) {
+  return lla = lla + delta_ned;
+}
+
 // If |now - pt.time| <= max_predict_time, adds dt * v_ned to pt, updates
 // time and return result.  Otherwise, returns pt unmodified.
 position_time predict(

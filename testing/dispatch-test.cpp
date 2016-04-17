@@ -39,7 +39,7 @@ void test_dispatch() {
 void test_dispatch_n(std::ostream& os, int const w, int const n, int const m) {
   std::map<int, int> themap;
 
-  os << "Map incremente test: "
+  os << "Map increment test: "
      << w << " worker(s), "
      << n << " task(s), "
      << m << " element(s)"

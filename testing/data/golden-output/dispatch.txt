@@ -48,7 +48,7 @@
 47
 48
 49
-Map incremente test: 1 worker(s), 100 task(s), 10000 element(s)
-Map incremente test: 3 worker(s), 100 task(s), 10000 element(s)
-Map incremente test: 10 worker(s), 100 task(s), 10000 element(s)
-Map incremente test: 100 worker(s), 100 task(s), 10000 element(s)
+Map increment test: 1 worker(s), 100 task(s), 10000 element(s)
+Map increment test: 3 worker(s), 100 task(s), 10000 element(s)
+Map increment test: 10 worker(s), 100 task(s), 10000 element(s)
+Map increment test: 100 worker(s), 100 task(s), 10000 element(s)

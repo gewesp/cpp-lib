@@ -215,6 +215,17 @@ bool set_latlon_dao(char const* const dao,
   return true;
 }
 
+void test_hide_id(std::ostream& os, 
+                  std::string const& id,
+                  int const digits,
+                  char const repl) {
+  os << "hide_id(\"" << id << "\", " << digits << ", '" << repl << "'"
+     << ") = \""
+     << cpl::ogn::hide_id(id, digits, repl)
+     << '"'
+     << std::endl;
+}
+
 } // end anonymous namespace
 
 
@@ -488,6 +499,26 @@ std::string cpl::ogn::unqualified_id(std::string const& id) {
   } else {
     return id.substr(colon + 1, std::string::npos);
   }
+}
+
+std::string cpl::ogn::hide_id(
+    std::string const& id,
+    int const n,
+    char const replacement) {
+  assert(n >= 0);
+  auto ret = id;
+  auto const colon = id.find(':');
+  if (std::string::npos == colon) {
+    return id;
+  } else {
+    for (std::string::size_type i = 1; 
+         i <= static_cast<std::string::size_type>(n) && id.size() > colon + i;
+         ++i) {
+      // id.size() > id.size() - i > colon >= 0
+      ret[id.size() - i] = replacement;
+    }
+  }
+  return ret;
 }
 
 std::ostream& cpl::ogn::operator<<(
@@ -1122,4 +1153,13 @@ double lat1 = 1, lon1 = 2;
   double lat3 = 3, lon3 = 4;
   always_assert(set_latlon_dao("!w&(!", lat3, lon3));
   os << std::setprecision(8) << lat3 << ' ' << lon3 << std::endl;
+
+  test_hide_id(os, "flarm:DEAB23", 4  , 'X');
+  test_hide_id(os, "flarm:DEAB23", 0  , 'X');
+  test_hide_id(os, "flarm:DEAB23", 6  , 'X');
+  test_hide_id(os, "flarm:DEAB23", 100, 'X');
+  test_hide_id(os, "icao:"       , 100, 'X');
+  test_hide_id(os, "icao:"       , 0  , 'X');
+  test_hide_id(os, "flarm342"    , 0  , 'X');
+  test_hide_id(os, "flarm342"    , 3  , 'X');
 }

@@ -376,6 +376,11 @@ std::string qualified_id(std::string const& id, short id_type);
 // Returns <id> for flarm:<id>, etc.
 std::string unqualified_id(std::string const& id);
 
+// Replaces the last n digits of <id> by <replacement>.  
+// E.g., returns e.g. flarm:DF0000 if passed flarm:DF48A3.
+// n must be >= 0.
+std::string hide_id(std::string const& id, int n = 4, char replacement = '0');
+
 // Connects to the given OGN host and returns the connection.
 // Logs to log.
 std::unique_ptr<cpl::util::network::connection> connect(

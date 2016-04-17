@@ -2,3 +2,11 @@ OGN unit tests
 1.0000833 2.0000833
 -1.0000833 -2.0000833
 3.0000092 4.0000128
+hide_id("flarm:DEAB23", 4, 'X') = "flarm:DEXXXX"
+hide_id("flarm:DEAB23", 0, 'X') = "flarm:DEAB23"
+hide_id("flarm:DEAB23", 6, 'X') = "flarm:XXXXXX"
+hide_id("flarm:DEAB23", 100, 'X') = "flarm:XXXXXX"
+hide_id("icao:", 100, 'X') = "icao:"
+hide_id("icao:", 0, 'X') = "icao:"
+hide_id("flarm342", 0, 'X') = "flarm342"
+hide_id("flarm342", 3, 'X') = "flarm342"

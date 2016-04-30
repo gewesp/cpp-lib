@@ -64,6 +64,17 @@ cpl::cgi::parse_query(std::string const& s) {
   return ret;
 }
 
+std::map<std::string, std::string> 
+cpl::cgi::parse_query(std::istream& is) {
+  std::string keyvals;
+  is >> keyvals;
+  if (!is) {
+    throw std::runtime_error("CGI parse: istream read error");
+  } else {
+    return parse_query(keyvals);
+  }
+}
+
 std::string 
 cpl::cgi::uri_decode(
         std::string const& escaped, bool const throw_on_errors) {

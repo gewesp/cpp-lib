@@ -23,6 +23,7 @@
 
 #include "boost/lexical_cast.hpp"
 
+#include <iostream>
 #include <map>
 #include <string>
 #include <utility>
@@ -41,6 +42,10 @@ std::pair<std::string, std::string> parse_parameter(std::string const&);
 
 // Parse a sequence of "key1=value1&key2=value2..."
 std::map<std::string, std::string> parse_query(std::string const&);
+
+// Read a key/value sequence from is using operator>>() and call 
+// parse_query on the resulting std::string.
+std::map<std::string, std::string> parse_query(std::istream& is);
 
 // Given a map params, sets p to the value found in the map if present.
 // Doesn't touch p otherwise.

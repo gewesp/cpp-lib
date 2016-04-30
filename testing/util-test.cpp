@@ -472,7 +472,20 @@ void test_uri(std::ostream& os) {
   test_uri(os, "%3a%50");
 }
 
-void test_stringutils() {
+using sv = std::vector<std::string>;
+void test_split(std::ostream& os, std::string const& s, sv const& expected) {
+  sv actual;
+  cpl::util::split(actual, s);
+  if (actual != expected) {
+    os << "split failed: " << s << std::endl;
+    for (auto const& el : actual) {
+      os << '"' << el << '"' << std::endl;
+    }
+  }
+  cpl::util::verify(actual == expected, "Split failed: " + s);
+}
+
+void test_stringutils(std::ostream& os) {
   // tolower(), toupper()
   std::string h = "Hello World!";
   cpl::util::toupper(h);
@@ -485,6 +498,13 @@ void test_stringutils() {
   cpl::util::verify_alnum("abc1234+.", "+.,");
   cpl::util::verify_alnum("abc1234\"+.", "\"+.,");
   cpl::util::verify_alnum("abc1234\"+.", "\"+.,");
+
+  test_split(os, "", sv{""});
+  test_split(os, "1", sv{"1"});
+  test_split(os, "1,2", sv{"1", "2"});
+  test_split(os, "1, 2", sv{"1", " 2"});
+  test_split(os, ", 2", sv{"", " 2"});
+  test_split(os, ", ,", sv{"", " ", ""});
 
   verify_throws("invalid", cpl::util::verify_alnum, "adsf+", "");
   verify_throws("invalid", cpl::util::verify_alnum, "adsf+", "-");
@@ -528,7 +548,7 @@ int main() {
 
   test_cgi(std::cout);
 
-  test_stringutils();
+  test_stringutils(std::cout);
 
   test_utf8(std::cout);
 

@@ -24,6 +24,8 @@
 #include "cpp-lib/units.h"
 #include "cpp-lib/sys/file.h"
 
+#include "boost/algorithm/string.hpp"
+#include "boost/algorithm/string/split.hpp"
 #include "boost/multi_array.hpp"
 #include "boost/range/iterator_range.hpp"
 
@@ -353,6 +355,20 @@ struct pair_access_first : std::unary_function< std::pair< T1 , T2 >& , T1& > {
 //
 
 std::istream& getline(std::istream&, std::string& s, long maxsize);
+
+//
+// Splits s on separator and inserts it into the given sequence.
+//
+// Usage e.g.:
+//   std::vector< std::string > strs;
+//   cpl::util::split("x,y,2", strs);
+// Result: a vector containing "x", "y" and "2".
+//
+
+template< typename Sequence > void split( 
+    Sequence& seq , std::string const& s , char const* const separators = "," ) {
+  boost::algorithm::split(seq, s, boost::algorithm::is_any_of(separators));
+}
 
 
 //

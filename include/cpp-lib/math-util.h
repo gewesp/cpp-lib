@@ -176,6 +176,13 @@ inline double angle_mpi_pi( double const& a ) {
 
 }
 
+/// \return The angle equivalent to a [degrees] in [-180 , 180).
+inline double angle_m180_180( double const& a ) {
+  double const m = std::fmod(a, 360.0);
+  if (m < -180.0) { return m + 360.0; }
+  if (m >  180.0) { return m - 360.0; }
+  return m;
+}
 
 //
 // Declare our own isnan() and isinf() functions.  They're *not* in C89, and

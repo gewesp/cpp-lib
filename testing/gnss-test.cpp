@@ -136,7 +136,7 @@ void nmea_test(std::ostream& os) {
 
 void course_test_1(std::ostream& os, double const& c) {
   os << "normalized course for " << c 
-     << ": " << cpl::gnss::normalize_course(c)
+     << ": " << cpl::math::angle_m180_180(c)
      << std::endl;
 }
 

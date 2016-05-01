@@ -108,6 +108,10 @@ struct motion_and_turnrate : motion {
   double turnrate;
 };
 
+// Normalizes c [degrees] modulo 360 so that the result is between 
+// -180 and 180.
+double normalize_course(double const& c);
+
 struct lat_lon_alt : lat_lon {
   lat_lon_alt()
     : lat_lon{} , alt{0}

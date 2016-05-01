@@ -134,6 +134,22 @@ void nmea_test(std::ostream& os) {
   nmea_test_1(os, fix{pt_invalid, si1}, m1);
 }
 
+void course_test_1(std::ostream& os, double const& c) {
+  os << "normalized course for " << c 
+     << ": " << cpl::gnss::normalize_course(c)
+     << std::endl;
+}
+
+void course_test(std::ostream& os) {
+  course_test_1(os, 0);
+  course_test_1(os, 180);
+  course_test_1(os, 270);
+  course_test_1(os, 540);
+  course_test_1(os, -3);
+  course_test_1(os, -180.001);
+  course_test_1(os, -360);
+}
+
 void v_ned_test() {
   v_ned_test_inner(0, 0, -10);
 
@@ -271,6 +287,7 @@ int main(int const argc, char const* const* const argv) {
     operators_test();
     bearing_distance_test();
     v_ned_test();
+    course_test(std::cout);
     nmea_test(std::cout);
 
     potential_altitude_test(std::cout, 1000, 25);

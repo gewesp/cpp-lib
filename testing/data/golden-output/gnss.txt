@@ -199,6 +199,13 @@ speed = 10 = 10; course = 90 = 90; vs = 1; v_ned = 6.12323e-16
 speed = 10 = 10; course = 270 = 270; vs = 1; v_ned = -1.83697e-15
          -10
           -1
+normalized course for 0: 0
+normalized course for 180: 180
+normalized course for 270: -90
+normalized course for 540: 180
+normalized course for -3: -3
+normalized course for -180.001: 179.999
+normalized course for -360: -0
 $GPRMC,180321,A,4730.0000,N,00820.0000,E,20.0,45.0,120215,,*18
 $GPGGA,180321,4730.0000,N,00820.0000,E,1,08,4.7,420.0,M,0.0,M,,*7C
 $GPRMC,180321,A,4730.0000,N,12100.0000,W,20.0,45.0,120215,,*02

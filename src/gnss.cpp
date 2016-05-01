@@ -313,6 +313,13 @@ cpl::matrix::vector_3_t cpl::gnss::v_ned(
       -vertical_speed);
 }
 
+double cpl::gnss::normalize_course(double const& course) {
+  double const m = std::fmod(course, 360.0);
+  if (m < -180.0) { return m + 360.0; }
+  if (m >  180.0) { return m - 360.0; }
+  return m;
+}
+
 double cpl::gnss::potential_altitude(
     double const& alt,
     cpl::gnss::motion const& mot) {

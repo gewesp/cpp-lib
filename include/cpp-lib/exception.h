@@ -29,7 +29,7 @@ struct type : base {                                                  \
   explicit type(const char* const  what_arg) : base(what_arg) {}      \
 };
 
-#include <exception>
+#include <stdexcept>
 #include <string>
 
 namespace cpl {

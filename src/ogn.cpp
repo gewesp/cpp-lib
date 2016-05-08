@@ -972,11 +972,13 @@ cpl::ogn::get_vehicle_database_ddb(std::ostream& sl, std::string const& url) {
       cpl::ogn::vehicle_data_and_name ent;
       try {
         ent = parse_ddb_entry(lex);
-      } catch (std::exception const& e) {
+        ret.insert(ent);
+      } catch (cpl::util::value_error const& e) {
+        // value_error is recoverable, we just discard this entry
+        // and continue parsing
         sl << prio::WARNING
            << "Couldn't parse DDB entry: " << e.what() << std::endl;
       }
-      ret.insert(ent);
     }
     sl << prio::INFO 
        << "Parsed " << ret.size() << " DDB record(s) from " << url

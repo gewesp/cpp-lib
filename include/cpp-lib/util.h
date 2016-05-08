@@ -872,7 +872,7 @@ std::string utf8_toupper(std::string const& s);
 
 
 // Verifies that a string contains only alphanumeric and
-// possibly extra characters.  Throws on violation.
+// possibly extra characters.  Throws cpl::util::value_error on violation.
 void verify_alnum(std::string const& s, std::string const& extra = "");
 
 // Writes a list of objects to os, optionally quoted by quote_char

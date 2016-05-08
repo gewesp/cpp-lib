@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+#include "cpp-lib/util.h"
 
 #include <chrono>
 #include <codecvt>
@@ -32,7 +33,7 @@
 #include <cstring>
 #include <ctime>
 
-#include "cpp-lib/util.h"
+#include "cpp-lib/exception.h"
 #include "cpp-lib/platform/wrappers.h"
 
 
@@ -326,7 +327,7 @@ void cpl::util::chop( std::string& s ) {
 void cpl::util::verify_alnum(std::string const& s, std::string const& extra) {
   for (char c : s) {
     if (!std::isalnum(c) && std::string::npos == extra.find(c)) {
-      throw std::runtime_error(
+      throw cpl::util::value_error(
             "invalid character in " + s 
           + ": must be alphanumeric or in " + extra);
     }

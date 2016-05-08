@@ -442,7 +442,7 @@ bool parse_aprs_aircraft(
               std::string const& initial_vdb = "");
 
   // Force replacement of vehicle DB if the given DB is nonempty.
-  void set_vdb(cpl::ogn::vehicle_db&& new_db);
+  void set_vdb(std::ostream& log, cpl::ogn::vehicle_db&& new_db);
 
   // Join thread...
   ~ddb_handler();

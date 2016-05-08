@@ -292,11 +292,19 @@ cpl::ogn::ddb_handler::~ddb_handler() {
   }
 }
 
-void cpl::ogn::ddb_handler::set_vdb(cpl::ogn::vehicle_db&& new_vdb) {
+void cpl::ogn::ddb_handler::set_vdb(
+    std::ostream& log,
+    cpl::ogn::vehicle_db&& new_vdb) {
   if (new_vdb.size() > 0) {
     std::lock_guard<std::mutex> vdb_lock(vdb_mutex);
     vdb = std::move(new_vdb);
     has_nontrivial_vdb = true;
+    log << cpl::util::log::prio::NOTICE
+        << "OGN: DDB replaced: " << vdb.size() << " entries" << std::endl;
+  } else {
+    log << cpl::util::log::prio::NOTICE
+        << "OGN: DDB not replaced (empty replacement)"
+        << std::endl;
   }
 }
 
@@ -308,7 +316,7 @@ void cpl::ogn::ddb_handler::query_thread_function() {
       << " seconds" << std::endl;
 
   while (query_thread_active) {
-    set_vdb(get_vehicle_database_ddb(log));
+    set_vdb(log, get_vehicle_database_ddb(log));
 
     if (!query_thread_active) { return; }
     cpl::util::sleep(query_interval);
@@ -332,7 +340,7 @@ cpl::ogn::ddb_handler::ddb_handler(
     log << prio::NOTICE << "OGN: Reading DDB from "
         << initial_vdb
         << std::endl;
-    set_vdb(cpl::ogn::get_vehicle_database_ddb(log, initial_vdb));
+    set_vdb(log, cpl::ogn::get_vehicle_database_ddb(log, initial_vdb));
   }
 
   if (query_thread_active) {

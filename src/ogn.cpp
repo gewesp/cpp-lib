@@ -113,14 +113,25 @@ long hhmmss_to_seconds(const long hhmmss) {
   return ss + 60 * mm + 3600 * hh;
 }
 
+// Checks that
+// (a) A conversion is performed and 
+// (b) The string s ends after that conversion.
 bool my_double_cast(const char* const s, double& x) {
-  try {
-    x = boost::lexical_cast<double>(std::string(s));
-    return true;
-  } catch (const std::exception& e) {
-    // std::cerr << e.what() << "; val = " << s << std::endl;
+  char* endptr = NULL;
+  x = std::strtod(s, &endptr);
+
+  // No conversion performed
+  if (s == endptr) {
     return false;
   }
+
+  // String continues
+  if ('\0' != *endptr) {
+    return false;
+  }
+
+  // All OK
+  return true;
 }
 
 // Convert DDDDDmm.mmmm format to decimal degrees.  E.g. 45 degrees 40 minutes,

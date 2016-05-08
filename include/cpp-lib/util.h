@@ -353,8 +353,12 @@ struct pair_access_first : std::unary_function< std::pair< T1 , T2 >& , T1& > {
 // A line that is exactly maxsize long followed by '\n' causes
 // an additional empty line to be read.
 //
+// size_hint can be used to tell the function to expect strings of
+// approximately that size.
+//
 
-std::istream& getline(std::istream&, std::string& s, long maxsize);
+std::istream& getline(std::istream&, std::string& s, long maxsize,
+    long size_hint = 0);
 
 //
 // Splits s on separator and inserts it into the given sequence.

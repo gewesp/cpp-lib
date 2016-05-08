@@ -72,7 +72,8 @@ void cpl::util::set_die_output( std::ostream* os )
 // TODO: Templatize, etc?
 // http://en.cppreference.com/w/cpp/string/basic_string/getline
 std::istream& cpl::util::getline(
-    std::istream& is , std::string& s , long const maxsize ) {
+    std::istream& is , std::string& s , 
+    long const maxsize , long const size_hint ) {
 
   always_assert( maxsize > 0 ) ;
 
@@ -82,7 +83,8 @@ std::istream& cpl::util::getline(
     return is ;
   }
 
-  s.erase() ;
+  s.clear() ;
+  s.reserve( size_hint ) ;
 
   std::istreambuf_iterator< char > it( is ) ;
   std::istreambuf_iterator< char > const eos ;

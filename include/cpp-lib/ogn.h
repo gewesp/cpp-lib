@@ -55,11 +55,18 @@ short constexpr ID_TYPE_OGN    = 3;
 short constexpr VEHICLE_TYPE_GLIDER      = 1;
 short constexpr VEHICLE_TYPE_TOW_PLANE   = 2;
 short constexpr VEHICLE_TYPE_HELICOPTER  = 3;
+short constexpr VEHICLE_TYPE_PARACHUTE   = 4;
 short constexpr VEHICLE_TYPE_DROP_PLANE  = 5;
 short constexpr VEHICLE_TYPE_DELTA       = 6;
 short constexpr VEHICLE_TYPE_PARAGLIDER  = 7;
 short constexpr VEHICLE_TYPE_POWER_PLANE = 8;
 short constexpr VEHICLE_TYPE_JET         = 9;
+short constexpr VEHICLE_TYPE_UFO         = 10;
+short constexpr VEHICLE_TYPE_BALLOON     = 11;
+short constexpr VEHICLE_TYPE_AIRSHIP     = 12;
+short constexpr VEHICLE_TYPE_UAV         = 13;
+// 14 not assigned
+short constexpr VEHICLE_TYPE_STATIC      = 15;
 
 // OGN station information:
 // - Network name

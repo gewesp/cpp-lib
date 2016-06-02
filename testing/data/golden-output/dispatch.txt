@@ -48,7 +48,31 @@
 47
 48
 49
-Map increment test: 1 worker(s), 100 task(s), 10000 element(s)
-Map increment test: 3 worker(s), 100 task(s), 10000 element(s)
-Map increment test: 10 worker(s), 100 task(s), 10000 element(s)
-Map increment test: 100 worker(s), 100 task(s), 10000 element(s)
+Map increment test: 1 worker(s), 40 task(s), 40 element(s), return value: 1
+test ok
+Map increment test: 1 worker(s), 1 task(s), 3 element(s), return value: 1
+test ok
+Map increment test: 1 worker(s), 3 task(s), 3 element(s), return value: 1
+test ok
+Map increment test: 1 worker(s), 100 task(s), 10000 element(s), return value: 1
+test ok
+Map increment test: 3 worker(s), 100 task(s), 10000 element(s), return value: 1
+test ok
+Map increment test: 10 worker(s), 100 task(s), 10000 element(s), return value: 1
+test ok
+Map increment test: 100 worker(s), 100 task(s), 10000 element(s), return value: 1
+test ok
+Map increment test: 1 worker(s), 40 task(s), 40 element(s), return value: 0
+test ok
+Map increment test: 1 worker(s), 1 task(s), 3 element(s), return value: 0
+test ok
+Map increment test: 1 worker(s), 3 task(s), 3 element(s), return value: 0
+test ok
+Map increment test: 1 worker(s), 100 task(s), 10000 element(s), return value: 0
+test ok
+Map increment test: 3 worker(s), 100 task(s), 10000 element(s), return value: 0
+test ok
+Map increment test: 10 worker(s), 100 task(s), 10000 element(s), return value: 0
+test ok
+Map increment test: 100 worker(s), 100 task(s), 10000 element(s), return value: 0
+test ok

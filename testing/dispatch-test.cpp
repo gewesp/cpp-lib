@@ -66,7 +66,7 @@ void test_dispatch_n(std::ostream& os, int const w, int const n, int const m,
                    themap_manager.dispatch
               ([&themap, i]() { ++themap[i];           });
         } else             {
-          std::cout << "push " << i << std::endl;
+          // std::cout << "push " << i << std::endl;
           total += themap_manager.dispatch_returning<int>
               ([&themap, i]() { ++themap[i]; return i; });
         }

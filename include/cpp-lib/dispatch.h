@@ -141,18 +141,9 @@ T cpl::dispatch::thread_pool::dispatch_returning(
   //   is set (ret).
   {
     auto const wrapper_task = [&t, &ret, &mut, &cv, &t_executed] {
-      std::cout << "calling task " << std::endl;
+      std::lock_guard<std::mutex> guard{mut};
       try { 
-        std::lock_guard<std::mutex> guard{mut};
         ret = t(); 
-        t_executed = true;
-        std::cout << "before notify " << ret << std::endl;
-        // Seems like here, even though
-        // "the lock does not need to be held for notification",
-        // we'd rather hold it.
-        cv.notify_one();
-        std::cout << "after notify " << ret << std::endl;
-        std::cout << "recv " << ret << std::endl;
       } catch (std::exception const& e) {
         std::cerr << "ERROR: " << e.what() << std::endl;
         // TODO: Log
@@ -163,6 +154,12 @@ T cpl::dispatch::thread_pool::dispatch_returning(
       {
         // "the lock does not need to be held for notification"
       }
+      t_executed = true;
+      // Seems like here, even though the documentation says
+      // "the lock does not need to be held for notification",
+      // we'd rather hold it.  May risk early access to ret
+      // otherwise?
+      cv.notify_one();
       // No return value, sets ret in calling thread!
     };
     this->dispatch(wrapper_task);

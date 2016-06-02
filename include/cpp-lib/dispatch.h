@@ -66,6 +66,9 @@ namespace dispatch {
 
 typedef std::function<void()> task;
 
+// Task with return value of type T
+template<typename T> using returning_task = std::function<T()>;
+
 struct thread_pool {
   // Creates and starts n threads to asynchronously execute tasks added 
   // by dispatch().
@@ -85,6 +88,14 @@ struct thread_pool {
   // FIFO order is guaranteed if num_workers() == 1. Currently, dispatch()
   // never blocks, but see the for the constructor.
   void dispatch(task&& t);
+
+  // Adds a new task for execution execution by the next available thread.
+  // Blocks the calling thread until the function returns and forwards
+  // the return value.  Returns a default constructed value if t 
+  // or T's copy constructor throws.
+  //
+  // TODO: Better use of move semantics.
+  template<typename T> T dispatch_returning(returning_task<T>&& t);
 
   // Noncopyable
   thread_pool           (thread_pool const&) = delete;
@@ -110,5 +121,51 @@ using dispatch_queue = thread_pool;
 
 } // namespace cpl
 
+
+// http://en.cppreference.com/w/cpp/thread/condition_variable
+template<typename T> 
+T cpl::dispatch::thread_pool::dispatch_returning(
+    returning_task<T>&& t) {
+  T ret;
+
+  std::mutex mut;
+  std::condition_variable cv;
+  bool t_executed = false;
+
+  // Create and start a wrapper task that:
+  // * Executes t and sets the return value in calling thread
+  // * Handles any exceptions from t().
+  // * Notifies this thread as soon as the return value of t()
+  //   is set (ret).
+  {
+    auto const wrapper_task = [&t, &ret, &mut, &cv, &t_executed] {
+      try { 
+        ret = t(); 
+      } catch (std::exception const& e) {
+        // TODO: Log
+      } catch (...) {
+        // TODO: Log
+      }
+      {
+        // "the lock does not need to be held for notification"
+        std::lock_guard<std::mutex> guard{mut};
+        t_executed = true;
+      }
+      cv.notify_one();
+      // No return value, sets ret in calling thread!
+    };
+    this->dispatch(wrapper_task);
+  }
+
+  {
+    std::unique_lock<std::mutex> lock{mut};
+    while (!t_executed) {
+      cv.wait(lock);
+    }
+  }
+  // OK. The task has finished and the return value has been
+  // set except in the case of an exception.  We are done.
+  return ret;
+}
 
 #endif // CPP_LIB_DISPATCH_H

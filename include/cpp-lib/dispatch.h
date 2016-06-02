@@ -128,10 +128,11 @@ template<typename T>
 T cpl::dispatch::thread_pool::dispatch_returning(
     returning_task<T>&& t) {
   T ret;
+  bool t_executed = false;
 
+  // Protects ret and t_executed
   std::mutex mut;
   std::condition_variable cv;
-  bool t_executed = false;
 
   // Create and start a wrapper task that:
   // * Executes t and sets the return value in calling thread
@@ -142,7 +143,15 @@ T cpl::dispatch::thread_pool::dispatch_returning(
     auto const wrapper_task = [&t, &ret, &mut, &cv, &t_executed] {
       std::cout << "calling task " << std::endl;
       try { 
+        std::lock_guard<std::mutex> guard{mut};
         ret = t(); 
+        t_executed = true;
+        std::cout << "before notify " << ret << std::endl;
+        // Seems like here, even though
+        // "the lock does not need to be held for notification",
+        // we'd rather hold it.
+        cv.notify_one();
+        std::cout << "after notify " << ret << std::endl;
         std::cout << "recv " << ret << std::endl;
       } catch (std::exception const& e) {
         std::cerr << "ERROR: " << e.what() << std::endl;
@@ -153,12 +162,7 @@ T cpl::dispatch::thread_pool::dispatch_returning(
       }
       {
         // "the lock does not need to be held for notification"
-        std::lock_guard<std::mutex> guard{mut};
-        t_executed = true;
       }
-      std::cout << "before notify " << ret << std::endl;
-      cv.notify_one();
-      std::cout << "after notify " << ret << std::endl;
       // No return value, sets ret in calling thread!
     };
     this->dispatch(wrapper_task);
@@ -169,10 +173,10 @@ T cpl::dispatch::thread_pool::dispatch_returning(
     while (!t_executed) {
       cv.wait(lock);
     }
+    // OK. The task has finished and the return value has been
+    // set except in the case of an exception.  We are done.
+    return ret;
   }
-  // OK. The task has finished and the return value has been
-  // set except in the case of an exception.  We are done.
-  return ret;
 }
 
 #endif // CPP_LIB_DISPATCH_H

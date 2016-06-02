@@ -56,6 +56,7 @@
 
 #include "cpp-lib/util.h"
 
+#include <iostream>
 #include <string>
 #include <thread>
 #include <utility>
@@ -139,11 +140,15 @@ T cpl::dispatch::thread_pool::dispatch_returning(
   //   is set (ret).
   {
     auto const wrapper_task = [&t, &ret, &mut, &cv, &t_executed] {
+      std::cout << "calling task " << std::endl;
       try { 
         ret = t(); 
+        std::cout << "recv " << ret << std::endl;
       } catch (std::exception const& e) {
+        std::cerr << "ERROR: " << e.what() << std::endl;
         // TODO: Log
       } catch (...) {
+        std::cerr << "ERROR: nonstandard exception" << std::endl;
         // TODO: Log
       }
       {
@@ -151,7 +156,9 @@ T cpl::dispatch::thread_pool::dispatch_returning(
         std::lock_guard<std::mutex> guard{mut};
         t_executed = true;
       }
+      std::cout << "before notify " << ret << std::endl;
       cv.notify_one();
+      std::cout << "after notify " << ret << std::endl;
       // No return value, sets ret in calling thread!
     };
     this->dispatch(wrapper_task);

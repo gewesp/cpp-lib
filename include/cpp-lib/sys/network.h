@@ -462,6 +462,7 @@ struct datagram_socket {
   // Observers
 
   // Address of last packet received
+  // TODO: This isn't thread safe!
   address_type const& source() const { return source_ ; }
 
   // Local address, for bound sockets only

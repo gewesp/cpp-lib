@@ -142,7 +142,7 @@ meaningful `what()` message.
 
 ## Supported platforms
 
-  Cpp-lib is written in ISO C++ and makes use of C++11 features.
+  Cpp-lib is written in ISO C++ and makes use of C++14 features.
 Due to multiple problems with GNU g++, we currently recommend clang++
 (October 2015).
 
@@ -158,7 +158,7 @@ for embedded applications.
 
 ### Dependencies
 
-- A C++ compiler supporting C++11 or later (Tested: clang++)
+- A C++ compiler supporting C++14 or later (Tested: clang++)
 - GNU make (BSD make does *not* work)
 - The [BOOST] [1] header files.
 - The [Eigen] [10] library

@@ -9,7 +9,7 @@
 # TODO: Add -Wshadow (currently fails mostly due to constructor arguments)
 #
 
-CXX      = g++-5 -std=c++11
+CXX      = g++-5 -std=c++14
 CXXFLAGS = -Wall -Wextra
 MTFLAGS  =
 DEBUG    = -g -O0 -fno-inline

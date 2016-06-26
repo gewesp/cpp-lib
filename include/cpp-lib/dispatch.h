@@ -73,6 +73,8 @@ template<typename T> using returning_task = std::function<T()>;
 struct thread_pool {
   // Creates and starts n threads to asynchronously execute tasks added 
   // by dispatch().
+  // If n == 0, no threads are created and dispatch() calls will execute
+  // the tasks in the calling thread.
   // TODO: Allow to specify maximum number of waiting tasks before dispatch()
   // blocks?
   explicit thread_pool(int n = 1);
@@ -85,17 +87,20 @@ struct thread_pool {
   // it will return immediately.
   void dispatch_sync(task&& t) { dispatch(std::move(t)); }
 
-  // Adds a new task for execution execution by the next available thread.
-  // FIFO order is guaranteed if num_workers() == 1. Currently, dispatch()
-  // never blocks, but see the for the constructor.
+  // If num_workers() >= 1, adds a new task for execution execution by the 
+  // next available thread.  If num_workers() == 0, executes t in the
+  // calling thread. FIFO order is guaranteed if num_workers() <= 1
   void dispatch(task&& t);
 
-  // Adds a new task for execution execution by the next available thread.
+  // As for dispatch(), adds t for execution to the FIFO or executes 
+  // it in the calling thread.
+  //
   // Blocks the calling thread until the function returns and forwards
   // the return value.  Returns a default constructed value if t 
   // or T's copy constructor throws.
   //
-  // TODO: Better use of move semantics.
+  // TODO: Better use of move semantics---Use C++14 generalized capture.
+  // TODO: Log exceptions ot syslog.
   template<typename T> T dispatch_returning(returning_task<T>&& t);
 
   // Noncopyable
@@ -127,6 +132,9 @@ using dispatch_queue = thread_pool;
 template<typename T> 
 T cpl::dispatch::thread_pool::dispatch_returning(
     returning_task<T>&& t) {
+  if (0 == num_workers()) {
+    return t();
+  }
   T ret;
   bool t_executed = false;
 

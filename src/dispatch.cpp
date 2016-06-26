@@ -22,8 +22,8 @@
 // Initialize thread pool
 cpl::dispatch::thread_pool::thread_pool(int const n_threads)
   : tasks{} {
-  cpl::util::verify(n_threads >= 1, 
-      "thread pool: must have at least one worker thread");
+  cpl::util::verify(n_threads >= 0, 
+      "thread pool: number of worker threads must be >= 0");
   workers.reserve(n_threads);
   for (int i = 0; i < n_threads; ++i) {
     workers.push_back(std::thread(&thread_pool::thread_function, this));
@@ -44,7 +44,11 @@ cpl::dispatch::thread_pool::~thread_pool() {
 }
 
 void cpl::dispatch::thread_pool::dispatch(cpl::dispatch::task&& t) {
-  tasks.push(task_and_continue{std::move(t), true});
+  if (num_workers() > 0) {
+    tasks.push(task_and_continue{std::move(t), true});
+  } else {
+    t();
+  }
 }
 
 void cpl::dispatch::thread_pool::thread_function() {

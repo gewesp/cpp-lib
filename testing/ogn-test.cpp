@@ -206,7 +206,7 @@ void process(
     } else {
       cpl::ogn::aircraft_rx_info_and_name acft;
       const double utc_now = utc > 0 ? utc : 
-         (utc <= -2 ? utc_parsed :cpl::util::utc());
+         (utc <= -2 ? utc_parsed : cpl::util::utc());
       if (parser.parse_aprs_aircraft(line, acft, utc_now)) {
         // Previous aircraft with same info
         auto const it = acdb.find(acft.first);

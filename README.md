@@ -160,9 +160,17 @@ for embedded applications.
 
 - A C++ compiler supporting C++14 or later (Tested: clang++)
 - GNU make (BSD make does *not* work)
-- The [BOOST] [1] header files.
+- The [BOOST] [1] header files (version 1.58.0 or higher).
 - The [Eigen] [10] library
 - If `PNG_STUFF` is enabled: [libpng] [8] and [png++] [9]
+
+See Tested Versions below.
+
+On old Ubuntu versions (14.04), it is currently necessary to install the
+Boost source code directly from here:
+`http://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.tar.bz2`
+It is *not* necessary to compile Boost.
+
 
 __Boost, png++ and Eigen are used in a header-only way.__
 

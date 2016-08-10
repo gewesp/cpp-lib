@@ -205,10 +205,10 @@ void run_queries(
 
   cpl::gnss::lat_lon_alt lla;
   while (is >> lla.lat >> lla.lon >> lla.alt) {
-    auto const n = adb.nearest(lla);
+    auto const n = adb.nearest_positions(lla);
     always_assert(1 == n.size());
-    auto const& entry   = n[0].first;
-    auto const distance = n[0].second;
+    auto const& entry    = std::get<1>(n[0]);
+    auto const  distance = std::get<2>(n[0]);
 
     os << "query: " << lla << "; "
        << "nearest: " << entry.icao << '/' << entry.type

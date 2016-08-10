@@ -49,12 +49,16 @@ typedef boost::geometry::model::box<point> box;
 
 // Simple conversion stuff
 
-inline point_3_t from_vector(cpl::matrix::vector_3_t const& x) {
+inline point_3_t to_point_3_t(cpl::matrix::vector_3_t const& x) {
   point_3_t ret;
   ret.set<0>(x(0));
   ret.set<1>(x(1));
   ret.set<2>(x(2));
   return ret;
+}
+
+inline cpl::matrix::vector_3_t to_vector_3_t(point_3_t const& p) {
+  return cpl::matrix::column_vector(p.get<0>(), p.get<1>(), p.get<2>());
 }
 
 } // namespace math

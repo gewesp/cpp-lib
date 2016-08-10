@@ -52,12 +52,17 @@ template <typename T,
 struct geodb {
 
   typedef STRAT strategy;
-
   typedef T value_type;
-  typedef std::pair<value_type, double> value_and_distance;
-  typedef std::vector<value_and_distance> value_and_distance_vector;
 
   typedef std::pair<cpl::math::point_3_t, value_type> tree_element;
+
+  typedef std::pair<value_type, double> 
+           value_and_distance;
+  typedef std::tuple<cpl::gnss::lat_lon_alt, value_type, double>
+      position_value_distance;
+
+  typedef std::vector<value_and_distance     >      value_and_distance_vector;
+  typedef std::vector<position_value_distance> position_value_distance_vector;
 
   // The tree type used for the spatial index
   typedef boost::geometry::index::rtree<tree_element, strategy> tree_type;
@@ -88,6 +93,12 @@ struct geodb {
   // Finds max_results nearest element(s) to lla and returns the associated 
   // value(s) together with the respective 3D distance.
   value_and_distance_vector nearest(
+      cpl::gnss::lat_lon_alt const& lla, 
+      int max_results = 1) const;
+
+  // Finds max_results nearest element(s) to lla and returns the associated 
+  // tuples (position, value 3D distance).
+  position_value_distance_vector nearest_positions(
       cpl::gnss::lat_lon_alt const& lla, 
       int max_results = 1) const;
 
@@ -168,7 +179,7 @@ void cpl::gnss::geodb<T, STRAT>::add_element(
     value_type const& v) {
 
   auto const x = cpl::gnss::lla_to_ecef(lla, radius());
-  auto const p = cpl::math::from_vector(x);
+  auto const p = cpl::math::to_point_3_t(x);
 
   tr.insert(std::make_pair(p, v));
 }
@@ -182,13 +193,36 @@ cpl::gnss::geodb<T, STRAT>::nearest(
   value_and_distance_vector ret;
 
   auto const x = cpl::gnss::lla_to_ecef(lla, radius());
-  auto const p = cpl::math::from_vector(x);
+  auto const p = cpl::math::to_point_3_t(x);
 
   auto it = boost::geometry::index::qbegin(
               tr, boost::geometry::index::nearest(p, max_results));
   while (it != boost::geometry::index::qend(tr)) {
     double const dist = boost::geometry::distance(p, it->first);
     ret.push_back(std::make_pair(it->second, dist));
+    ++it;
+  }
+  return ret;
+}
+
+template <typename T, typename STRAT>
+typename cpl::gnss::geodb<T, STRAT>::position_value_distance_vector
+cpl::gnss::geodb<T, STRAT>::nearest_positions(
+    cpl::gnss::lat_lon_alt const& lla,
+    int const max_results) const {
+
+  position_value_distance_vector ret;
+
+  auto const x = cpl::gnss::lla_to_ecef(lla, radius());
+  auto const p = cpl::math::to_point_3_t(x);
+
+  auto it = boost::geometry::index::qbegin(
+              tr, boost::geometry::index::nearest(p, max_results));
+  while (it != boost::geometry::index::qend(tr)) {
+    ret.emplace_back(cpl::gnss::ecef_to_lla(
+                         cpl::math::to_vector_3_t(it->first), radius()),
+                     it->second,
+                     boost::geometry::distance(p, it->first));
     ++it;
   }
   return ret;

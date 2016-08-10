@@ -209,10 +209,12 @@ void run_queries(
     always_assert(1 == n.size());
     auto const& entry    = std::get<1>(n[0]);
     auto const  distance = std::get<2>(n[0]);
+    auto const  alt      = std::get<0>(n[0]).alt;
 
     os << "query: " << lla << "; "
        << "nearest: " << entry.icao << '/' << entry.type
-       << "; dist: " << distance
+       << "; alt: " << alt
+       << "; dist: " << distance 
        << std::endl;
   }
 }

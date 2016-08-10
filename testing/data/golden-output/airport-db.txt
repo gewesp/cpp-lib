@@ -12,8 +12,8 @@
 (WARNING) Ignoring airport: LSZD; type = closed
 (WARNING) Ignoring airport: LSZY; type = closed
 (NOTICE) Airport data: Read 754 entries
-query: 47 8 800; nearest: LSPG/1; dist: 21849.67314
-query: 47.649445 8.387971 800; nearest: LSPF/1; dist: 11386.54198
-query: 47.148548 9.043032 400; nearest: LSZX/1; dist: 2591.731783
-query: 47.079476 9.062301 500; nearest: LSMF/2; dist: 207.654639
-query: 0 0 0; nearest: EDWT/1; dist: 181568.2067
+query: 47 8 800; nearest: LSPG/1; alt: 464.82; dist: 21849.67314
+query: 47.649445 8.387971 800; nearest: LSPF/1; alt: 462.9912; dist: 11386.54198
+query: 47.148548 9.043032 400; nearest: LSZX/1; alt: 416.052; dist: 2591.731783
+query: 47.079476 9.062301 500; nearest: LSMF/2; alt: 452.628; dist: 207.654639
+query: 0 0 0; nearest: EDWT/1; alt: 0; dist: 181568.2067

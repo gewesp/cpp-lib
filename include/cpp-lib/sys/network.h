@@ -497,8 +497,6 @@ private:
   cpl::detail_::datagram_socket_reader_writer s ;
   cpl::detail_::socketfd_t fd() const { return s.fd() ; }
 
-  std::vector< char > buffer_ ;
-
   address_type source_ ;
   address_type  local_ ;
 
@@ -927,7 +925,7 @@ cpl::util::network::datagram_socket::receive(
 
   }
 
-  buffer_.resize( max ) ;
+  std::vector< char > buffer( max ) ;
 
   long err ;
   do {
@@ -937,8 +935,8 @@ cpl::util::network::datagram_socket::receive(
     err = 
       ::recvfrom(
          fd()           ,
-         &buffer_[ 0 ]  ,
-         buffer_.size() ,
+         &buffer[ 0 ]   ,
+         buffer.size()  ,
          0              ,
          source_.sockaddr_pointer() ,
          source_. socklen_pointer()
@@ -949,9 +947,9 @@ cpl::util::network::datagram_socket::receive(
   if( err < 0 )
   { cpl::detail_::throw_socket_error( "recvfrom" ) ; }
 
-  assert( static_cast< size_type >( err ) <= buffer_.size() ) ;
+  assert( static_cast< size_type >( err ) <= buffer.size() ) ;
 
-  std::copy( buffer_.begin() , buffer_.begin() + err , begin ) ;
+  std::copy( buffer.begin() , buffer.begin() + err , begin ) ;
   return err ;
 
 }
@@ -969,18 +967,17 @@ void cpl::util::network::datagram_socket::send(
     throw std::runtime_error( "datagram send: disconntected socket" ) ;
   }
 
-  buffer_.clear() ;
-  std::copy( begin , end , std::back_inserter( buffer_ ) ) ;
+  std::vector< char > const buffer( begin , end ) ;
 
   long const result = 
-      cpl::detail_::my_send( fd() , &buffer_[ 0 ] , buffer_.size() ) ;
+      cpl::detail_::my_send( fd() , &buffer[ 0 ] , buffer.size() ) ;
 
   if( result < 0 ) {
     if( errno == ECONNREFUSED ) { return ; }
     cpl::detail_::throw_socket_error( "send" ) ;
   }
 
-  always_assert( result == static_cast< long >( buffer_.size() ) ) ;
+  always_assert( result == static_cast< long >( buffer.size() ) ) ;
 
 }
 
@@ -999,18 +996,17 @@ void cpl::util::network::datagram_socket::send(
     throw std::runtime_error( "datagram send: address family mismatch" ) ;
   }
 
-  buffer_.clear() ;
-  std::copy( begin , end , std::back_inserter( buffer_ ) ) ;
+  std::vector< char > const buffer( begin , end ) ;
 
   const long result = cpl::detail_::my_sendto(
-      fd() , d , &buffer_[ 0 ] , buffer_.size() ) ;
+      fd() , d , &buffer[ 0 ] , buffer.size() ) ;
 
   if( result < 0 ) {
     if( errno == ECONNREFUSED ) { return ; }
     cpl::detail_::throw_socket_error( "send to " + d.host() + ":" + d.port() ) ; 
   }
 
-  always_assert( result == static_cast< long >( buffer_.size() ) ) ;
+  always_assert( result == static_cast< long >( buffer.size() ) ) ;
 
 }
  

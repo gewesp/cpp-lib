@@ -1371,7 +1371,7 @@ template <class T> struct safe_queue {
     }
 
     // lock is re-acquired after waiting, so we're good to go
-    T const t = q.front();
+    T t = std::move(q.front());
     q.pop();
     return t;
   }

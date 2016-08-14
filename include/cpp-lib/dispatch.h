@@ -49,6 +49,11 @@
 // Notes:
 // * Carefully consider call by reference/value in capture lists!
 //
+// TODO:
+// * Fully use std::packaged_task features
+//   See http://en.cppreference.com/w/cpp/thread/packaged_task/packaged_task
+// * Maximum queue size with intelligent management
+//
 
 
 #ifndef CPP_LIB_DISPATCH_H
@@ -60,15 +65,17 @@
 #include <string>
 #include <thread>
 #include <utility>
+#include <future>
 
 namespace cpl {
 
 namespace dispatch {
 
-typedef std::function<void()> task;
+// Note: packaged_task constructors are explicit!
+typedef std::packaged_task<void()> task;
 
 // Task with return value of type T
-template<typename T> using returning_task = std::function<T()>;
+template<typename T> using returning_task = std::packaged_task<T()>;
 
 struct thread_pool {
   // Creates and starts n threads to asynchronously execute tasks added 
@@ -90,6 +97,7 @@ struct thread_pool {
   // If num_workers() >= 1, adds a new task for execution execution by the 
   // next available thread.  If num_workers() == 0, executes t in the
   // calling thread. FIFO order is guaranteed if num_workers() <= 1
+  // Note: cpl::dispatch::task constructors are explicit!
   void dispatch(task&& t);
 
   // As for dispatch(), adds t for execution to the FIFO or executes 
@@ -133,7 +141,9 @@ template<typename T>
 T cpl::dispatch::thread_pool::dispatch_returning(
     returning_task<T>&& t) {
   if (0 == num_workers()) {
-    return t();
+    auto result = t.get_future();
+    t();
+    return result.get();
   }
   T ret;
   bool t_executed = false;
@@ -148,10 +158,11 @@ T cpl::dispatch::thread_pool::dispatch_returning(
   // * Notifies this thread as soon as the return value of t()
   //   is set (ret).
   {
-    auto const wrapper_task = [&t, &ret, &mut, &cv, &t_executed] {
+    cpl::dispatch::task wrapper_task([&t, &ret, &mut, &cv, &t_executed] () {
       std::lock_guard<std::mutex> guard{mut};
       try { 
-        ret = t(); 
+        t();
+        ret = t.get_future().get(); 
       } catch (std::exception const& e) {
         std::cerr << "ERROR: " << e.what() << std::endl;
         // TODO: Log
@@ -169,8 +180,8 @@ T cpl::dispatch::thread_pool::dispatch_returning(
       // otherwise?
       cv.notify_one();
       // No return value, sets ret in calling thread!
-    };
-    this->dispatch(wrapper_task);
+    });
+    this->dispatch(std::move(wrapper_task));
   }
 
   {

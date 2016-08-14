@@ -377,6 +377,8 @@ inline datagram_address_list const resolve_datagram
 // TODO: The API is still in flux and currently not in line with N1925.
 // TODO: Implement smart decision on which address from resolver to
 // use.
+// TODO: Thread safety is in a mess.  Remove state from the class
+// to make it thread-safe (e.g., source_).  Seriously.
 ////////////////////////////////////////////////////////////////////////
 
 struct datagram_socket {

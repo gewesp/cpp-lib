@@ -30,7 +30,8 @@ void test_dispatch() {
   cpl::dispatch::thread_pool disq;
 
   for (int i = 0; i < 50; ++i) {
-    disq.dispatch([i]{ std::cout << i << std::endl; });
+    cpl::dispatch::task t([i]{ std::cout << i << std::endl; });
+    disq.dispatch(std::move(t));
   }
 }
 
@@ -58,17 +59,17 @@ void test_dispatch_n(std::ostream& os, int const w, int const n, int const m,
   cpl::dispatch::thread_pool workers(w);
 
   for (int j = 0; j < n; ++j) {
-    auto const worker_func = 
+    auto worker_func = 
         [m, &return_value, &themap_manager, &themap]() {
       int total = 0;
       for (int i = 0; i < m; ++i) {
         if (!return_value) {
-                   themap_manager.dispatch
-              ([&themap, i]() { ++themap[i];           });
+          cpl::dispatch::task t([&themap, i]() { ++themap[i]; });
+                   themap_manager.dispatch(std::move(t));
         } else             {
           // std::cout << "push " << i << std::endl;
-          total += themap_manager.dispatch_returning<int>
-              ([&themap, i]() { ++themap[i]; return i; });
+          total += themap_manager.dispatch_returning<int>(
+              cpl::dispatch::returning_task<int>([&themap, i]() { ++themap[i]; return i; }));
         }
 
       }
@@ -88,7 +89,7 @@ void test_dispatch_n(std::ostream& os, int const w, int const n, int const m,
       }
     };
 
-    workers.dispatch(worker_func);
+    workers.dispatch(cpl::dispatch::task(worker_func));
   }
 
   }

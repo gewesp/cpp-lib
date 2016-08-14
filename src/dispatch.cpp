@@ -35,7 +35,8 @@ cpl::dispatch::thread_pool::~thread_pool() {
   // Signal 'EOF' to all workers---one thread will pop
   // only one task wiht continue set to false
   for (int i = 0; i < num_workers(); ++i) {
-    tasks.push(task_and_continue{[]{}, false});
+    task empty([]{});
+    tasks.push(task_and_continue{std::move(empty), false});
   }
   // Join all workers
   for (int i = 0; i < num_workers(); ++i) {
@@ -53,7 +54,7 @@ void cpl::dispatch::thread_pool::dispatch(cpl::dispatch::task&& t) {
 
 void cpl::dispatch::thread_pool::thread_function() {
   do {
-    auto const tac = tasks.pop_front();
+    auto tac = std::move(tasks.pop_front());
     if (!tac.second) {
       return;
     } else {

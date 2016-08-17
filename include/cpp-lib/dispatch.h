@@ -50,9 +50,11 @@
 // * Carefully consider call by reference/value in capture lists!
 //
 // TODO:
-// * Fully use std::packaged_task features
-//   See http://en.cppreference.com/w/cpp/thread/packaged_task/packaged_task
+// * The interface is still not very nice.  Use templated dispatch() with
+//   raw function objects?
 // * Maximum queue size with intelligent management
+// * The use of std::future for wrapper task and/or tasks without
+//   return value may be overkill?
 //
 
 
@@ -138,61 +140,36 @@ using dispatch_queue = thread_pool;
 
 // http://en.cppreference.com/w/cpp/thread/condition_variable
 template<typename T> 
-T cpl::dispatch::thread_pool::dispatch_returning(
-    returning_task<T>&& t) {
+T cpl::dispatch::thread_pool::dispatch_returning(returning_task<T>&& t) {
+  auto result = t.get_future();
+
   if (0 == num_workers()) {
-    auto result = t.get_future();
     t();
     return result.get();
   }
-  T ret;
-  bool t_executed = false;
 
-  // Protects ret and t_executed
-  std::mutex mut;
-  std::condition_variable cv;
-
-  // Create and start a wrapper task that:
-  // * Executes t and sets the return value in calling thread
-  // * Handles any exceptions from t().
-  // * Notifies this thread as soon as the return value of t()
-  //   is set (ret).
-  {
-    cpl::dispatch::task wrapper_task([&t, &ret, &mut, &cv, &t_executed] () {
-      std::lock_guard<std::mutex> guard{mut};
-      try { 
-        t();
-        ret = t.get_future().get(); 
-      } catch (std::exception const& e) {
-        std::cerr << "ERROR: " << e.what() << std::endl;
-        // TODO: Log
-      } catch (...) {
-        std::cerr << "ERROR: nonstandard exception" << std::endl;
-        // TODO: Log
-      }
-      {
-        // "the lock does not need to be held for notification"
-      }
-      t_executed = true;
-      // Seems like here, even though the documentation says
-      // "the lock does not need to be held for notification",
-      // we'd rather hold it.  May risk early access to ret
-      // otherwise?
-      cv.notify_one();
-      // No return value, sets ret in calling thread!
-    });
-    this->dispatch(std::move(wrapper_task));
-  }
-
-  {
-    std::unique_lock<std::mutex> lock{mut};
-    while (!t_executed) {
-      cv.wait(lock);
+  cpl::dispatch::task wrapper([&t] () {
+    try { 
+      t();
+    } catch (std::exception const& e) {
+      std::cerr << "ERROR: " << e.what() << std::endl;
+      // TODO: Log
+    } catch (...) {
+      std::cerr << "ERROR: nonstandard exception" << std::endl;
+      // TODO: Log
     }
-    // OK. The task has finished and the return value has been
-    // set except in the case of an exception.  We are done.
-    return ret;
-  }
+  });
+
+  auto fut = wrapper.get_future();
+  this->dispatch(std::move(wrapper));
+  // Important: It seems we need to 'trigger' execution of the wrapper task
+  // by tickling its future.
+  // The whole future business looks a bit unfinished, cf.
+  // http://stackoverflow.com/questions/23455104/why-is-the-destructor-of-a-future-returned-from-stdasync-blocking
+  fut.get();
+
+  // Wait for result and return it.
+  return result.get();
 }
 
 #endif // CPP_LIB_DISPATCH_H

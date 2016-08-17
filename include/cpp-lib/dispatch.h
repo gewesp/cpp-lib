@@ -138,38 +138,26 @@ using dispatch_queue = thread_pool;
 } // namespace cpl
 
 
-// http://en.cppreference.com/w/cpp/thread/condition_variable
 template<typename T> 
 T cpl::dispatch::thread_pool::dispatch_returning(returning_task<T>&& t) {
-  auto result = t.get_future();
-
   if (0 == num_workers()) {
+    // Synchronous execution
     t();
-    return result.get();
+  } else {
+    // Asynchronous execution via wrapper task
+    cpl::dispatch::task wrapper([&t] { t(); });
+
+    auto fut = wrapper.get_future();
+    dispatch(std::move(wrapper));
+
+    // Important: It seems we need to 'trigger' execution of the wrapper task
+    // by tickling its future.
+    // The whole future business looks a bit unfinished, cf.
+    // http://stackoverflow.com/questions/23455104/why-is-the-destructor-of-a-future-returned-from-stdasync-blocking
+    fut.get();
   }
 
-  cpl::dispatch::task wrapper([&t] () {
-    try { 
-      t();
-    } catch (std::exception const& e) {
-      std::cerr << "ERROR: " << e.what() << std::endl;
-      // TODO: Log
-    } catch (...) {
-      std::cerr << "ERROR: nonstandard exception" << std::endl;
-      // TODO: Log
-    }
-  });
-
-  auto fut = wrapper.get_future();
-  this->dispatch(std::move(wrapper));
-  // Important: It seems we need to 'trigger' execution of the wrapper task
-  // by tickling its future.
-  // The whole future business looks a bit unfinished, cf.
-  // http://stackoverflow.com/questions/23455104/why-is-the-destructor-of-a-future-returned-from-stdasync-blocking
-  fut.get();
-
-  // Wait for result and return it.
-  return result.get();
+  return t.get_future().get();
 }
 
 #endif // CPP_LIB_DISPATCH_H

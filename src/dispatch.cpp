@@ -48,7 +48,9 @@ void cpl::dispatch::thread_pool::dispatch(cpl::dispatch::task&& t) {
   if (num_workers() > 0) {
     tasks.push(task_and_continue{std::move(t), true});
   } else {
+    // Direct execution, re-throw exceptions (on get())
     t();
+    t.get_future().get();
   }
 }
 
@@ -58,6 +60,7 @@ void cpl::dispatch::thread_pool::thread_function() {
     if (!tac.second) {
       return;
     } else {
+      // Execute task, any exception goes to 'shared state'
       tac.first();
     }
   } while (true);

@@ -128,12 +128,14 @@ struct vehicle_data {
       std::string const& name2,
       std::string const& type,
       bool const tracking,
-      bool const identify)
+      bool const identify,
+      short id_type_probably_wrong_in)
   : name1(name1),
     name2(name2),
     type(type),
     tracking(tracking),
-    identify(identify)
+    identify(identify),
+    id_type_probably_wrong(id_type_probably_wrong_in)
   {}
 
   vehicle_data()

@@ -952,11 +952,10 @@ cpl::ogn::vehicle_data_and_name parse_ddb_entry(cpl::util::lexer& lex) {
   // Use unqualified ID.  This is a primary key in the DDB
   // and users regularly get the ID type wrong (called
   // 'Device type' in the UI as of July, 2015).
-  static_cast<void>(id_type);
   return std::make_pair(
       // cpl::ogn::qualified_id(id, id_type),
       id,
-      cpl::ogn::vehicle_data{callsign, cn, type, tracking, identify});
+      cpl::ogn::vehicle_data{callsign, cn, type, tracking, identify, id_type});
 }
 
 cpl::ogn::vehicle_db

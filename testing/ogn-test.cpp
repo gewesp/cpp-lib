@@ -58,6 +58,7 @@ const cpl::util::opm_entry options[] = {
   cpl::util::opm_entry("utc"     , cpl::util::opp(true , 'u')),
   cpl::util::opm_entry("unittests", cpl::util::opp(false    )),
   cpl::util::opm_entry("minalt"  , cpl::util::opp(true , 'm')),
+  cpl::util::opm_entry("ddb_stats", cpl::util::opp(false    )),
   cpl::util::opm_entry("ddb_query_interval", cpl::util::opp(true , 'q'))
 };
 
@@ -82,6 +83,7 @@ void usage( std::string const& name ) {
 "                     Query interval for DDB, -1 for no queries.\n"
 "--unittests:         Run unit tests.\n"
 "--anonymize <key>:   Scramble IDs in input stream by <key> and output again.\n"
+"--ddb_stats:         Download DDB and display statistics\n"
 "--help:              Display this message.\n"
   ;
 
@@ -366,6 +368,72 @@ output:
   return 0;
 }
 
+// Count occurrences of id_type in vdb
+int count_id_type(cpl::ogn::vehicle_db const& vdb, short const id_type) {
+  return std::count_if(vdb.begin(), vdb.end(),
+      [id_type](cpl::ogn::vehicle_db::value_type const& v) {
+          return id_type == v.second.id_type_probably_wrong;
+        });
+}
+
+void ddb_stats(std::ostream& os) {
+  auto const vdb = cpl::ogn::get_vehicle_database_ddb(os);
+
+  // Count occurrences of types
+  std::map<std::string, int> types;
+  for (auto const& el : vdb) {
+    ++types[el.second.type];
+  }
+
+  // Sort found types in descending order of frequency
+  typedef std::pair<std::string, int> si;
+  std::vector<si> freq(types.begin(), types.end());
+  std::sort(freq.begin(), freq.end(), 
+            [](si const& p1, si const& p2) { return p1.second > p2.second; });
+
+  auto const n_flarm = count_id_type(vdb, cpl::ogn::ID_TYPE_FLARM );
+  auto const n_icao  = count_id_type(vdb, cpl::ogn::ID_TYPE_ICAO  );
+  auto const n_ogn   = count_id_type(vdb, cpl::ogn::ID_TYPE_OGN   );
+
+  auto const n_flarm_from_id = std::count_if(vdb.begin(), vdb.end(),
+      [](cpl::ogn::vehicle_db::value_type const& v) {
+          return (   cpl::ogn::ID_TYPE_FLARM == v.second.id_type_probably_wrong
+                  || cpl::ogn::ID_TYPE_ICAO  == v.second.id_type_probably_wrong)
+                  && (   "DD" == v.first.substr(0, 2)
+                      || "DE" == v.first.substr(0, 2)
+                      || "DF" == v.first.substr(0, 2));
+        });
+
+  auto const n_icao_from_id = std::count_if(vdb.begin(), vdb.end(),
+      [](cpl::ogn::vehicle_db::value_type const& v) {
+          return (   cpl::ogn::ID_TYPE_FLARM == v.second.id_type_probably_wrong
+                  || cpl::ogn::ID_TYPE_ICAO  == v.second.id_type_probably_wrong)
+                  && not (   "DD" == v.first.substr(0, 2)
+                          || "DE" == v.first.substr(0, 2)
+                          || "DF" == v.first.substr(0, 2));
+        });
+
+  os << "Open Glider Network DDB statistics" << std::endl;
+  os << "Date: " << cpl::util::format_datetime(cpl::util::utc()) << std::endl;
+  os << "Total number of registered devices: " << vdb.size() << std::endl;
+  os << "Number of FLARM IDs (D{DEF}xxxx): " 
+     << n_flarm_from_id << std::endl; 
+  os << "Number of ICAO IDs (not D{DEF}xxxx): " 
+     << n_icao_from_id << std::endl; 
+  os << "Number of OGN IDs: " 
+     << n_ogn << std::endl; 
+  os << "Number of IDs claimed FLARM: " 
+     << n_flarm << std::endl; 
+  os << "Number of IDs claimed ICAO: " 
+     << n_icao << std::endl; 
+  os << "Total number of registered aircraft types: "
+     << freq.size() << std::endl;
+  os << "Aircraft types in decreasing order of frequency: " << std::endl;
+  for (auto const& el : freq) {
+    os << el.second << ' ' << el.first << std::endl;
+  }
+}
+
 
 int main( int , char const* const* const argv ) {
 
@@ -382,6 +450,11 @@ int main( int , char const* const* const argv ) {
 
   if (cl.is_set("unittests")) {
     cpl::ogn::unittests(std::cout);
+    return 0;
+  }
+
+  if (cl.is_set("ddb_stats")) {
+    ddb_stats(std::cout);
     return 0;
   }
 

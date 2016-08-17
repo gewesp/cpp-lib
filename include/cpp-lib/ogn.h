@@ -120,7 +120,7 @@ struct vehicle_data {
 
   // ID type from DDB, one of ID_TYPE_...
   // WARNING: This will often be wrong because users enter the
-  // wrong address type in the DB.
+  // wrong address type in the DB.  Avoid relying on this parameter.
   short id_type_probably_wrong = ID_TYPE_RANDOM;
 
   vehicle_data(
@@ -357,7 +357,9 @@ typedef std::map<std::string, aircraft_rx_info> aircraft_db;
 // Complete aircraft RX info and ID
 typedef std::pair<std::string, aircraft_rx_info> aircraft_rx_info_and_name;
 
-// Vehicle database type
+// Vehicle database type.  Warning: Indexed by *unqualified* ID
+// (based on the OGN DDB primary key, which is also the unqualified
+// ID).
 typedef std::unordered_map<std::string, vehicle_data> vehicle_db;
 
 ////////////////////////////////////////////////////////////////////////
@@ -459,6 +461,10 @@ bool parse_aprs_aircraft(
   // If we have a DDB, apply it to the given aircraft record,
   // i.e. set its callsign from the ID.
   void apply(aircraft_rx_info_and_name&);
+
+  // Returns the entry associated with the given qualified id, or 
+  // throws if not found.
+  vehicle_data lookup(std::string const& id);
 
 private:
   double query_interval;

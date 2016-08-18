@@ -60,6 +60,7 @@
 // [1] A very interesting paper by Herb Sutter on various options of
 //     std::future design:
 //     http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3630.pdf
+// [2] http://stackoverflow.com/questions/23455104/why-is-the-destructor-of-a-future-returned-from-stdasync-blocking
 //
 
 
@@ -142,6 +143,18 @@ using dispatch_queue = thread_pool;
 
 } // namespace cpl
 
+//
+// The only possible exceptions from packaged_task::operator() 
+// according to the Standard are:
+//
+// std::future_error on the following error conditions:
+// The stored task has already been invoked. The error category is 
+// set to promise_already_satisfied.
+//
+// *this has no shared state. The error category is set to no_state.
+//
+// Both seem to be programming errors.
+//
 
 template<typename T> 
 T cpl::dispatch::thread_pool::dispatch_returning(returning_task<T>&& t) {
@@ -152,13 +165,12 @@ T cpl::dispatch::thread_pool::dispatch_returning(returning_task<T>&& t) {
     // Asynchronous execution via wrapper task
     cpl::dispatch::task wrapper([&t] { t(); });
 
+    // Get the future before we give the wrapper away.
     auto fut = wrapper.get_future();
     dispatch(std::move(wrapper));
 
     // Important: It seems we need to 'trigger' execution of the wrapper task
     // by tickling its future.
-    // The whole future business looks a bit unfinished, cf.
-    // http://stackoverflow.com/questions/23455104/why-is-the-destructor-of-a-future-returned-from-stdasync-blocking
     fut.get();
   }
 

@@ -56,6 +56,11 @@
 // * The use of std::future for wrapper task and/or tasks without
 //   return value may be overkill?
 //
+// References:
+// [1] A very interesting paper by Herb Sutter on various options of
+//     std::future design:
+//     http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3630.pdf
+//
 
 
 #ifndef CPP_LIB_DISPATCH_H

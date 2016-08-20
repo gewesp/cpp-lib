@@ -60,7 +60,8 @@ void cpl::dispatch::thread_pool::thread_function() {
     if (!tac.second) {
       return;
     } else {
-      // Execute task, any exception goes to 'shared state'
+      // Execute task.  This should not throw, exceptions are stored in
+      // the 'shared state'.
       tac.first();
     }
   } while (true);

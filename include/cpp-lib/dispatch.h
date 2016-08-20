@@ -68,6 +68,7 @@
 #define CPP_LIB_DISPATCH_H
 
 #include "cpp-lib/util.h"
+#include "cpp-lib/sys/syslogger.h"
 
 #include <iostream>
 #include <string>
@@ -158,23 +159,52 @@ using dispatch_queue = thread_pool;
 
 template<typename T> 
 T cpl::dispatch::thread_pool::dispatch_returning(returning_task<T>&& t) {
+  auto tfut = t.get_future();
   if (0 == num_workers()) {
     // Synchronous execution
     t();
   } else {
     // Asynchronous execution via wrapper task
+    // cpl::dispatch::task wrapper([t_inner = std::move(t)] { t_inner(); });
+    // t() should theoretically not throw---the exception should appear
+    // in the get() below.
     cpl::dispatch::task wrapper([&t] { t(); });
 
     // Get the future before we give the wrapper away.
-    auto fut = wrapper.get_future();
+    auto wfut = wrapper.get_future();
     dispatch(std::move(wrapper));
 
     // Important: It seems we need to 'trigger' execution of the wrapper task
     // by tickling its future.
-    fut.get();
+    try {
+      wfut.get();
+    } catch (std::exception const& e) {
+      cpl::util::log::syslogger sl;
+      sl << cpl::util::log::prio::ERR
+         << "DISPATCH: Error in wrapper task: " << e.what()
+         << std::endl;
+    } catch (...) {
+      cpl::util::log::syslogger sl;
+      sl << cpl::util::log::prio::ERR
+         << "DISPATCH: Unknown error in wrapper task"
+         << std::endl;
+    }
   }
 
-  return t.get_future().get();
+  try {
+    return tfut.get();
+  } catch (std::exception const& e) {
+    cpl::util::log::syslogger sl;
+    sl << cpl::util::log::prio::ERR
+       << "DISPATCH: Error in returning task: " << e.what()
+       << std::endl;
+  } catch (...) {
+    cpl::util::log::syslogger sl;
+    sl << cpl::util::log::prio::ERR
+       << "DISPATCH: Unknown error in returning task"
+       << std::endl;
+  }
+  return T();
 }
 
 #endif // CPP_LIB_DISPATCH_H

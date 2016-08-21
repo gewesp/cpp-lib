@@ -205,8 +205,16 @@ void cpl::util::run_server(
                 + "(retrying in " + std::to_string(params.listen_retry_time)
                 + "s)",
                 e.what());
-        cpl::util::sleep(params.listen_retry_time);
-        continue;
+        ++listen_retries;
+        if (listen_retries <= params.n_listen_retries) {
+          cpl::util::sleep(params.listen_retry_time);
+          continue;
+        } else {
+          sl << prio::ERR << "Maximum number of retries ("
+             << params.n_listen_retries
+             << ") reached, giving up" << std::endl;
+          throw;
+        }
       }
     }
   }

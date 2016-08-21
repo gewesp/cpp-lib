@@ -542,47 +542,71 @@ template<> struct buffer_maker_traits< ::cpl::util::network::connection > {
 
 namespace network {
 
+// A TCP connection endpoint, for incoming or outgoing connections.
+// See tcp-test.cpp for examples.  Use instream/onstream for sending and
+// receiving data.
 struct connection : cpl::util::file::buffer_maker< connection > {
 
-  // Move, but don't copy
-  connection(connection&&) = default;
+  // Moveable, but not copyable
+  connection           (connection&&) = default;
   connection& operator=(connection&&) = default;
 
-  connection(connection const&) = delete;
+  connection           (connection const&) = delete;
   connection& operator=(connection const&) = delete;
   
   typedef stream_address      address_type      ;
   typedef stream_address_list address_list_type ;
 
+  //////////////////////////////////////////////////////////////////////// 
+  // Outgoing connections
+  //////////////////////////////////////////////////////////////////////// 
+
+  // Connects to the remote address ra, binding to the first suitable
+  // local address la if provided, else from an unbound socket.
   connection( 
     address_list_type const& ra , 
     address_list_type const& la = address_list_type()
   ) ;
 
-  connection( std::string const& n , std::string const& s ) ;
+  // Connects to the given remote name/service (hostname/port).
+  connection( std::string const& name , std::string const& service ) ;
 
+  //////////////////////////////////////////////////////////////////////// 
+  // Incoming connections
+  //////////////////////////////////////////////////////////////////////// 
+  // Waits for an incoming connection on the given acceptor.
   connection( acceptor& ) ;
 
-  // Enable/disable nodelay
+  //////////////////////////////////////////////////////////////////////// 
+  // Parametrization
+  //////////////////////////////////////////////////////////////////////// 
+
+  // Enables/disables the TCP_NODELAY option.  If set, sends out data as 
+  // soon as possible, otherwise waits a bit (RFC1122/`Nagle algorithm').
   void no_delay( bool = true ) ;
 
-  // Set send/receive timeout, parameter must be >= 0.
+  // Sets send/receive timeout, parameter must be >= 0.
   // Default: Wait indefinitely
   void    send_timeout( double ) ;
   void receive_timeout( double ) ;
-  // Set both timeouts to the same value >= 0.
+  // Sets both timeouts to the same value >= 0.
   // Default: Wait indefinitely
   void timeout        ( double ) ;
 
+  // Returns the other endpoint's address
   address_type const& peer () const { return  peer_ ; }
+  // Returns the local address
   address_type const& local() const { return local_ ; }
 
+  // Returns the internal socket object
+  // TODO: This should be private.
   std::shared_ptr<cpl::detail_::stream_socket_reader_writer> socket() 
   { return s ; }
 
+  // Returns the low-level socket descriptor
   cpl::detail_::socketfd_t fd() { return s->fd() ; }
 
-  // buffer_maker<> interface
+  // Implementation of buffer_maker<> interface
   instreambuf make_istreambuf() { return instreambuf( socket() ) ; }
   onstreambuf make_ostreambuf() { return onstreambuf( socket() ) ; }
 
@@ -612,30 +636,40 @@ private:
 } ;
 
 
+// Class to listen on a local port and establish incoming TCP connections
+// (via the connection(acceptor&) constructor).  See tcp-test.cpp for
+// examples.
 struct acceptor {
 
-  // Move, but don't copy
-  acceptor(acceptor&&) = default;
+  // Moveable, but not copyable
+  acceptor           (acceptor&&) = default;
   acceptor& operator=(acceptor&&) = default;
 
-  acceptor(acceptor const&) = delete;
+  acceptor           (acceptor const&) = delete;
   acceptor& operator=(acceptor const&) = delete;
 
   typedef stream_address      address_type      ;
   typedef stream_address_list address_list_type ;
 
-  // Listen on given local service, IPv4.
+  // Listens on the given local service (port), IPv4.
+  // TODO: Offer an IPv6 listener (just set the local address to ::1)
+  // Backlog: Maximum queue size for incoming connections.
   acceptor( std::string       const& ls , int backlog = 0 ) ;
 
-  // Listen on first suitable local address.
+  // Listens on first suitable local address.  Can be used to 
+  // listen on IPv6.
   acceptor( address_list_type const& la , int backlog = 0 ) ;
 
+  // Returns the address we're listening on
   address_type const& local() const { return local_ ; }
 
+  // Returns the low-level file descriptor
   cpl::detail_::socketfd_t fd() const { return s.fd() ; }
 
 private:
 
+  // Socket read/write interface, but the acceptor will only use 
+  // accept().
   cpl::detail_::stream_socket_reader_writer s ;
 
   address_type local_ ;
@@ -646,6 +680,22 @@ private:
 
 //
 // std::istream and std::ostream classes for stream (TCP) sockets.
+// The constructor takes a connection object and attaches the data
+// stream to it.  instream/onstream acquires shared ownership of the 
+// connection so that the connection can optionally go out of scope 
+// before the attached stream(s).
+//
+// At most one instream and one onstream may be created per connection
+// (TODO: enforce that!).
+//
+// A pair of instream/onstream attached to the same connection may be
+// used in separate threads.
+//
+// The instream/onstream destructors shut down the connection for
+// reading/writing, respectively.  In order to signal the shutdown
+// to other endpoint (typically causing it to shut down as well),
+// the onstream should be destructed first.  This can be achieved
+// by appropriate scoping, see the compact telnet example in tcp-test.cpp.
 //
 
 typedef cpl::util::file::owning_istream<instreambuf> instream ;

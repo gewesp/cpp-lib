@@ -72,11 +72,16 @@ typedef std::function<
 // Connection parameters.
 // service         ... Port, or "test:stdio" for test run on stdin/stdout
 // server_name     ... Server name for syslog
+// n_listen_retries ... Retry this many times to listen to incoming
+//                      connections, typically to wait for the port to
+//                      become available
+// listen_retry_time ... Time to wait for listening port to become available
+//                     after a failure to listn [s]
 // log_connections ... Whether to log connections or not
 //                     ("New connection", "Connection closing" log entries)
 // max_line_length ... Maximum for input lines
-// timeout         ... Time out connection after this amount of inactivity [s]
-//                     (both input and output)
+// timeout         ... Connection timeout connection after this amount of 
+//                     inactivity [s] (both input and output)
 // backlog         ... Max number of backlogged connections (see acceptor)
 // background      ... Whether to listen for connections in background or not
 //
@@ -89,6 +94,8 @@ struct server_parameters {
   std::string service    = "test:stdio";
   std::string server_name = "cpp-lib/generic";
   bool   log_connections = true ;
+  long   n_listen_retries = 0   ;
+  double listen_retry_time = 1.0 ;
   long   max_line_length = 1000 ;
   double timeout         = 60.0 ;
   int    backlog         = 0    ;

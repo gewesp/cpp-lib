@@ -14,9 +14,9 @@
 // limitations under the License.
 //
 
-
 #include "cpp-lib/sys/server.h"
 
+#include "cpp-lib/sys/util.h"
 #include "cpp-lib/sys/syslogger.h"
 
 #include <exception>
@@ -186,14 +186,28 @@ void cpl::util::run_server(
           "Aborting test mode server " + params.server_name, e.what());
     }
   } else {
-    server_thread st(
-        acceptor(params.service, params.backlog), handler, welcome, params);
+    syslogger sl{params.server_name + " accept " + this_thread_id_paren()};
+    long listen_retries = 0;
+    while (listen_retries <= params.n_listen_retries) {
+      try {
+        acceptor acc(params.service, params.backlog);
+        server_thread st(std::move(acc), handler, welcome, params);
 
-    if (params.background) {
-      std::thread t(std::move(st));
-      t.detach();
-    } else {
-      st();
+        if (params.background) {
+          std::thread t(std::move(st));
+          t.detach();
+        } else {
+          st();
+        }
+      } catch (std::exception const& e) {
+        cpl::util::log::log_error(
+            sl, "Failed to accept connections on " + params.service
+                + "(retrying in " + std::to_string(params.listen_retry_time)
+                + "s)",
+                e.what());
+        cpl::util::sleep(params.listen_retry_time);
+        continue;
+      }
     }
   }
 }

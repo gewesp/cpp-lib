@@ -342,6 +342,16 @@ typedef std::vector<   stream_address >   stream_address_list ;
 typedef std::vector< datagram_address > datagram_address_list ;
 
 
+// Name for INADDR_ANY.  Use this to explicitly bind to an IPv4 address.
+inline std::string any_ipv4() {
+  return "0.0.0.0" ;
+}
+
+// Name for INADDR6_ANY.  Use this to explicitly bind to an IPv6 address.
+inline std::string any_ipv6() {
+  return "::" ;
+}
+
 inline stream_address_list const resolve_stream
 ( std::string const& n , std::string const& s ) { 
 
@@ -400,8 +410,8 @@ struct datagram_socket {
   datagram_socket( address_family_type , std::string const& ls ) ;
 
   // Bind to local name and service
-  // Use ("0.0.0.0", ls) for IPv4
-  // Use ("::1", ls) for IPv6
+  // Use (any_ipv4()/"0.0.0.0", ls) for IPv4
+  // Use (any_ipv6()/"::", ls) for IPv6
   datagram_socket( std::string const& ln, std::string const& ls ) ;
 
   // Bind to first suitable of the given local addresses
@@ -651,13 +661,17 @@ struct acceptor {
   typedef stream_address      address_type      ;
   typedef stream_address_list address_list_type ;
 
-  // Listens on the given local service (port), IPv4.
-  // TODO: Offer an IPv6 listener (just set the local address to ::1)
+  // Listens on the given local service (port). Tries IPv4, IPv6
+  // if IPv4 isn't available.
   // Backlog: Maximum queue size for incoming connections.
-  acceptor( std::string       const& ls , int backlog = 0 ) ;
+  acceptor( std::string const& ls , int backlog = 0 ) ;
 
-  // Listens on first suitable local address.  Can be used to 
-  // listen on IPv6.
+  // Listens on the given local address and service (port), IPv4 or IPv6
+  // Use (any_ipv4()/"0.0.0.0", ls) for IPv4
+  // Use (any_ipv6()/"::", ls) for IPv6
+  acceptor( std::string const& ln , std::string const& ls , int backlog = 0 ) ;
+
+  // Listens on first suitable local address.
   acceptor( address_list_type const& la , int backlog = 0 ) ;
 
   // Returns the address we're listening on

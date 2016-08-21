@@ -219,13 +219,17 @@ cpl::util::network::acceptor::acceptor
   local_( my_getsockname< SOCK_STREAM >( s.fd() ) )
 { my_listen( s.fd() , bl ) ; }
 
-
 cpl::util::network::acceptor::acceptor
 ( std::string const& ls , int const bl )
 : s( bound_socket< SOCK_STREAM >( resolve_stream( ls ) ) ) ,
   local_( my_getsockname< SOCK_STREAM >( s.fd() ) )
 { my_listen( s.fd() , bl ) ; }
 
+cpl::util::network::acceptor::acceptor
+( std::string const& ln , std::string const& ls , int const bl )
+: s( bound_socket< SOCK_STREAM >( resolve_stream( ln , ls ) ) ) ,
+  local_( my_getsockname< SOCK_STREAM >( s.fd() ) )
+{ my_listen( s.fd() , bl ) ; }
 
 std::shared_ptr<stream_socket_reader_writer>
 cpl::util::network::connection::initialize( 

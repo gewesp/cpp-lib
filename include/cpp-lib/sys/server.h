@@ -70,6 +70,7 @@ typedef std::function<
 
 //
 // Connection parameters.
+// bind_address    ... The local address to bind to, default: "0.0.0.0"
 // service         ... Port, or "test:stdio" for test run on stdin/stdout
 // server_name     ... Server name for syslog
 // n_listen_retries ... Retry this many times to listen to incoming
@@ -91,6 +92,7 @@ typedef std::function<
 struct server_parameters {
   server_parameters() {} 
 
+  std::string bind_address = cpl::util::network::any_ipv4();
   std::string service    = "test:stdio";
   std::string server_name = "cpp-lib/generic";
   bool   log_connections = true ;

@@ -262,19 +262,6 @@ void daytime() {
 }
 
 
-struct telnet_receiver {
-
-  void operator()() const {
-    line_copy( is , os ) ;
-    os << "Connection closed by foreign host." << std::endl ;
-  }
-
-  std::istream& is ;
-  std::ostream& os ;
-
-} ;
-
-
 // Telnet client example, using separate send and receive threads.
 void telnet( 
   std::istream& is        ,
@@ -286,13 +273,18 @@ void telnet(
   connection c( host , port ) ;
   instream ins( c ) ;
 
-  std::thread receiver_thread( telnet_receiver{ ins , os } ) ;
+  std::thread receiver_thread( [&] { 
+      line_copy( ins , os ) ; 
+      os << "Connection closed by foreign host." << std::endl ;
+  } ) ;
 
   {
+    // By putting the onstream into a scope, we ensure that the connection
+    // is properly shut down (this is done by the onstream destructor).
+    // The server will notice the shutdown and shut down its side as well,
+    // allowing the receiver thread to exit.
     onstream ons( c ) ;
     line_copy( is , ons ) ;
-    // The onstream destructor shuts the connection down, hence the
-    // server shuts down as well and the receiver thread exits.
   }
   
   receiver_thread.join() ;

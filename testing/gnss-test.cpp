@@ -150,6 +150,13 @@ void course_test(std::ostream& os) {
   course_test_1(os, -360);
 }
 
+void base_test(std::ostream& os) {
+  motion_and_turnrate mot;
+  os << "motion_and_turnrate" << std::endl;
+  os << mot.speed << " " << mot.vertical_speed << " " 
+     << mot.turnrate << std::endl;
+}
+
 void v_ned_test() {
   v_ned_test_inner(0, 0, -10);
 
@@ -285,7 +292,8 @@ int main(int const argc, char const* const* const argv) {
     cpl::util::verify(3 == argc, "geoid <dbfile>");
     test_geoid(std::cout, argv[2], 8);
   } else if ("unittest" == command) {
-    cpl::util::verify(2 == argc, "unittests (no further arguments)");
+    cpl::util::verify(2 == argc, "unittest (no further arguments)");
+    base_test(std::cout);
     operators_test();
     bearing_distance_test();
     v_ned_test();

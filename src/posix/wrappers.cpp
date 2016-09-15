@@ -65,7 +65,7 @@ void cpl::util::file::mkdir(std::string const& path,
 
   int const res = ::mkdir(path.c_str(), 0777);
   if (0 != res) {
-    cpl::detail_::strerror_exception("chdir to " + path, errno);
+    cpl::detail_::strerror_exception("mkdir " + path, errno);
   }
 }
 

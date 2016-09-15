@@ -276,6 +276,21 @@ void test_getline() {
   }
 }
 
+void test_safe_queue_destructor() {
+  safe_queue<std::string> q;
+
+  std::thread reader(
+    [&q]{
+      q.pop_front();
+  });
+
+  q.push("hello world");
+
+  // Must join() here, otherwise the queue may get destructed before the 
+  // reader accesses it.
+  reader.join();
+}
+
 void test_safe_queue(long long const n) {
   std::cout << "Testing safe_queue" << std::endl;
   safe_queue<std::string> q;
@@ -544,6 +559,7 @@ int main() {
 
   test_getline();
 
+  test_safe_queue_destructor();
   test_safe_queue(100000);
 
   test_cgi(std::cout);

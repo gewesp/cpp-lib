@@ -330,7 +330,7 @@ void tiles(std::ostream& sl, std::string const& config) {
   for (long x = nw_tile.x; x <= se_tile.x; ++x) {
 
   std::string const dir2 = dir1 + "/" + std::to_string(x);
-  cpl::util::file::mkdir(dir2);
+  cpl::util::file::mkdir(dir2, true);
 
   for (long y = nw_tile.y; y <= se_tile.y; ++y) {
     char url  [1000] = "";

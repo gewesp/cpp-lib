@@ -1350,6 +1350,12 @@ private:
 // See also:
 // http://en.cppreference.com/w/cpp/thread/condition_variable
 //
+// TODO:
+// * Add a safeguard against destruction when there's still a reader or 
+//   writer?  Just acquiring a lock on the mutex in the destructor doesn't
+//   work because wait() unlocks the mutex.
+// * Add maximum size, empty() and full() conditions.
+//
 
 template <class T> struct safe_queue {
   void push(T&& t) {

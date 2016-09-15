@@ -296,7 +296,7 @@ void tiles(std::ostream& sl, std::string const& config) {
   auto const tsp = cpl::map::tileset_parameters_from_registry(reg);
   tsp.validate();
   auto const    url_pattern = reg.check_string("url_pattern");
-  auto const local_pattern  = reg.check_string("local_pattern" );
+  auto const  local_pattern = reg.check_string("local_pattern");
   auto const tmpfile        = reg.check_string("tmpfile" );
   double const max_delay = reg.get_default("max_delay", 1.0);
   cpl::util::verify_bounds(max_delay, "max_delay", 0.0, 1e9);
@@ -306,7 +306,11 @@ void tiles(std::ostream& sl, std::string const& config) {
   std::minstd_rand rng;
   std::uniform_real_distribution<> U(0.0, max_delay);
 
+  cpl::util::file::mkdir(tsp.tile_directory, true);
+
   for (int zoom = tsp.maxzoom; zoom >= tsp.minzoom; --zoom) {
+  std::string const dir1 = tsp.tile_directory + "/" + std::to_string(zoom);
+  cpl::util::file::mkdir(dir1, true);
 
   auto const se_tile = tm.get_tile_coordinates(zoom, tsp.south_east);
   auto const nw_tile = tm.get_tile_coordinates(zoom, tsp.north_west);
@@ -322,15 +326,21 @@ void tiles(std::ostream& sl, std::string const& config) {
 
   cpl::util::sleep(3.0);
 
-  for (long y = nw_tile.y; y <= se_tile.y; ++y) {
+
   for (long x = nw_tile.x; x <= se_tile.x; ++x) {
+
+  std::string const dir2 = dir1 + "/" + std::to_string(x);
+  cpl::util::file::mkdir(dir2);
+
+  for (long y = nw_tile.y; y <= se_tile.y; ++y) {
     char url  [1000] = "";
     char local[1000] = "";
 
     std::sprintf(url  ,   url_pattern.c_str(), zoom, x, y);
-    std::sprintf(local, local_pattern.c_str(), zoom, x, y);
+    // Local: Pattern only determines filename, directory structure is fixed
+    std::sprintf(local, local_pattern.c_str(), y         );
 
-    std::string const filename = tsp.tile_directory + "/" + local;
+    std::string const filename = dir2 + "/" + local;
 
     if (cpl::util::file::exists(filename)) {
       sl << prio::INFO << "File " << filename << " exists, skipping"

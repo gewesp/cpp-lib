@@ -57,6 +57,18 @@ void cpl::util::file::chdir(std::string const& path) {
   }
 }
 
+void cpl::util::file::mkdir(std::string const& path, 
+                            bool const allow_existing) {
+  if (allow_existing && cpl::util::file::exists(path)) {
+    return;
+  }
+
+  int const res = ::mkdir(path.c_str(), 0777);
+  if (0 != res) {
+    cpl::detail_::strerror_exception("chdir to " + path, errno);
+  }
+}
+
 std::string cpl::util::file::getcwd() {
   int constexpr size = 10000;
   char buf[size];

@@ -42,6 +42,11 @@ namespace file {
 // Changes working directory for this process, throws in case of errors.
 void chdir( std::string const& ) ;
 
+// Creates a directory.  If allow_existing is true, does not do anything
+// if it already exists.
+// TODO: allow_existing currently also allows for a file
+void mkdir( std::string const& name , bool allow_existing = false ) ;
+
 // Gets current working directory (absolute path name).
 std::string getcwd() ;
 

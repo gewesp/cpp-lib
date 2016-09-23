@@ -15,6 +15,8 @@
 //
 // Component: SYSUTIL
 //
+// TODO: This is UNIX only.  Provide a Windows implementation
+//
 
 #ifndef CPP_LIB_SYSLOGGER_H
 #define CPP_LIB_SYSLOGGER_H
@@ -76,6 +78,11 @@ struct prio_setter {
   unsigned short const which;
 };
 
+//
+// Syslog_writer implements the writer part of the reader_writer concept, 
+// see util.h
+//
+
 struct syslog_writer {
 
   // Better be explicit
@@ -88,6 +95,7 @@ struct syslog_writer {
 
   syslog_writer(std::string const& t, std::ostream* echo);
 
+  // reader_writer implementation of write()
   int write(char const* buf, int n);
   void shutdown_write() {}
 
@@ -145,6 +153,14 @@ namespace log {
 typedef cpl::util::ostreambuf< cpl::detail_::syslog_writer > syslogstreambuf ;
 
 
+//
+// This is the main class.  It derives from ostream and can be used
+// exchangeably with any standard stream.  Use prio::INFO, ... to
+// set the log level (priority).
+//
+// See syslogger-test.cpp for extensive usage examples.
+//
+
 struct syslogger : cpl::util::file::owning_ostream<syslogstreambuf> { 
 
   //
@@ -168,15 +184,18 @@ struct syslogger : cpl::util::file::owning_ostream<syslogstreambuf> {
 
   syslogger() : syslogger("") {}
 
+  // If an echo stream is set, all messages will be output to the echo
+  // stream in addition to *this.
   void set_echo_stream(std::ostream* const s) {
     buffer().reader_writer().set_echo_stream(s);
   }
 
+  // Use the given clock function for timestamps on the echo stream.
   void set_echo_clock(std::function<double()> const& cl) {
     buffer().reader_writer().set_echo_clock(cl);
   }
 
-  // Log level selection
+  // Selects the minimum Log level on *this, the echo stream, or both.
   void set_minlevel(cpl::detail_::prio_setter const& ps) {
     if (ps.which & SYSLOG) 
     { buffer().reader_writer().minlevel_syslog = ps.p; }

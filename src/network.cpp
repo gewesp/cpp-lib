@@ -110,7 +110,9 @@ bound_socket( std::vector< address< type > > const& la ) {
 
 }
 
-int int_address_family( 
+} // end anonymous namespace
+
+int cpl::detail_::int_address_family( 
     cpl::util::network::address_family_type const af ) {
   switch( af ) {
     case cpl::util::network::ipv4 :
@@ -123,7 +125,6 @@ int int_address_family(
 }
  
 
-} // end anonymous namespace
 
 
 void cpl::detail_::throw_socket_error( std::string const& msg )

@@ -50,6 +50,17 @@ namespace network {
 struct acceptor   ;
 struct connection ;
 
+//
+// Constants for IPv4 and IPv6.
+// Avoid overlap of enum with port numbers.
+//
+
+enum address_family_type { ipv4 = 1000123 , ipv6 = 1000343 } ;
+
+// Returns ipv4 for "ipv4", "ip4" etc.
+// Throws if description cannot be recognized.
+address_family_type address_family( std::string const& description ) ;
+
 } // namespace network
 
 } // namespace util
@@ -57,6 +68,8 @@ struct connection ;
 
 namespace detail_ {
 
+// Returns the AF_INET or AF_INET6 or throws in case of invalid value
+int int_address_family( cpl::util::network::address_family_type ) ;
 
 struct socket_resource_traits {
 
@@ -338,12 +351,6 @@ namespace util {
 
 namespace network {
 
-// Avoid overlap of enum with port numbers...
-enum address_family_type { ipv4 = 1000123 , ipv6 = 1000343 } ;
-
-// Returns ipv4 for "ipv4", "ip4" etc.
-// Throws if description cannot be recognized.
-address_family_type address_family( std::string const& description ) ;
 
 ////////////////////////////////////////////////////////////////////////
 // cpp-lib specific functionality.
@@ -383,6 +390,12 @@ inline std::string any_ipv6() {
   return "::" ;
 }
 
+// 
+// For the following functions:
+// n ... name
+// s ... service
+//
+
 inline stream_address_list const resolve_stream
 ( std::string const& n , std::string const& s ) { 
 
@@ -411,6 +424,25 @@ inline datagram_address_list const resolve_datagram
 
 }
 
+//
+// Resolve functions with a preference for IPv4 or IPv6 addresses
+//
+
+inline stream_address_list const resolve_stream
+( std::string const& s , address_family_type const aft ) {
+
+  return cpl::detail_::my_getaddrinfo< SOCK_STREAM >( 
+      0 , s.c_str() , cpl::detail_::int_address_family( aft ) ) ;
+
+}
+
+inline datagram_address_list const resolve_datagram
+( std::string const& s , address_family_type const aft ) {
+  
+  return cpl::detail_::my_getaddrinfo< SOCK_DGRAM >( 
+      0 , s.c_str() , cpl::detail_::int_address_family( aft ) ) ;
+
+}
 
 ////////////////////////////////////////////////////////////////////////
 // Datagram communications.

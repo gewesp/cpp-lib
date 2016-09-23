@@ -220,7 +220,7 @@ cpl::util::network::connection::initialize(
   address_list_type const& la
 ) {
 
-  std::string err ;
+  std::string err = "connect: no suitable address combination found";
 
   // No local port given, use unbound socket.
   if( 0 == la.size() ) {
@@ -240,7 +240,7 @@ cpl::util::network::connection::initialize(
     }
 
   } else {
-    // Local address given, find an address family match.
+    // Local addresses given, find an address family match.
 
     for( auto const& local : la ) {
 
@@ -311,7 +311,7 @@ void cpl::util::network::connection::timeout( const double t ) {
 }
 
 #if 0
-// Dangerous ... Cf. comments in header.
+// Dangerous ... not possible after shutdown().  Cf. comments in header.
 cpl::util::network::stream_address
 cpl::util::network::peer( cpl::util::network::onstream const& ons ) {
   return my_getpeername< SOCK_STREAM >( ons.buffer().reader_writer().fd() ) ;

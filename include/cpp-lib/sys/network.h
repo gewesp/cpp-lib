@@ -438,10 +438,25 @@ inline std::string any_ipv6() {
 }
 
 // 
+// Resolver functions.
+//
 // The following combinations exist:
-// resolve_{stream|datagram}([name], service, address_family_hint);
-// name is optional.
-// address_family_hint defaults to ip_unspec if not given.
+// * resolve_{stream|datagram}(service, address_family_hint);
+// -> Resolves to an address on any local interface, intended to bind.
+// -> Typically used for server sockets
+//
+// * resolve_{stream|datagram}(hostname, service, address_family_hint);
+// -> Resolves to an address on the given remote host, intended to send or 
+//    connect.
+// -> Typically used for client sockets
+//
+// address_family_hint: Prefer ipv4 or ipv6 if specified, defaults to
+//     ip_unspec meaning any suitable protocol.
+//
+// Return value:
+// * A list of at least one suitable addresses.
+// * Throws if the hostname/service/address_family_hint combination cannot 
+//   be resolved.
 //
 
 template< typename ... ARG >
@@ -659,8 +674,12 @@ struct connection : cpl::util::file::buffer_maker< connection > {
   // Outgoing connections
   //////////////////////////////////////////////////////////////////////// 
 
-  // Connects to the remote address ra, binding to the first suitable
-  // local address la if provided, else from an unbound socket.
+  // If la is nonempty, connects to one of the remote addresses in ra 
+  // using one of the local addresses la.
+  // If la is empty, uses an unbound socket suitable for connection to
+  // the first address in ra.
+  // If a server is only listening on IPv6 or IPv4, this will still 
+  // be able to connect, provided that both addresses are in ra.
   connection( 
     address_list_type const& ra , 
     address_list_type const& la = address_list_type()

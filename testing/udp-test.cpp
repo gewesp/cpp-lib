@@ -111,9 +111,9 @@ void ping(
   datagram_socket::address_type source ;
   
   auto const destination = resolve_datagram( host , port , family )[0] ;
-  std::cout << "Local address: " << s.local() << std::endl ;
   if( connect ) {
     s.connect( host , port ) ;
+    std::cout << "Local address: " << s.local() << std::endl ;
   }
 
   // Peer address is only defined if connect() has been called.

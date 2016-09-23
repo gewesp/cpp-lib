@@ -387,8 +387,8 @@ inline datagram_address_list const resolve_datagram
 // TODO: The API is still in flux and currently not in line with N1925.
 // TODO: Implement smart decision on which address from resolver to
 // use.
-// TODO: Thread safety is in a mess.  Remove state from the class
-// to make it thread-safe (e.g., source_).  Seriously.
+// Datagram sockets are thread safe except for calls to connect().
+// TODO: Clarify bound()
 ////////////////////////////////////////////////////////////////////////
 
 struct datagram_socket {
@@ -444,7 +444,21 @@ struct datagram_socket {
     for_it const& begin , 
     double const& t = -1 ,
     size_type n = default_size()
-  ) ;
+  ) {
+    return receive_internal( nullptr , begin , t , n );
+  }
+
+  // Like receive() above, but fills the source address
+  template< typename for_it >
+  size_type receive( 
+    address_type& source ,
+    for_it const& begin , 
+    double const& t = -1 ,
+    size_type n = default_size()
+  ) {
+    return receive_internal( &source , begin , t , n );
+  }
+
 
   // Send overloads.
   // Connection refused error is ignored.
@@ -473,9 +487,9 @@ struct datagram_socket {
 
   // Observers
 
-  // Address of last packet received
-  // TODO: This isn't thread safe!
-  address_type const& source() const { return source_ ; }
+  // Removed.  Please use the new receive() overload with a source
+  // return parameter instead.
+  // address_type const& source() const;
 
   // Local address, for bound sockets only
   address_type const& local () const { 
@@ -502,6 +516,14 @@ struct datagram_socket {
   bool connected() const { return connected_ ; }
 
 private:
+  template< typename for_it >
+
+  size_type receive_internal(
+    address_type* source ,
+    for_it const& begin , 
+    double const& t ,
+    size_type n 
+  ) ;
 
   // Sets up local_ and enables broadcasting.
   void initialize();
@@ -509,7 +531,7 @@ private:
   cpl::detail_::datagram_socket_reader_writer s ;
   cpl::detail_::socketfd_t fd() const { return s.fd() ; }
 
-  address_type source_ ;
+  // Local (bound) address
   address_type  local_ ;
 
   // Remote address for connected sockets.
@@ -958,7 +980,8 @@ cpl::detail_::address< type >::port() const {
 
 template< typename for_it >
 cpl::util::network::datagram_socket::size_type 
-cpl::util::network::datagram_socket::receive( 
+cpl::util::network::datagram_socket::receive_internal( 
+  address_type* const source_ret ,
   for_it const& begin ,
   double const& t , 
   size_type const max
@@ -995,8 +1018,7 @@ cpl::util::network::datagram_socket::receive(
 
   long err ;
   do {
-
-    source_.set_maxlength() ;
+    address_type source ;
 
     err = 
       ::recvfrom(
@@ -1004,9 +1026,13 @@ cpl::util::network::datagram_socket::receive(
          &buffer[ 0 ]   ,
          buffer.size()  ,
          0              ,
-         source_.sockaddr_pointer() ,
-         source_. socklen_pointer()
+         source.sockaddr_pointer() ,
+         source. socklen_pointer()
       ) ;
+
+    if( nullptr != source_ret ) {
+      *source_ret = source ;
+    }
 
   } while( cpl::detail_::EINTR_repeat( err ) ) ;
 

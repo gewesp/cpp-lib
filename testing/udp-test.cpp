@@ -96,6 +96,7 @@ void ping(
     const char* const* msgs ) {
 
   datagram_socket s( address_family( proto ) ) ;
+  datagram_socket::address_type source ;
   s.connect( host , port ) ;
 
   std::cout << "Local address: " << s.local() << std::endl ;
@@ -106,10 +107,11 @@ void ping(
     s.send( *msgs, *msgs + std::strlen( *msgs ) ) ;
 
     std::string reply;
-    if ( s.timeout() == s.receive( std::back_inserter( reply ) , TIMEOUT ) ) {
+    if ( s.timeout() == s.receive(
+          source , std::back_inserter( reply ) , TIMEOUT ) ) {
       std::cout << "Reply timed out" << std::endl ;
     } else {
-      std::cout << "Reply from " << s.source() << ": " << reply << std::endl ;
+      std::cout << "Reply from " << source << ": " << reply << std::endl ;
     }
 
     ++msgs;
@@ -121,18 +123,19 @@ void pong(std::string const& proto ,
           std::string const& listen_port ) {
   
   datagram_socket s( address_family( proto ) , listen_port ) ;
+  datagram_socket::address_type source ;
 
   std::cout << "Receiving on local address: " << s.local() << std::endl ;
 
   long n = 0;
   while ( true ) {
     std::string msg ;
-    s.receive( std::back_inserter( msg ) ) ;
-    std::cout << "Received from " << s.source() << ": " << msg << std::endl ;
+    s.receive( source , std::back_inserter( msg ) ) ;
+    std::cout << "Received from " << source << ": " << msg << std::endl ;
     std::string reply = "Re: " + msg 
       + " (#" + boost::lexical_cast<std::string>(n) + ")" ;
     std::cout << "Sending reply: " << reply << std::endl ;
-    s.send( reply.begin() , reply.end() , s.source() ) ;
+    s.send( reply.begin() , reply.end() , source ) ;
     ++n;
   }
 
@@ -178,6 +181,7 @@ int main( int argc , char const* const* const argv ) {
     { usage( argv[ 0 ] ) ; return 1 ; }
 
     datagram_socket r( address_family( argv[ 2 ] ) , argv[ 3 ] ) ;
+    datagram_socket::address_type source;
 
     std::cerr << "Receiving packets on: " << r.local() << std::endl ;
 
@@ -192,7 +196,8 @@ int main( int argc , char const* const* const argv ) {
       if( !to_file ) {
 
         std::cerr << "Data: " << std::flush ;
-        size = r.receive( std::ostreambuf_iterator< char >( std::cout ) ) ;
+        size = r.receive( 
+            source , std::ostreambuf_iterator< char >( std::cout ) ) ;
         time = cpl::util::utc();
         std::cout << std::endl ;
 
@@ -204,7 +209,8 @@ int main( int argc , char const* const* const argv ) {
 
         always_assert( os ) ;
 
-        size = r.receive( std::ostreambuf_iterator< char >( os ) ) ;
+        size = r.receive( 
+            source , std::ostreambuf_iterator< char >( os ) ) ;
         time = cpl::util::utc();
 
         always_assert( os ) ;
@@ -220,7 +226,7 @@ int main( int argc , char const* const* const argv ) {
         << ", size: " 
         << size
         << " bytes, source: "
-        << r.source()
+        << source
         << std::endl
       ;
 

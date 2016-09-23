@@ -15,7 +15,20 @@
 //
 // Component: NETWORK
 //
-
+// Supports:
+// * Datagram (UDP) and stream (TCP) abstractions
+// * IPv4 and IPv6
+// * Iostreams abstractions TCP
+// * Name resolution (DNS)
+//
+// Notes:
+// * In order to send from client datagram socket, the address family
+//   must match the destination address.
+//
+// TODO:
+// * Client and server constructors or factory functions for UDP.
+// * The API is still in flux and currently not in line with N1925.
+//
 
 #ifndef CPP_LIB_NETWORK_H
 #define CPP_LIB_NETWORK_H
@@ -55,7 +68,11 @@ struct connection ;
 // Avoid overlap of enum with port numbers.
 //
 
-enum address_family_type { ipv4 = 1000123 , ipv6 = 1000343 } ;
+enum address_family_type { 
+  ipv4 = 1000123 , 
+  ipv6 = 1000343 , 
+  ip_unspec = 1000999 
+} ;
 
 // Returns ipv4 for "ipv4", "ip4" etc.
 // Throws if description cannot be recognized.
@@ -68,8 +85,12 @@ address_family_type address_family( std::string const& description ) ;
 
 namespace detail_ {
 
-// Returns the AF_INET or AF_INET6 or throws in case of invalid value
+// Returns AF_INET, AF_INET6 or AF_UNSPEC or throws in case of invalid value
 int int_address_family( cpl::util::network::address_family_type ) ;
+
+// Returns ipv4, ipv6 or ip_unspec (on input AF_INET, AF_INET6, ...) or throws
+// in case of invalid value
+cpl::util::network::address_family_type from_int_address_family( int ) ;
 
 struct socket_resource_traits {
 
@@ -179,14 +200,23 @@ struct address {
 
   bool dgram() const { return SOCK_DGRAM == type ; }
 
-  // sa_family_t family() const { return sockaddr_pointer()->sa_family ; }
-  unsigned  family() const { return sockaddr_pointer()->sa_family ; }
+  // Returns the address family type (ipv4 or ipv6)
+  cpl::util::network::address_family_type family() const {
+    return cpl::detail_::from_int_address_family( family_detail_() ) ;
+  }
   socklen_t length() const { return addrlen ; }
 
   socklen_t maxlength() const { return sizeof( sockaddr_storage ) ; }
   void set_maxlength() { addrlen = maxlength() ; }
 
+  ////////////////////////////////////////////////////////////////////////  
+  // Pseudo-private:  Reserved for implementation use.  
+  // Do not use in application code.
+  ////////////////////////////////////////////////////////////////////////  
+
   // Accessors for the low-level stuff...
+  // The pointers are always valid (they point to memory held by
+  // the object)
   sockaddr* sockaddr_pointer() 
   { return reinterpret_cast< sockaddr* >( &addr ) ; }
 
@@ -199,10 +229,10 @@ struct address {
   sockaddr_in6 const& as_sockaddr_in6() const
   { return *reinterpret_cast< sockaddr_in6 const* >( &addr ) ; }
 
-
   socklen_t const* socklen_pointer() const { return &addrlen ; }
   socklen_t      * socklen_pointer()       { return &addrlen ; }
 
+  int family_detail_() const { return sockaddr_pointer()->sa_family ; }
 private:
 
   // From struct addrinfo:
@@ -216,11 +246,11 @@ private:
 // http://linux.die.net/man/7/ipv6
 template< int type >
 bool operator!=( address< type > const& a1 , address< type > const& a2 ) {
-  if( a1.family() != a2.family() ) {
+  if( a1.family_detail_() != a2.family_detail_() ) {
     return true;
   }
 
-  if( AF_INET == a1.family() ) {
+  if( AF_INET == a1.family_detail_() ) {
     return    a1.as_sockaddr_in().sin_port
            != a2.as_sockaddr_in().sin_port
         ||    a1.as_sockaddr_in().sin_addr.s_addr
@@ -246,11 +276,11 @@ bool operator==( address< type > const& a1 , address< type > const& a2 ) {
 template< int type >
 std::ostream& operator<<( std::ostream& os , address< type > const& a ) {
 
-  if( AF_INET6 == a.family() ) {
+  if( AF_INET6 == a.family_detail_() ) {
     os << '[';
   }
   os << a.host() ;
-  if( AF_INET6 == a.family() ) {
+  if( AF_INET6 == a.family_detail_() ) {
     os << ']';
   }
   os << ":" << a.port() ; 
@@ -258,12 +288,29 @@ std::ostream& operator<<( std::ostream& os , address< type > const& a ) {
   return os ;
 }
 
-
+// Resolve implementations, see resolve_stream(), resolve_datagram()
 template< int type >
 std::vector< address< type > >
 my_getaddrinfo( char const* n , char const* s , 
                 int family_hint = AF_UNSPEC ) ;
 
+template< int type > std::vector< cpl::detail_::address< type > >
+inline resolve( 
+    std::string const& n , std::string const& s ,
+    cpl::util::network::address_family_type const hint = 
+        cpl::util::network::ip_unspec ) {
+  return cpl::detail_::my_getaddrinfo< type >( 
+      n.c_str() , s.c_str() , cpl::detail_::int_address_family( hint ) ) ;
+}
+
+template< int type > std::vector< cpl::detail_::address< type > >
+inline resolve(
+    std::string const& s ,
+    cpl::util::network::address_family_type const hint =
+        cpl::util::network::ip_unspec ) {
+  return cpl::detail_::my_getaddrinfo< type >( 
+      nullptr , s.c_str() , cpl::detail_::int_address_family( hint ) ) ;
+}
 
 template< int type >
 long my_sendto
@@ -391,63 +438,31 @@ inline std::string any_ipv6() {
 }
 
 // 
-// For the following functions:
-// n ... name
-// s ... service
+// The following combinations exist:
+// resolve_{stream|datagram}([name], service, address_family_hint);
+// name is optional.
+// address_family_hint defaults to ip_unspec if not given.
 //
 
-inline stream_address_list const resolve_stream
-( std::string const& n , std::string const& s ) { 
-
-  return cpl::detail_::my_getaddrinfo< SOCK_STREAM >( n.c_str() , s.c_str() ) ;
-
+template< typename ... ARG >
+inline cpl::util::network::stream_address_list 
+resolve_stream( ARG&& ... arg ) {
+  return cpl::detail_::resolve< SOCK_STREAM >(
+      std::forward< ARG >( arg ) ... 
+  ) ;
 }
 
-inline datagram_address_list const resolve_datagram
-( std::string const& n , std::string const& s ) {
-
-  return cpl::detail_::my_getaddrinfo< SOCK_DGRAM >( n.c_str() , s.c_str() ) ;
-
-}
-
-inline stream_address_list const resolve_stream
-( std::string const& s ) {
-
-  return cpl::detail_::my_getaddrinfo< SOCK_STREAM >( 0 , s.c_str() ) ;
-
-}
-
-inline datagram_address_list const resolve_datagram
-( std::string const& s ) {
-  
-  return cpl::detail_::my_getaddrinfo< SOCK_DGRAM >( 0 , s.c_str() ) ;
-
-}
-
-//
-// Resolve functions with a preference for IPv4 or IPv6 addresses
-//
-
-inline stream_address_list const resolve_stream
-( std::string const& s , address_family_type const aft ) {
-
-  return cpl::detail_::my_getaddrinfo< SOCK_STREAM >( 
-      0 , s.c_str() , cpl::detail_::int_address_family( aft ) ) ;
-
-}
-
-inline datagram_address_list const resolve_datagram
-( std::string const& s , address_family_type const aft ) {
-  
-  return cpl::detail_::my_getaddrinfo< SOCK_DGRAM >( 
-      0 , s.c_str() , cpl::detail_::int_address_family( aft ) ) ;
-
+template< typename ... ARG >
+inline cpl::util::network::datagram_address_list 
+resolve_datagram( ARG&& ... arg ) {
+  return cpl::detail_::resolve< SOCK_DGRAM >(
+      std::forward< ARG >( arg ) ... 
+  ) ;
 }
 
 ////////////////////////////////////////////////////////////////////////
 // Datagram communications.
 //
-// TODO: The API is still in flux and currently not in line with N1925.
 // TODO: Implement smart decision on which address from resolver to
 // use.
 // Datagram sockets are thread safe except that uncoordinated calls to 
@@ -744,7 +759,7 @@ struct acceptor {
   // Use (any_ipv6()/"::", ls) for IPv6
   acceptor( std::string const& ln , std::string const& ls , int backlog = 0 ) ;
 
-  // Listens on first suitable local address.
+  // Listens on first suitable local address from the given list.
   acceptor( address_list_type const& la , int backlog = 0 ) ;
 
   // Returns the address we're listening on
@@ -983,7 +998,7 @@ template< int type >
 std::string const
 cpl::detail_::address< type >::fqdn() const {
 
-  check_family( family() ) ;
+  check_family( family_detail_() ) ;
 
   return cpl::detail_::my_getnameinfo< type >( *this , true , false , true ) ;
 
@@ -994,7 +1009,7 @@ template< int type >
 std::string const
 cpl::detail_::address< type >::host_name() const {
 
-  check_family( family() ) ;
+  check_family( family_detail_() ) ;
 
   return cpl::detail_::my_getnameinfo< type >( *this , true , false , false ) ;
 
@@ -1004,7 +1019,7 @@ template< int type >
 std::string const
 cpl::detail_::address< type >::port_name() const {
 
-  check_family( family() ) ;
+  check_family( family_detail_() ) ;
 
   return cpl::detail_::my_getnameinfo< type >( *this , false , false , false ) ;
 
@@ -1014,7 +1029,7 @@ template< int type >
 std::string const
 cpl::detail_::address< type >::host() const {
 
-  check_family( family() ) ;
+  check_family( family_detail_() ) ;
 
   return cpl::detail_::my_getnameinfo< type >( *this , true , true , false ) ;
 
@@ -1129,9 +1144,10 @@ void cpl::util::network::datagram_socket::send(
   address_type const& d
 ) {
 
-  // Can we send from an IPv4 socket to IPv6 or vice versa?  Probably 
-  // this is system dependent, so don't rely on it.
-  if( d.family() != local().family() ) {
+  // It appears we cannot send from an IPv4 socket to IPv6 or vice versa
+  // (tested MacOS X).  Hence, test for this condition and throw
+  // in case somebody tries.
+  if( d.family_detail_() != local().family_detail_() ) {
     throw std::runtime_error( "datagram send: address family mismatch" ) ;
   }
 
@@ -1162,7 +1178,7 @@ void cpl::util::network::datagram_socket::send(
 
   for( auto const& i : ra ) {
 
-    if( i.family() == local().family() ) {
+    if( i.family_detail_() == local().family_detail_() ) {
       send( begin , end , i ) ; 
       return ;
     }

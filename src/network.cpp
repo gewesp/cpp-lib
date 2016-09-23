@@ -98,7 +98,7 @@ bound_socket( std::vector< address< type > > const& la ) {
 
     try {
 
-      cpl::detail_::socket< type > s( adr.family() ) ;
+      cpl::detail_::socket< type > s( adr.family_detail_() ) ;
       my_bind( s.fd() , adr ) ;
       return s ;
 
@@ -119,12 +119,26 @@ int cpl::detail_::int_address_family(
       return AF_INET ;
     case cpl::util::network::ipv6 :
       return AF_INET6 ;
+    case cpl::util::network::ip_unspec :
+      return AF_UNSPEC ;
     default :
-      throw std::runtime_error( "unknown address family" ) ;
+      throw std::runtime_error( "unknown address family type" ) ;
   }
 }
- 
 
+cpl::util::network::address_family_type 
+cpl::detail_::from_int_address_family( int const afi ) {
+  switch( afi ) {
+    case AF_INET  :
+      return cpl::util::network::ipv4 ;
+    case AF_INET6 :
+      return cpl::util::network::ipv6 ;
+    case AF_UNSPEC :
+      return cpl::util::network::ip_unspec ;
+    default       :
+      throw std::runtime_error( "unknown integer address family" ) ;
+  }
+}
 
 
 void cpl::detail_::throw_socket_error( std::string const& msg )
@@ -164,10 +178,15 @@ void cpl::detail_::socket_resource_traits::dispose
 
 cpl::util::network::address_family_type
 cpl::util::network::address_family( std::string const& desc ) {
-  if( "ip4" == desc || "ipv4" == desc) {
+  if        ( "ip4" == desc || "ipv4" == desc) {
     return cpl::util::network::ipv4;
   } else if ( "ip6" == desc || "ipv6" == desc ) {
     return cpl::util::network::ipv6;
+  // any/unspec isn't suitable e.g. for socket() calls.
+  // TODO: Figure out when to allow that as user input.  Possible
+  // never.
+  // } else if ( "unspec" == desc || "any" == desc ) {
+  //   return cpl::util::network::ip_unspec;
   } else {
     throw std::runtime_error( "unkown address family: " + desc ) ;
   }
@@ -211,7 +230,7 @@ cpl::util::network::connection::initialize(
       try {
 
         auto const s = std::make_shared< stream_socket_reader_writer >( 
-            remote.family() ) ;
+            remote.family_detail_() ) ;
 
         my_connect( s->fd() , remote ) ;
         return s;
@@ -227,14 +246,14 @@ cpl::util::network::connection::initialize(
 
       for( auto const& remote : ra ) {
 
-        if( local.family() != remote.family() ) 
+        if( local.family_detail_() != remote.family_detail_() ) 
         { err = "address families don't match" ; continue ; }
 
         try {
 
           auto const s = 
               std::make_shared< stream_socket_reader_writer >( 
-                  local.family() ) ;
+                  local.family_detail_() ) ;
 
           my_bind   ( s->fd() , local ) ;
           my_connect( s->fd() , remote ) ;
@@ -348,7 +367,7 @@ void cpl::util::network::datagram_socket::connect(
 
   // Look for protocol (IPv4/IPv6) match and connect.
   for ( auto const& adr : candidates ) {
-    if ( local().family() == adr.family() ) {
+    if ( local().family_detail_() == adr.family_detail_() ) {
       connect( adr ) ;
       return ;
     }

@@ -106,10 +106,11 @@ void ping(
     throw std::runtime_error( "connect parameter must be 'yes' or 'no'" );
   }
 
-  datagram_socket s( address_family( proto ) ) ;
+  auto const family = address_family( proto ) ;
+  datagram_socket s( family ) ;
   datagram_socket::address_type source ;
   
-  auto const destination = resolve_datagram( host , port )[0] ;
+  auto const destination = resolve_datagram( host , port , family )[0] ;
   std::cout << "Local address: " << s.local() << std::endl ;
   if( connect ) {
     s.connect( host , port ) ;

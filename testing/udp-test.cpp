@@ -52,9 +52,10 @@ void usage( std::string const prog ) {
 "                                    stdout\n"
 "receive-file <proto> <listen_port>: Receive on <listen_port>, write packets\n"
 "                                    to a file sequence\n"
-"ping         <proto> <host> <port> [ <msg> ... ]:\n"
-"                                    Connect to <host>:<port>, send\n"
-"                                    messages, print replies\n"
+"ping         <proto> <host> <port> <connect> [ <msg> ... ]:\n"
+"                                    Send messages to <host>:<port>,\n"
+"                                    print replies\n"
+"                                    Connect if <connect> is 'yes'\n"
 "pong         <proto> <listen_port>: Listen on <listen_port> and reply to\n"
 "                                    received messages\n"
 "\n"
@@ -93,18 +94,42 @@ void ping(
     std::string const& proto ,
     std::string const& host, 
     std::string const& port , 
-    const char* const* msgs ) {
+    std::string const& connect_s ,
+    const char* const* msgs) {
+
+  bool connect = false ;
+  if        ( "yes" == connect_s ) {
+    connect = true ; 
+  } else if ( "no"  == connect_s ) {
+    connect = false ; 
+  } else {
+    throw std::runtime_error( "connect parameter must be 'yes' or 'no'" );
+  }
 
   datagram_socket s( address_family( proto ) ) ;
   datagram_socket::address_type source ;
-  s.connect( host , port ) ;
-
+  
+  auto const destination = resolve_datagram( host , port )[0] ;
   std::cout << "Local address: " << s.local() << std::endl ;
-  std::cout << "Peer address: "  << s.peer () << std::endl ;
+  if( connect ) {
+    s.connect( host , port ) ;
+  }
+
+  // Peer address is only defined if connect() has been called.
+  // TODO: These should be equal?
+  std::cout   << "Destination address: "  << destination << std::endl ;
+  if( connect ) {
+    std::cout << "Peer address: "         << s.peer()    << std::endl ;
+  }
 
   while ( *msgs ) {
     std::cout << "Sending: " << *msgs << std::endl ;
-    s.send( *msgs, *msgs + std::strlen( *msgs ) ) ;
+    if( connect ) {
+      s.send( *msgs, *msgs + std::strlen( *msgs )               ) ;
+    } else {
+      s.send( *msgs, *msgs + std::strlen( *msgs ) , destination ) ;
+    }
+    std::cout << "Local address: " << s.local() << std::endl ;
 
     std::string reply;
     if ( s.timeout() == s.receive(
@@ -271,10 +296,10 @@ int main( int argc , char const* const* const argv ) {
 
   } else if( std::string( "ping" ) == argv[1] ) {
     
-    if( argc < 5 )
+    if( argc < 6 )
     { usage( argv[ 0 ] ) ; return 1 ; }
 
-    ping( argv[2], argv[3] , argv[ 4 ] , &argv[ 5 ] ) ;
+    ping( argv[2], argv[3] , argv[ 4 ] , argv[ 5 ] , &argv[ 6 ] ) ;
 
   } else if( std::string( "pong" ) == argv[1] ) {
 

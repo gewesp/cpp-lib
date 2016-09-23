@@ -274,8 +274,39 @@ inline long my_send( socketfd_t const fd , char const* p , long n ) {
 
 }
 
+template< int type >
+address< type > my_getsockname( socketfd_t const fd ) {
 
+  // API information (from man getsockname):
+  // getsockname() returns the current address to which the socket sockfd is
+  // bound, in the buffer pointed to by addr.  The addrlen  argument  should
+  // be initialized to indicate the amount of space (in bytes) pointed to by
+  // addr.  On return it contains the actual size of the socket address.
+  address< type > a ;
+  always_assert( *a.socklen_pointer() == a.maxlength() ) ;
+  int const err = 
+    ::getsockname( fd , a.sockaddr_pointer() , a.socklen_pointer() ) ;
 
+  if( err < 0 )
+  { throw_socket_error( "getsockname" ) ; }
+
+  return a ;
+
+}
+
+template< int type >
+address< type > my_getpeername( socketfd_t const fd ) {
+
+  address< type > a ;
+  int const err = 
+    ::getpeername( fd , a.sockaddr_pointer() , a.socklen_pointer() ) ;
+
+  if( err < 0 )
+  { throw_socket_error( "getpeername" ) ; }
+
+  return a ;
+
+}
 
 template< int type >
 std::string const
@@ -387,8 +418,8 @@ inline datagram_address_list const resolve_datagram
 // TODO: The API is still in flux and currently not in line with N1925.
 // TODO: Implement smart decision on which address from resolver to
 // use.
-// Datagram sockets are thread safe except for calls to connect().
-// TODO: Clarify bound()
+// Datagram sockets are thread safe except that uncoordinated calls to 
+// connect() from different threads can yield unpredictable results.
 ////////////////////////////////////////////////////////////////////////
 
 struct datagram_socket {
@@ -402,24 +433,34 @@ struct datagram_socket {
 
   // Constructors
 
-  // Create unbound IPv4 or IPv6 socket.
+  // Creates an unbound ('client') IPv4 or IPv6 socket.
   // User code should use e.g. datagram_socket sock(ipv4);
+  // Use this constructor for 'client' sockets, i.e. sockets intended
+  // to send data and possibly process replies.  The port (service) will
+  // be chosen by the operating system.
   datagram_socket( address_family_type ) ;
 
+  // Creates a bound ('server') socket.
   // Binds to local service ls.
+  // Use this constructor for server sockets receiving data on a given port.
   datagram_socket( address_family_type , std::string const& ls ) ;
 
-  // Bind to local name and service
+  // Creates a bound ('server') socket.
+  // Binds to local name and service
   // Use (any_ipv4()/"0.0.0.0", ls) for IPv4
   // Use (any_ipv6()/"::", ls) for IPv6
+  // Use this constructor for server sockets receiving data on a given port.
   datagram_socket( std::string const& ln, std::string const& ls ) ;
 
-  // Bind to first suitable of the given local addresses
+  // Creates a bound ('server') socket.
+  // Binds to the first suitable of the given local addresses
   datagram_socket( address_list_type const& la ) ;
 
+  // Constant returned by receive() functions in case of a timeout.
   static size_type timeout() 
   { return std::numeric_limits< size_type >::max() ; }
 
+  // Default maximum size value for receive() functions.
   static size_type default_size() { return 65536 ; }
 
   // Connect to the given name/service, use IPv4 or IPv6 according
@@ -430,8 +471,6 @@ struct datagram_socket {
   // be sent to this address.
   void connect( address_type const& destination ) {
     my_connect( s.fd() , destination ) ;
-    peer_ = destination ;
-    connected_ = true ;
   }
 
   // Receive a packet with timeout t [s].
@@ -463,11 +502,12 @@ struct datagram_socket {
   // Send overloads.
   // Connection refused error is ignored.
 
-  // Send to address given in connect().
+  // Sends to address given in connect().
+  // Throws if connect() has not been called.
   template< typename for_it >
   void send( for_it const& begin, for_it const& end ) ;
 
-  // Send to given destination.
+  // Sends to given destination.
   template< typename for_it >
   void send( 
     for_it       const& begin       ,
@@ -475,7 +515,7 @@ struct datagram_socket {
     address_type const& destination
   ) ;
  
-  // Send to given node/service.
+  // Sends to given node/service.
   template< typename for_it >
   void send( 
     for_it      const& begin   ,
@@ -491,33 +531,24 @@ struct datagram_socket {
   // return parameter instead.
   // address_type const& source() const;
 
-  // Local address, for bound sockets only
-  address_type const& local () const { 
-    if( !bound() ) {
-      throw std::runtime_error( "unbound datagram socket" ) ;
-    }
-    return  local_ ; 
+  // Returns the local address.
+  // Only valid for bound sockets, that is created with a local address
+  // or after at least one send() call.
+  // If the socket is not bound, may throw or return an all-zero address.
+  address_type local() const { 
+    return cpl::detail_::my_getsockname< SOCK_DGRAM >( fd() ) ;
   }
 
-  // Remote address, for connected sockets only
-  address_type const& peer() const {
-    if( !connected() ) {
-      throw std::runtime_error( "unconnected datagram socket" ) ;
-    }
-    return peer_ ; 
+  // Returns the remote (peer) address.
+  // Only valid for connected sockets, that is after at least one call
+  // to connect().
+  // If the socket is not connected, may throw or return an all-zero address.
+  address_type peer () const {
+    return cpl::detail_::my_getpeername< SOCK_DGRAM >( fd() ) ;
   }
-
-  // Is socket bound?
-  // bool bound    () const { return bound_     ; }
-  bool bound() const { return true ; }
-
-
-  // Is socket connected?
-  bool connected() const { return connected_ ; }
 
 private:
   template< typename for_it >
-
   size_type receive_internal(
     address_type* source ,
     for_it const& begin , 
@@ -525,23 +556,11 @@ private:
     size_type n 
   ) ;
 
-  // Sets up local_ and enables broadcasting.
+  // Enables broadcasting
   void initialize();
 
   cpl::detail_::datagram_socket_reader_writer s ;
   cpl::detail_::socketfd_t fd() const { return s.fd() ; }
-
-  // Local (bound) address
-  address_type  local_ ;
-
-  // Remote address for connected sockets.
-  address_type peer_ ;
-
-  // Socket is bound, local() valid
-  // bool bound_;
-
-  // Socket is connected, can use send(begin, end)
-  bool connected_;
 
 } ;
 
@@ -1055,10 +1074,6 @@ void cpl::util::network::datagram_socket::send(
   for_it const& end
 ) {
  
-  if( !connected() ) {
-    throw std::runtime_error( "datagram send: disconntected socket" ) ;
-  }
-
   std::vector< char > const buffer( begin , end ) ;
 
   long const result = 
@@ -1161,7 +1176,5 @@ long cpl::detail_::socket< type >::write
   return ret ;
 
 }
-
-
 
 #endif // CPP_LIB_NETWORK_H

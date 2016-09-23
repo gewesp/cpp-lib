@@ -70,43 +70,6 @@ void my_bind( socketfd_t const fd , address< type > const& a ) {
   
 }
 
-
-template< int type >
-address< type > my_getsockname( socketfd_t const fd ) {
-
-  // API information (from man getsockname):
-  // getsockname() returns the current address to which the socket sockfd is
-  // bound, in the buffer pointed to by addr.  The addrlen  argument  should
-  // be initialized to indicate the amount of space (in bytes) pointed to by
-  // addr.  On return it contains the actual size of the socket address.
-  address< type > a ;
-  always_assert( *a.socklen_pointer() == a.maxlength() ) ;
-  int const err = 
-    ::getsockname( fd , a.sockaddr_pointer() , a.socklen_pointer() ) ;
-
-  if( err < 0 )
-  { throw_socket_error( "getsockname" ) ; }
-
-  return a ;
-
-}
-
-
-template< int type >
-address< type > my_getpeername( socketfd_t const fd ) {
-
-  address< type > a ;
-  int const err = 
-    ::getpeername( fd , a.sockaddr_pointer() , a.socklen_pointer() ) ;
-
-  if( err < 0 )
-  { throw_socket_error( "getpeername" ) ; }
-
-  return a ;
-
-}
-
-
 socketfd_t my_accept( socketfd_t const fd ) {
 
   // Don't care where the connection request comes from...
@@ -352,10 +315,7 @@ void cpl::util::network::datagram_socket::initialize() {
 // TODO: Use delegating constructors
 cpl::util::network::datagram_socket::datagram_socket(
     cpl::util::network::address_family_type const af )
-  : s( datagram_socket_reader_writer( int_address_family( af ) ) ) ,
-    // bound_    ( false ) ,
-    local_( my_getsockname< SOCK_DGRAM >( s.fd() ) ) ,
-    connected_( false )
+  : s( datagram_socket_reader_writer( int_address_family( af ) ) )
 { initialize() ; }
 
 // TODO: A bit messy.  Another wrapper around my_getaddrinfo()?
@@ -366,27 +326,18 @@ cpl::util::network::datagram_socket::datagram_socket(
       cpl::detail_::my_getaddrinfo< SOCK_DGRAM >( 
         NULL , /* name */
         ls.c_str() , /* service */
-        int_address_family( af ) ) ) ) ,
-  // bound_    ( true  ) ,
-  local_( my_getsockname< SOCK_DGRAM >( s.fd() ) ) ,
-  connected_( false )
+        int_address_family( af ) ) ) )
 { initialize() ; }
 
 cpl::util::network::datagram_socket::datagram_socket( 
     std::string const& ln,
     std::string const& ls ) 
-: s( bound_socket< SOCK_DGRAM >( resolve_datagram( ln , ls ) ) ) ,
-  // bound_    ( true  ) ,
-  local_( my_getsockname< SOCK_DGRAM >( s.fd() ) ) ,
-  connected_( false )
+: s( bound_socket< SOCK_DGRAM >( resolve_datagram( ln , ls ) ) )
 { initialize() ; }
 
 cpl::util::network::datagram_socket::datagram_socket(
   address_list_type const& la 
-) : s( bound_socket< SOCK_DGRAM >( la ) ) ,
-  // bound_    ( true  ) ,
-  local_( my_getsockname< SOCK_DGRAM >( s.fd() ) ) ,
-  connected_( false )
+) : s( bound_socket< SOCK_DGRAM >( la ) )
 { initialize() ; }
 
 void cpl::util::network::datagram_socket::connect(

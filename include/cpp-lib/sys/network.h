@@ -76,7 +76,11 @@ enum address_family_type {
 
 // Returns ipv4 for "ipv4", "ip4" etc.
 // Throws if description cannot be recognized.
-address_family_type address_family( std::string const& description ) ;
+// allow_unspec: If true, allows 'any' or 'unspec' as description
+// and returns ip_unspec in that case.
+address_family_type address_family( 
+    std::string const& description ,
+    bool allow_unspec = false ) ;
 
 } // namespace network
 

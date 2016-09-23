@@ -177,16 +177,19 @@ void cpl::detail_::socket_resource_traits::dispose
 ////////////////////////////////////////////////////////////////////////
 
 cpl::util::network::address_family_type
-cpl::util::network::address_family( std::string const& desc ) {
+cpl::util::network::address_family( 
+    std::string const& desc , bool const allow_unspec ) {
   if        ( "ip4" == desc || "ipv4" == desc) {
     return cpl::util::network::ipv4;
   } else if ( "ip6" == desc || "ipv6" == desc ) {
     return cpl::util::network::ipv6;
-  // any/unspec isn't suitable e.g. for socket() calls.
-  // TODO: Figure out when to allow that as user input.  Possible
-  // never.
-  // } else if ( "unspec" == desc || "any" == desc ) {
-  //   return cpl::util::network::ip_unspec;
+  } else if ( "unspec" == desc || "any" == desc ) {
+    if ( allow_unspec ) {
+      return cpl::util::network::ip_unspec;
+    } else {
+      throw std::runtime_error(
+          "need to specify address family ipv4 or ipv6" ) ;
+    }
   } else {
     throw std::runtime_error( "unkown address family: " + desc ) ;
   }

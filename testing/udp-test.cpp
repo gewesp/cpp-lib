@@ -45,7 +45,7 @@ void usage( std::string const prog ) {
 
   std::cout 
     << "usage: " << prog << "\n"
-"resolve              <host> <port>: Resolve given <host>:<port> combination\n"
+"resolve      <proto> <host> <port>: Resolve given <host>:<port> combination\n"
 "send         <proto> <host> <port>: Send to destination, reading lines from\n" 
 "                                    stdin\n"
 "receive      <proto> <listen_port>: Receive on <listen_port>, write to\n" 
@@ -60,7 +60,7 @@ void usage( std::string const prog ) {
 "                                    received messages\n"
 "\n"
 "The <proto> argument refers to protocol version for the local socket\n"
-"and must be ip4 or ip6.\n"
+"and must be 'ip4' or 'ip6'.  For resolve, it may be 'any'.\n"
 "\n"
 "Examples:\n"
 "  udp-test pong ip6 4711\n"
@@ -279,13 +279,15 @@ int main( int argc , char const* const* const argv ) {
 
   } else if( std::string( "resolve" ) == argv[ 1 ] ) {
 
-    if( argc != 4 ) 
+    if( argc != 5 ) 
     { usage( argv[ 0 ] ) ; return 1 ; }
 
+    // 'any' is allowed here
     datagram_address_list const& dest = 
-      resolve_datagram( argv[ 2 ] , argv[ 3 ] ) ;
+      resolve_datagram( argv[ 3 ] , argv[ 4 ] , 
+                        address_family( argv[ 2 ] , true ) ) ;
 
-    std::cout << argv[ 2 ] << ":" << argv[ 3 ] << " resolves to:"
+    std::cout << argv[ 3 ] << ":" << argv[ 4 ] << " resolves to:"
               << std::endl ;
     if( dest.empty() ) {
       std::cout << "(none)" << std::endl ;

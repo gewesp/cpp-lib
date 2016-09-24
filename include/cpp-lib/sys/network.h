@@ -496,12 +496,16 @@ struct datagram_socket {
 
   typedef unsigned long size_type ;
 
+  //////////////////////////////////////////////////////////////////////// 
   // Constructors
+  //////////////////////////////////////////////////////////////////////// 
   // Note: Prefer the 'named' constructors (static members returning
   // a datagram_socket) below.  The other constructors may become
   // deprecated at some point.
 
+  //////////////////////////////////////////////////////////////////////// 
   // Moveable, but not copyable
+  //////////////////////////////////////////////////////////////////////// 
   datagram_socket           (datagram_socket&&) = default;
   datagram_socket& operator=(datagram_socket&&) = default;
 
@@ -531,8 +535,12 @@ struct datagram_socket {
   // Binds to the first suitable of the given local addresses
   datagram_socket( address_list_type const& la ) ;
 
+  //////////////////////////////////////////////////////////////////////// 
   // Named constructors
-  // Returns a socket connected to the given hostname and service
+  //////////////////////////////////////////////////////////////////////// 
+  // Returns a socket connected to the given hostname and service,
+  // preferring the given address family if specified other than
+  // ip_unspec.
   static datagram_socket connected(
       std::string const& name , std::string const& service ,
       address_family_type family = ip_unspec ) ;
@@ -557,6 +565,9 @@ struct datagram_socket {
     return datagram_socket( ln , ls ) ;
   }
 
+  //////////////////////////////////////////////////////////////////////// 
+  // Operation
+  //////////////////////////////////////////////////////////////////////// 
   // Constant returned by receive() functions in case of a timeout.
   static size_type timeout() 
   { return std::numeric_limits< size_type >::max() ; }

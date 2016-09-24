@@ -107,12 +107,13 @@ void ping(
   }
 
   auto const family = address_family( proto ) ;
-  datagram_socket s( family ) ;
+  auto s = connect ? datagram_socket::connected( host , port , family )
+                   : datagram_socket( family ) ;
+
   datagram_socket::address_type source ;
   
-  auto const destination = resolve_datagram( host , port , family )[0] ;
+  auto const destination = resolve_datagram( host , port , family ).at( 0 ) ;
   if( connect ) {
-    s.connect( host , port ) ;
     std::cout << "Local address: " << s.local() << std::endl ;
   }
 
@@ -148,7 +149,7 @@ void ping(
 void pong(std::string const& proto ,
           std::string const& listen_port ) {
   
-  datagram_socket s( address_family( proto ) , listen_port ) ;
+  auto s = datagram_socket::bound( address_family( proto ) , listen_port ) ;
   datagram_socket::address_type source ;
 
   std::cout << "Receiving on local address: " << s.local() << std::endl ;
@@ -206,7 +207,7 @@ int main( int argc , char const* const* const argv ) {
     if( argc != 4 )
     { usage( argv[ 0 ] ) ; return 1 ; }
 
-    datagram_socket r( address_family( argv[ 2 ] ) , argv[ 3 ] ) ;
+    auto r = datagram_socket::bound( address_family( argv[ 2 ] ) , argv[ 3 ] ) ;
     datagram_socket::address_type source;
 
     std::cerr << "Receiving packets on: " << r.local() << std::endl ;

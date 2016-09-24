@@ -363,6 +363,26 @@ cpl::util::network::datagram_socket::datagram_socket(
 ) : s( bound_socket< SOCK_DGRAM >( la ) )
 { initialize() ; }
 
+
+cpl::util::network::datagram_socket
+cpl::util::network::datagram_socket::connected(
+    std::string const& name ,
+    std::string const& service ,
+    cpl::util::network::address_family_type const family ) {
+  // resolve_datagram() either throws or returns at least one address.
+  return cpl::util::network::datagram_socket::connected(
+      cpl::util::network::resolve_datagram(
+          name , service , family ).at( 0 ) ) ; 
+}
+
+cpl::util::network::datagram_socket
+cpl::util::network::datagram_socket::connected(
+    cpl::util::network::datagram_socket::address_type const& destination ) {
+  cpl::util::network::datagram_socket ret( destination.family() ) ;
+  ret.connect( destination ) ;
+  return ret ;
+}
+
 void cpl::util::network::datagram_socket::connect(
     std::string const& name ,
     std::string const& service ) {

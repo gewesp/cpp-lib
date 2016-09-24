@@ -18,7 +18,7 @@
 // Supports:
 // * Datagram (UDP) and stream (TCP) abstractions
 // * IPv4 and IPv6
-// * Iostreams abstractions TCP
+// * IOstreams abstractions TCP
 // * Name resolution (DNS)
 //
 // Notes:
@@ -123,14 +123,13 @@ inline int check_family( int const family )
 // Implements the 'reader_writer' abstraction.
 template< int type > struct socket {
 
-  // Just to be sure...
+  // Just to be sure, clarify desired semantics, in accordance
+  // with the auto_resource member.
   socket& operator=( const socket&  ) = delete;
   socket           ( const socket&  ) = delete;
 
-  // Default move construction: Moves contents
-  // Move assignent deleted for the time being
   socket           ( socket&&      ) = default ;
-  socket& operator=( socket&&      ) = delete;
+  socket& operator=( socket&&      ) = default ;
 
   socketfd_t fd() const { return fd_.get() ; }
 
@@ -498,6 +497,16 @@ struct datagram_socket {
   typedef unsigned long size_type ;
 
   // Constructors
+  // Note: Prefer the 'named' constructors (static members returning
+  // a datagram_socket) below.  The other constructors may become
+  // deprecated at some point.
+
+  // Moveable, but not copyable
+  datagram_socket           (datagram_socket&&) = default;
+  datagram_socket& operator=(datagram_socket&&) = default;
+
+  datagram_socket           (datagram_socket const&) = delete;
+  datagram_socket& operator=(datagram_socket const&) = delete;
 
   // Creates an unbound ('client') IPv4 or IPv6 socket.
   // User code should use e.g. datagram_socket sock(ipv4);
@@ -521,6 +530,32 @@ struct datagram_socket {
   // Creates a bound ('server') socket.
   // Binds to the first suitable of the given local addresses
   datagram_socket( address_list_type const& la ) ;
+
+  // Named constructors
+  // Returns a socket connected to the given hostname and service
+  static datagram_socket connected(
+      std::string const& name , std::string const& service ,
+      address_family_type family = ip_unspec ) ;
+
+  // Returns a socket connected to the given address
+  static datagram_socket connected(
+      address_type const& destination ) ;
+
+  // Returns a socket bound to the local service ls with the given family
+  inline static datagram_socket bound( 
+      address_family_type const family , std::string const& ls ) {
+    return datagram_socket( family , ls ) ;
+  }
+
+  // Creates a bound ('server') socket.
+  // Binds to local name and service
+  // Use (any_ipv4()/"0.0.0.0", ls) for IPv4
+  // Use (any_ipv6()/"::", ls) for IPv6
+  // Use this constructor for server sockets receiving data on a given port.
+  inline static datagram_socket bound(
+      std::string const& ln, std::string const& ls ) {
+    return datagram_socket( ln , ls ) ;
+  }
 
   // Constant returned by receive() functions in case of a timeout.
   static size_type timeout() 

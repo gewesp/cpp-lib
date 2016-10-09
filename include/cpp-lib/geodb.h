@@ -47,6 +47,8 @@ namespace gnss {
 // The first template argument is the type for values, lat/lon is
 // considered the key.
 //
+// TODO: See implementation in geodb.cpp
+//
 template <typename T,
          typename STRAT = boost::geometry::index::quadratic<4> >
 struct geodb {
@@ -142,20 +144,24 @@ airport_db airport_db_from_csv(
 // Reads an airport DB from an openAIP file, adding to adb.
 // capitalize: Capitalize names (ICAO codes are always
 // capitalized)
+// Blacklist: Exclude these names or ICAO codes from the DB.
 void airport_db_from_openaip(
     airport_db& adb,
     std::string const& filename,
     bool capitalize = true,
-    std::ostream* log = NULL);
+    std::ostream* log = NULL,
+    std::set<std::string> const& blacklist = std::set<std::string>());
 
 // Parses multiple openAIP XML files given base directory and
 // list of country codes.
+// Blacklist: Exclude these names or ICAO codes from the DB.
 void airport_db_from_openaip(
     airport_db& adb,
     std::string const& directory,
     std::vector<std::string> const& country_list,
     bool capitalize = true,
-    std::ostream* log = NULL);
+    std::ostream* log = NULL,
+    std::set<std::string> const& blacklist = std::set<std::string>());
 
 // Parses registry to read multiple .aip files:
 // airport_db_directory = <directory>

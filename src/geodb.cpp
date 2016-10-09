@@ -13,6 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+// TODO:
+// * Use spatial_index to enable query by name and/or ICAO
+// * Blacklisting should be done independently of reading the file.
+//
+
 
 #include "cpp-lib/geodb.h"
 
@@ -51,7 +56,8 @@ void cpl::gnss::airport_db_from_openaip(
     cpl::gnss::airport_db& ret,
     std::string const& filename,
     bool const capitalize,
-    std::ostream* const sl) {
+    std::ostream* const sl,
+    std::set<std::string> const& blacklist) {
 
   if (sl) {
     *sl << prio::NOTICE << "Airport data: Reading from " 
@@ -104,11 +110,25 @@ void cpl::gnss::airport_db_from_openaip(
       } else {
         v.name = name.get(); 
       }
+      if (blacklist.count(v.name)) {
+        if (sl) {
+          *sl << prio::NOTICE << "Blacklisting airport name " << v.name
+              << std::endl;
+        }
+        continue;
+      }
     }
     if (icao != boost::none) { 
       cpl::util::verify_alnum(icao.get());
       v.icao = icao.get();
-      cpl::util::toupper(v.name);
+      cpl::util::toupper(v.icao);
+      if (blacklist.count(v.icao)) {
+        if (sl) {
+          *sl << prio::NOTICE << "Blacklisting airport ICAO code " << v.icao
+              << std::endl;
+        }
+        continue;
+      }
     }
 
     auto const& t = elt.second.get<std::string>("<xmlattr>.TYPE");
@@ -154,11 +174,12 @@ void cpl::gnss::airport_db_from_openaip(
     std::string const& dir,
     std::vector<std::string> const& countries,
     bool const capitalize,
-    std::ostream* const sl) {
+    std::ostream* const sl,
+    std::set<std::string> const& blacklist) {
 
   for (auto const& c : countries) {
     auto const filename = dir + "/" + c + "_wpt.aip";
-    airport_db_from_openaip(adb, filename, capitalize, sl);
+    airport_db_from_openaip(adb, filename, capitalize, sl, blacklist);
   }
 }
 

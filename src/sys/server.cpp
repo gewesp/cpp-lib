@@ -152,19 +152,24 @@ void server_thread::operator()() {
                      << a.local() 
                      << std::endl;
 
-  try {
-
+  // Loop: Handle incoming connections on acceptor a
   while (true) {
+
+  try {
     std::unique_ptr<connection> c(new connection(a));
+    // Set connection timeout and pass it to the handler thread
     c->timeout(params.timeout);
     std::thread t((connection_thread{std::move(c), params, handler, welcome}));
     t.detach();
-  }
-
   } catch (std::exception const& e) {
     cpl::util::log::log_error(
-        sl, "Aborting server " + params.server_name, e.what());
+        sl, "Server " + params.server_name 
+            + ": Failed to handle incoming connection", e.what());
+    // Avoid busy loop
+    cpl::util::sleep(1);
   }
+
+  } // while (true)
 }
 
 } // end anonymous namespace

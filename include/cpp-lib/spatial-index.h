@@ -99,7 +99,11 @@ template<typename ID, typename T, typename TR = spatial_index_traits<T>,
   // improvement.
   typedef std::map<id_type, value_type> id_map;
 
+  // Element containing all the information.
+  typedef std::pair<id_type, value_type> element_type;
+
   // Iterator into primary index.  Used for query() results, see below.
+  // Dereferencing the iterators yields element_type.
   typedef typename id_map::const_iterator primary_iterator;
   typedef typename id_map::const_iterator const_iterator;
   typedef typename id_map::iterator iterator;

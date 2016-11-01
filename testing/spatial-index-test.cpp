@@ -28,15 +28,15 @@ typedef long id_type;
 
 typedef cpl::gnss::position_time value_type;
 
-// A predicate
-bool time_even(value_type const& v) {
-  return std::fmod(v.time, 2) < .001;
-}
 
 // Uses traits on the base type lat_lon for an index on position_time.
 typedef spatial_index<id_type, value_type,
         cpl::math::spatial_index_traits<cpl::gnss::lat_lon> > my_index;
 
+// A predicate
+bool time_even(my_index::element_type const& e) {
+  return std::fmod(e.second.time, 2) < .001;
+}
 
 // This updater sometimes doesn't update the indexable even
 // if it says so.  The index must cope with this.
@@ -142,7 +142,7 @@ void test_index(
     const int max_ids, const double max_xy,
     const double r,
     long const max_results,
-    my_index::value_predicate const& pred = my_index::true_predicate) {
+    my_index::element_predicate const& pred = my_index::true_predicate) {
   std::minstd_rand mstd(4711);
   std::uniform_real_distribution<double> U(-max_xy, max_xy);
   std::uniform_int_distribution<int> I(0, max_ids - 1);

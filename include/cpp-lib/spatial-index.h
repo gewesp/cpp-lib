@@ -91,16 +91,18 @@ template<typename ID, typename T, typename TR = spatial_index_traits<T>,
   typedef TR    traits_type;
   typedef STRAT strategy   ;
 
+  // Element containing all the information.
+  typedef std::pair<id_type, value_type> element_type;
+
   // Functions value_type -> bool
-  typedef std::function<bool(value_type const&)> value_predicate;
+  typedef std::function<bool(value_type   const&)> value_predicate  ;
+  // Functions element_type -> bool
+  typedef std::function<bool(element_type const&)> element_predicate;
 
   // Type for the 'primary' index id_type -> value_type
   // Note: Using unordered_map<> doesn't yield a significant speed
   // improvement.
   typedef std::map<id_type, value_type> id_map;
-
-  // Element containing all the information.
-  typedef std::pair<id_type, value_type> element_type;
 
   // Iterator into primary index.  Used for query() results, see below.
   // Dereferencing the iterators yields element_type.
@@ -164,7 +166,7 @@ template<typename ID, typename T, typename TR = spatial_index_traits<T>,
     }
   }
 
-  inline static bool true_predicate(value_type const&) {
+  inline static bool true_predicate(element_type const&) {
     return true;
   }
 
@@ -305,7 +307,7 @@ template<typename ID, typename T, typename TR = spatial_index_traits<T>,
   template<typename I>
   void query(box const& b, I oit, 
              long const max_results = std::numeric_limits<long>::max(),
-             value_predicate const& pred = true_predicate) const {
+             element_predicate const& pred = true_predicate) const {
     validate("before query");
     long n_results = 0;
 
@@ -315,7 +317,7 @@ template<typename ID, typename T, typename TR = spatial_index_traits<T>,
         tr,   boost::geometry::index::within(b));
     auto const end = boost::geometry::index::qend(tr);
     while (it != end && n_results < max_results) {
-      if (pred(it->second->second)) {
+      if (pred(*(it->second))) {
         *oit = it->second;
         ++oit;
         ++n_results;

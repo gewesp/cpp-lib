@@ -388,6 +388,22 @@ Please see TODO.md.
 - Orthogonality/DRY: Don't repeat yourself
 
 
+## Commit guidelines
+
+- Please follow the library design guidelines above.
+
+- Commits that add or change functionality should be kept small and
+  with well readable diffs for code review.
+
+- To achieve the above, isolate as much as possible of the work in 
+  'zero functional change' (ZFC) commits.  That is, refactor before
+  you add or change functionality.
+  
+- Any whitespace changes should be in a separate ZFC commit.
+
+
+## References
+
 [1]: http://www.boost.org/
 [2]: http://www.cygwin.com/
 [3]: http://jmarshall.com/easy/http/ "HTTP made really easy."

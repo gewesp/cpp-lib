@@ -388,7 +388,7 @@ Please see TODO.md.
 - Orthogonality/DRY: Don't repeat yourself
 
 
-## Commit guidelines
+## Contributor guidelines
 
 - Please follow the library design guidelines above.
 
@@ -406,6 +406,13 @@ Please see TODO.md.
 - Add test cases for new functionality, modify test cases for modified
   functionality.
 
+### Commit messages
+
+Examples:
+- ADD: Shiny new feature
+- MOD/ZFC: Refactoring the xyz component (zero functional change)
+- REMOVE: We no longer need the abc() function (use xyz() instead)
+- FIX: Fixed a bug in the uvw module causing the server to crash.
 
 ## References
 

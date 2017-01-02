@@ -28,10 +28,10 @@ Parsing strategy:
 * Split the rest on comma into list L
 * L must have 3 or 4 elements.
 * L[0] must be `APRS`
-* L[-2] (the second-last element) must be `qAS` or `qAC`
+* L[-2] _(the second-last element)_ must be `qAS` or `qAC`
   If qAC, it's a station report.
   If qAS, it's an aircraft report.
-* L[-1] (the last element) is the server name or receiving station ID.
+* L[-1] _(the last element)_ is the server name or receiving station ID.
 
 General format:
 * Stations: `station_id>APRS,TCPIP*,qAC,server`

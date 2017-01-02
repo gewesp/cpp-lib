@@ -398,8 +398,13 @@ Please see TODO.md.
 - To achieve the above, isolate as much as possible of the work in 
   'zero functional change' (ZFC) commits.  That is, refactor before
   you add or change functionality.
-  
+
 - Any whitespace changes should be in a separate ZFC commit.
+
+- Make sure that ZFC commits don't change any test results or break tests.
+
+- Add test cases for new functionality, modify test cases for modified
+  functionality.
 
 
 ## References

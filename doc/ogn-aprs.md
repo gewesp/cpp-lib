@@ -65,6 +65,9 @@ Examples:
 `+0.0rot`
 `FL004.17`
 `3e`
+`s6.00`
+`h03`
+`rDDAE09`
 
 # Examples
 
@@ -80,18 +83,38 @@ Examples:
 
 ## Aircraft position reports
 
-`OGNA4863D>APRS,RELAY*,qAS,EPLR:/101723h5113.10N/02223.56E'000/000/A=000794 !W15! id07A4863D +000fpm +0.0rot FL004.17`
+```
+OGNA4863D>APRS,RELAY*,qAS,EPLR:/101723h5113.10N/02223.56E'000/000/A=000794 !W15! id07A4863D +000fpm +0.0rot FL004.17
+OGN113D07>APRS,qAS,Ottawa1:/171237h4521.30N/07547.23W'248/000/A=000226 !W62! id07113D07 +000fpm +0.0rot FL000.00 28.0dB 0e -12.0kHz gps3x5
+FLR5102BD>APRS,qAS,LFLE:/123945h4534.11N/00559.49E'146/050/A=002394 !W87! id065102BD -058fpm +0.0rot 25.5dB 0e -2.6kHz gps2x4 s6.00 h03
+ICA4B43D0>APRS,qAS,Letzi:/155643h4656.29N/00831.74EX267/128/A=005448 !W05! id0D4B43D0 -474fpm +0.1rot 3.5dB 0e -1.6kHz gps3x4 s6.01 h03 rDDAE09 +9.1dBm
+ICA400EDB>APRS,qAS,DarltonN:/132511h5257.41N\00034.58W^240/077/A=000705 !W58! id21400EDB +1030fpm +0.0rot 6.8dB 0e -9.8kHz gps1x2 s6.05 3 +8.6dBm
+FLRDD9824>APRS,qAS,whb:/135048h4723.86N/00944.08Ez000/000/A=001410 !W76! id02DD9824 +000fpm +0.0rot 54.8dB 0e -0.9kHz gps4x4 s6.06 h02 r982400
+FLRDDAC88>APRS,qAS,Hengsen:/133458h5128.42N/00738.54Ez000/000/A=000443 !W29! id02DDAC88 -019fpm +0.0rot 54.0dB 0e +1.4kHz gps3x4 s6.07 h03 rAC8800
+```
 
-`FLR5102BD>APRS,qAS,LFLE:/123945h4534.11N/00559.49E'146/050/A=002394 !W87! id065102BD -058fpm +0.0rot 25.5dB 0e -2.6kHz gps2x4 s6.00 h03`
 
 
 ## Server response to login
 
-`# aprsc 2.0.14-g28c5a6a`
-`# logresp 0 unverified, server GLIDERN1`
+```
+# aprsc 2.0.14-g28c5a6a
+# logresp 0 unverified, server GLIDERN1
+```
+or if the client provide a **valid passcode**
+```
+# aprsc 2.1.2-gc90ee9c
+# logresp EDWJ verified, server GLIDERN3
+```
+
 
 
 ## Keepalives
 
 Every 20 seconds:
 `# aprsc 2.0.14-g28c5a6a 26 Jul 2014 19:53:39 GMT GLIDERN1 37.187.40.234:14580`
+
+### See also
+
+* [APRS-IS Specifications](http://www.aprs-is.net/Specification.aspx)
+* [APRS protocol reference. Version 1.0.1](http://www.aprs.org/doc/APRS101.PDF) 

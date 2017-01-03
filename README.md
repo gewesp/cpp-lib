@@ -25,7 +25,7 @@ or not ready for production.
 
 ### AERONAUTICS
 
-- Open Glider Network (APRS and DDB) client
+- Open Glider Network ([APRS](doc/ogn-aprs.md) and DDB) client
 - IGC file parsing
 
 ### CGI
@@ -74,7 +74,7 @@ or not ready for production.
 ### NETWORK
 
 - Easy TCP/IP and UDP connections.  Iostreams implementation for TCP 
-  streams.  See README-networking.md for more information.
+  streams.  See [README-networking](README-networking.md) for more information.
 - A framework for running TCP services, optionally using threads.
 
 ### TABLE
@@ -345,7 +345,7 @@ on POSIX systems.__
 
 ## Bugs
 
-Please see TODO.md.
+Please see [TODO](TODO.md).
 
 
 ## Coding style
@@ -430,7 +430,7 @@ Examples:
 
 ## See also
 
-  See README-networking.md for information on the TCP/IP and UDP classes.
+  See [README-networking](README-networking.md) for information on the TCP/IP and UDP classes.
 
 
 ## Copyright

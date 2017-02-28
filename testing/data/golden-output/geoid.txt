@@ -1,4 +1,5 @@
 (NOTICE) Geoid initialization: Reading data from ../data/ww15mgh.grd
+(NOTICE) Geoid initialization: Success; 91 rows, 181 columns
 geoid @ 47 8: 51.85300064
 geoid @ 52 -3: 49.1629982
 geoid @ -30 0: 21.4090004

@@ -364,7 +364,7 @@ struct geoid {
   // 1 / (Number of data points per degree)
   double scale = grid;
 
-  // The data
+  // The data.  Matrix indices start at 0, cf. Eigen docs
   cpl::matrix::matrix_f_t data;
 
   geoid(std::ostream* sl, std::string const&, int);
@@ -440,6 +440,13 @@ geoid the_geoid;
   }
 
   data = new_geoid;
+  if (sl) {
+    *sl << cpl::util::log::prio::NOTICE
+        << "Geoid initialization: Success; "
+        << n_rows   (data) << " rows, "
+        << n_columns(data) << " columns"
+        << std::endl;
+  }
 }
 
 double ::geoid::height(cpl::gnss::lat_lon const& lla) const {
@@ -463,7 +470,18 @@ double ::geoid::height(cpl::gnss::lat_lon const& lla) const {
   assert(row < n_rows   (data));
   assert(col < n_columns(data));
 
-  return data(row, col);
+  // We're asserting against index overruns. However,
+  // it happened in production on Feb 28, 2017 so we add a safety net.
+  if (row < 0 || col < 0 || row >= n_rows(data) || col >= n_columns(data)) {
+    cpl::util::log::syslogger sl("cpp-lib::gnss::geoid");
+    sl << cpl::util::log::prio::CRIT
+       << "Index out of range for coordinates " << lla
+       << "; scale = " << scale
+       << std::endl;
+    return 0.0;
+  } else {
+    return data(row, col);
+  }
 }
 
 void cpl::gnss::geoid_init(

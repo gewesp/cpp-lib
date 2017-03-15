@@ -160,6 +160,10 @@ typedef cpl::util::ostreambuf< cpl::detail_::syslog_writer > syslogstreambuf ;
 //
 // See syslogger-test.cpp for extensive usage examples.
 //
+// Note: This class is neither copyable nor moveable.  It could
+// potentially made be moveable, but that may be difficult due to
+// inheritance complications etc.
+//
 
 struct syslogger : cpl::util::file::owning_ostream<syslogstreambuf> { 
 

@@ -27,11 +27,13 @@
 namespace {
 
 void test_dispatch() {
-  cpl::dispatch::thread_pool disq;
+  // Also test move semantics
+  cpl::dispatch::thread_pool tp1;
+  auto tp = std::move(tp1);
 
   for (int i = 0; i < 50; ++i) {
     cpl::dispatch::task t([i]{ std::cout << i << std::endl; });
-    disq.dispatch(std::move(t));
+    tp.dispatch(std::move(t));
   }
 }
 

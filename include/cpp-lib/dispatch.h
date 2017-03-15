@@ -120,20 +120,26 @@ struct thread_pool {
   // TODO: Log exceptions ot syslog.
   template<typename T> T dispatch_returning(returning_task<T>&& t);
 
-  // Noncopyable
+  // Noncopyable, but moveable
   thread_pool           (thread_pool const&) = delete;
   thread_pool& operator=(thread_pool const&) = delete;
+  thread_pool           (thread_pool&&) = default;
+  thread_pool& operator=(thread_pool&&) = default;
 
   int num_workers() const { return workers.size(); }
 
-private:
   // Second argument: Whether another task will follow this one.
   typedef std::pair<task, bool> task_and_continue;
+  typedef cpl::util::safe_queue<task_and_continue> queue_type;
 
-  // Started from the constructor
-  void thread_function();
-
-  cpl::util::safe_queue<task_and_continue> tasks;
+private:
+  // We use a unique_ptr<> here to allow for move semantics of
+  // the thread_pool object.  safe_queue isn't moveable because
+  // it contains a std::mutex as a direct member.
+  // Each worker thread needs a reference to the queue so we
+  // need to guarantee that it stays at the same memory location
+  // after its construction.
+  std::unique_ptr<queue_type> tasks;
   std::vector<std::thread> workers;
 };
 

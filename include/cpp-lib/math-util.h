@@ -584,7 +584,7 @@ struct second_order {
 // Discrete model block:  Average.
 //
 // State: Sum and number of added elements.
-// Output: result (the average), which is NaN if no update has been done.
+// Output: result (the average), or 0 if no update has been done.
 //
 
 template< typename T = double >
@@ -608,7 +608,7 @@ struct average {
 
   T outputs(discrete_state_type const& x) const {
     if (x.n < .5) {
-      return std::numeric_limits<T>::quiet_NaN();
+      return 0;
     } else {
       return x.sum / x.n;
     }

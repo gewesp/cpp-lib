@@ -263,6 +263,12 @@ struct simple_scheduler {
 
   bool action( double const& t ) ;
 
+  //
+  // Returns the last time action() returned true.
+  //
+
+  double last_action() const { return t_last; }
+
 private:
 
   // Time of last action() call returning true.

@@ -1014,6 +1014,15 @@ private:
   std::vector<double> w;
 };
 
+// Safe function to calculate percentages.  Returns 0.0 in case
+// of divisions by zero.
+inline double percentage(const double& value, const double& reference) {
+  if (0.0 == reference) {
+    return 0.0;
+  } else {
+    return 100.0 * value / reference;
+  }
+}
 
 } // namespace math
 

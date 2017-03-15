@@ -584,7 +584,7 @@ struct second_order {
 // Discrete model block:  Average.
 //
 // State: Sum and number of added elements.
-// Output: result (the average), or 0 if no update has been done.
+// Output: result (the average), or a default value if no update has been done.
 //
 
 template< typename T = double >
@@ -606,9 +606,9 @@ struct average {
     x.sum += u;
   }
 
-  T outputs(discrete_state_type const& x) const {
+  T outputs(discrete_state_type const& x, T const& default_value = 0.0) const {
     if (x.n < .5) {
-      return 0;
+      return default_value;
     } else {
       return x.sum / x.n;
     }

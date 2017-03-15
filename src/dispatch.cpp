@@ -15,8 +15,24 @@
 //
 
 #include "cpp-lib/dispatch.h"
+#include "cpp-lib/util.h"
 
-void thread_function(cpl::dispatch::thread_pool::queue_type& tasks);
+namespace {
+
+void thread_function(cpl::dispatch::thread_pool::queue_type& tasks) {
+  do {
+    auto tac = std::move(tasks.pop_front());
+    if (!tac.second) {
+      return;
+    } else {
+      // Execute task.  This should not throw, exceptions are stored in
+      // the 'shared state'.
+      tac.first();
+    }
+  } while (true);
+}
+
+} // anonymous namespace
 
 // Make sure that tasks is initialized before the thread is
 // started!
@@ -55,7 +71,7 @@ cpl::dispatch::thread_pool::~thread_pool() {
 }
 
 void cpl::dispatch::thread_pool::dispatch(cpl::dispatch::task&& t) {
-  assert(tasks.get());  
+  cpl::util::verify(tasks.get(), "using moved-from thread_pool");
   if (num_workers() > 0) {
     tasks->push(task_and_continue{std::move(t), true});
   } else {
@@ -63,17 +79,4 @@ void cpl::dispatch::thread_pool::dispatch(cpl::dispatch::task&& t) {
     t();
     t.get_future().get();
   }
-}
-
-void thread_function(cpl::dispatch::thread_pool::queue_type& tasks) {
-  do {
-    auto tac = std::move(tasks.pop_front());
-    if (!tac.second) {
-      return;
-    } else {
-      // Execute task.  This should not throw, exceptions are stored in
-      // the 'shared state'.
-      tac.first();
-    }
-  } while (true);
 }

@@ -44,13 +44,15 @@ namespace util {
 // Handler parameters are:
 // * The input line
 // * Input and output streams bound to the network connection
-// * A stream for logging.
+// * A stream for logging.  A new stream is created for 
+//   for each incoming connection.
 //
 // Handlers *must* be copyable.  Each thread serving a connection gets
 // a copy of the handler.
 //
-// The function must return false if the connection should be closed,
-// e.g. if the peer has issued a quit command.
+// Handler return value:
+//   The function must return false if the connection should be closed,
+//   e.g. if the peer has issued a quit command.
 //
 
 typedef std::function<

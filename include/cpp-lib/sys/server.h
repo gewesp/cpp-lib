@@ -111,7 +111,8 @@ struct server_parameters {
 // Starts an IPv4 server on port params.service with the given
 // backlog.
 //
-// Logs start with params.server_name in syslog.
+// Logs start with params.server_name in syslog or on the given
+// ostream (sl), if non-null.
 //
 // If welcome is given, uses the function to write a message to its
 // stream argument at the beginning of each connection.
@@ -139,7 +140,8 @@ struct server_parameters {
 void run_server(
     input_handler_type const& handler,
     boost::optional<os_writer> welcome = boost::none,
-    server_parameters const& params = server_parameters());
+    server_parameters const& params = server_parameters(),
+    std::ostream* sl = nullptr);
 
 
 } // namespace util

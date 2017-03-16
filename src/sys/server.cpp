@@ -141,6 +141,9 @@ void log_params(
                      << params.timeout << std::endl;
   sl << prio::NOTICE << "Maximum line length: " 
                      << params.max_line_length << std::endl;
+  sl << prio::NOTICE << "Detached to background: "
+                     << params.background
+                     << std::endl;
 }
 
 void server_thread::operator()() {
@@ -178,20 +181,31 @@ void server_thread::operator()() {
 void cpl::util::run_server(
     input_handler_type const& handler,
     boost::optional<os_writer> const welcome,
-    server_parameters const& params) {
+    server_parameters const& params,
+    std::ostream* sl) {
   if ("test:stdio" == params.service) {
+    if (!sl) {
+      sl = &std::cout;
+    }
+    assert(sl);
     try {
-      log_params(std::cout, params, false);
+      log_params(*sl, params, false);
       handle_connection(
           std::cout, welcome, handler, 
           std::cin, std::cout, params.max_line_length);
     } catch (std::exception const& e) {
       cpl::util::log::log_error(
-          std::cout, 
+          *sl, 
           "Aborting test mode server " + params.server_name, e.what());
     }
   } else {
-    syslogger sl{params.server_name + " accept " + this_thread_id_paren()};
+    std::unique_ptr<syslogger> sl_created;
+    if (!sl) {
+      sl_created = std::make_unique<syslogger>(
+          params.server_name + " accept " + this_thread_id_paren());
+      sl = sl_created.get();
+    }
+    assert(sl);
     long listen_retries = 0;
     while (listen_retries <= params.n_listen_retries) {
       try {
@@ -207,7 +221,7 @@ void cpl::util::run_server(
         break;
       } catch (std::exception const& e) {
         cpl::util::log::log_error(
-            sl, "Failed to accept connections on " + params.service
+            *sl, "Failed to accept connections on " + params.service
                 + " (retrying in " + std::to_string(params.listen_retry_time)
                 + "s)",
                 e.what());
@@ -218,7 +232,7 @@ void cpl::util::run_server(
           cpl::util::sleep(params.listen_retry_time);
           continue;
         } else {
-          sl << prio::ERR << "Maximum number of retries ("
+          *sl << prio::ERR << "Maximum number of retries ("
              << params.n_listen_retries
              << ") reached, giving up" << std::endl;
           throw;

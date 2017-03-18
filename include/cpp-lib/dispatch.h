@@ -116,8 +116,10 @@ struct thread_pool {
   // the return value.  Returns a default constructed value if t 
   // or T's copy constructor throws.
   //
+  // Does not pass on exceptions.  If t throws, the exception gets
+  // logged in a syslogger created for that purpose.
+  //
   // TODO: Better use of move semantics---Use C++14 generalized capture.
-  // TODO: Log exceptions ot syslog.
   template<typename T> T dispatch_returning(returning_task<T>&& t);
 
   // Noncopyable, but moveable

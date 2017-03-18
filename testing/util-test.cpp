@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+#include <iomanip>
 #include <iostream>
 #include <list>
 #include <random>
@@ -29,6 +30,7 @@
 #include "cpp-lib/util.h"
 #include "cpp-lib/xdr.h"
 
+#include "cpp-lib/sys/util.h"
 
 using namespace cpl::util            ;
 using namespace cpl::util::container ;
@@ -549,8 +551,28 @@ void test_utf8(std::ostream& os) {
   os << cpl::util::utf8_tolower("ÉfoO") << std::endl;
 }
 
+struct heartbeat_tester {
+  heartbeat_tester(std::ostream& os) : os_(os) {}
+  void heartbeat(const double& t) {
+    os_ << "TIME " << std::setprecision(16) << t << std::endl;
+  }
+  std::ostream& os_;
+};
 
-int main() {
+void test_pacemaker(std::ostream& os) {
+  heartbeat_tester tester(os);
+
+  cpl::util::pacemaker<heartbeat_tester> hb(tester, 1.0);
+  cpl::util::sleep(5);
+  // Destructor should join the thread
+}
+
+int main(int argc, const char* const* const argv) {
+  if (2 == argc && "pacemaker" == std::string(argv[1])) {
+    test_pacemaker(std::cout);
+    return 0;
+  }
+
   test_datetime();
   test_format_time(cpl::util::format_time_hh_mmt, std::cout);
   test_format_time(cpl::util::format_time_hh_mm , std::cout);

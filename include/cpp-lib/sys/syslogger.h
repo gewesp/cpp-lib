@@ -110,7 +110,10 @@ struct syslog_writer {
   // The tag, NULL-terminated character array
   char const* tag() const { return &tag_[0]; }
 
-  // Sets the echo clock
+  // Sets the echo clock, used for timestamps on the echo stream
+  // (syslogger always uses system time).
+  // If cl returns a negative value, no timestamp is written in the
+  // echo stream.
   void set_echo_clock(std::function<double()> const& cl) {
     echo_clock_ = cl;
   }
@@ -224,6 +227,31 @@ std::ostream& operator<<(std::ostream&, cpl::detail_::prio_setter const&);
 // Logs an error, format:
 // ERROR: msg: what
 void log_error(std::ostream&, std::string const& msg, std::string const& what);
+
+// A class to redirect a logstream to an echo other stream for testing
+// purposes.
+// TODO: Store and reset SYSLOG priority
+struct testmode_sentry {
+  testmode_sentry(
+      syslogger   & sl,
+      std::ostream& echo,
+      const double& echo_time = 0.0) 
+  : sl_(sl) {
+    sl_.set_echo_stream(&echo);
+    sl_.set_echo_clock([echo_time]() { return echo_time; });
+    sl_ << setminprio(prio::EMERG, SYSLOG);
+  }
+
+  ~testmode_sentry() {
+    sl_.set_echo_stream(nullptr);
+    sl_ << setminprio(default_prio(), SYSLOG);
+  }
+
+  private:
+    syslogger& sl_;
+};
+
+
 
 } // namespace log
 

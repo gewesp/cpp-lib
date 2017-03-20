@@ -107,8 +107,13 @@ int cpl::detail_::syslog_writer::write(char const* const buf, int const n) {
   }
 
   if (echo_ && currlevel <= minlevel_echo) {
-    *echo_ << cpl::util::format_datetime(echo_clock_()) << ' '
-           << tag() << '(' << to_string(currlevel) << "): ";
+    // Time values < 0 disable the echo clock
+    const double now = echo_clock_();
+    if (now >= 0) {
+      *echo_ << cpl::util::format_datetime(echo_clock_()) << ' ';
+    }
+
+    *echo_ << tag() << '(' << to_string(currlevel) << "): ";
     std::copy(buf, buf + last, std::ostreambuf_iterator<char>(*echo_));
     *echo_ << std::endl;
   }

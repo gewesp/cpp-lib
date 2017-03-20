@@ -3,6 +3,7 @@
 (NOTICE) Maximum backlog: 0
 (NOTICE) Connection timeout [s]: 60
 (NOTICE) Maximum line length: 1000
+(NOTICE) Detached to background: 0
 500 Welcome to the REVERSE server.
 501 Please type the strings you would like to have reversed.
 501 Max idle time: 60s

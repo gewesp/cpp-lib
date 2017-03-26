@@ -882,6 +882,36 @@ cpl::ogn::vehicle_data cpl::ogn::ddb_handler::lookup(std::string const& id) {
   return it->data;
 }
 
+std::vector<cpl::ogn::vehicle_data_and_id>
+cpl::ogn::lookup_by_name1(
+    cpl::ogn::vehicle_db const& vdb, std::string const& name1) {
+  std::vector<cpl::ogn::vehicle_data_and_id> ret;
+  auto const er = by_name1(vdb).equal_range(name1);
+  std::copy(er.first, er.second, std::back_inserter(ret));
+  return ret;
+}
+
+std::vector<cpl::ogn::vehicle_data_and_id>
+cpl::ogn::lookup_by_name2(
+    cpl::ogn::vehicle_db const& vdb, std::string const& name2) {
+  std::vector<cpl::ogn::vehicle_data_and_id> ret;
+  auto const er = by_name2(vdb).equal_range(name2);
+  std::copy(er.first, er.second, std::back_inserter(ret));
+  return ret;
+}
+
+std::vector<cpl::ogn::vehicle_data_and_id>
+cpl::ogn::ddb_handler::lookup_by_name1(std::string const& name1) {
+  std::lock_guard<std::mutex> lock(vdb_mutex);
+  return cpl::ogn::lookup_by_name1(vdb, name1);
+}
+
+std::vector<cpl::ogn::vehicle_data_and_id>
+cpl::ogn::ddb_handler::lookup_by_name2(std::string const& name2) {
+  std::lock_guard<std::mutex> lock(vdb_mutex);
+  return cpl::ogn::lookup_by_name2(vdb, name2);
+}
+
 // DDB functions
 
 bool parse_bool(std::string const& s, std::string const& loc) {

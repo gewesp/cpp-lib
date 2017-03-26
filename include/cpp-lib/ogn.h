@@ -480,6 +480,13 @@ vehicle_db get_vehicle_database_ddb(
     std::ostream& log,
     std::string const& url = default_ddb_url());
 
+// Lookup based on non-unique data
+// Those functions don't throw but may return an empty vector.
+std::vector<vehicle_data_and_id> 
+lookup_by_name1(vehicle_db const&, std::string const& name1);
+std::vector<vehicle_data_and_id> 
+lookup_by_name2(vehicle_db const&, std::string const& name2);
+
 struct ddb_handler {
 
 // Parses an APRS line containing aircraft info and stores data in acft,
@@ -524,9 +531,9 @@ bool parse_aprs_aircraft(
   vehicle_data lookup(std::string const& id);
 
   // Lookup based on non-unique data
-  // Doesn't throw, may return empty vector.
-  // std::vector<vehicle_data_and_id> lookup_from_name1(std::string const& name1);
-  // std::vector<vehicle_data_and_id> lookup_from_name2(std::string const& name2);
+  // Thread-safe versions of the free functions above
+  std::vector<vehicle_data_and_id> lookup_by_name1(std::string const& name1);
+  std::vector<vehicle_data_and_id> lookup_by_name2(std::string const& name2);
 
 private:
   double query_interval;

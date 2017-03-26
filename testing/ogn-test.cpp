@@ -15,6 +15,9 @@
 //
 // Component: AERONAUTICS
 //
+// TODO: Add DDB tests to run-all-tests.sh .  Requires anonymized
+// version of a DDB.
+//
 
 #include <algorithm>
 #include <exception>
@@ -59,7 +62,8 @@ const cpl::util::opm_entry options[] = {
   cpl::util::opm_entry("unittests", cpl::util::opp(false    )),
   cpl::util::opm_entry("minalt"  , cpl::util::opp(true , 'm')),
   cpl::util::opm_entry("ddb_stats", cpl::util::opp(false    )),
-  cpl::util::opm_entry("ddb_query_interval", cpl::util::opp(true , 'q'))
+  cpl::util::opm_entry("ddb_query_interval", cpl::util::opp(true , 'q')),
+  cpl::util::opm_entry("ddb_source", cpl::util::opp(true , 's'))
 };
 
 
@@ -81,6 +85,7 @@ void usage( std::string const& name ) {
 "--minalt <wgs84_alt> Minimum altitude for AIRCRAFT filtering.\n"
 "--ddb_query_interval <seconds>\n"
 "                     Query interval for DDB, -1 for no queries.\n"
+"--ddb_source <s>     Read DDB from the given URL (if http://...) or file.\n"
 "--unittests:         Run unit tests.\n"
 "--anonymize <key>:   Scramble IDs in input stream by <key> and output again.\n"
 "--ddb_stats:         Download DDB and display statistics\n"
@@ -376,8 +381,8 @@ int count_id_type(cpl::ogn::vehicle_db const& vdb, short const id_type) {
         });
 }
 
-void ddb_stats(std::ostream& os) {
-  auto const vdb = cpl::ogn::get_vehicle_database_ddb(os);
+void ddb_stats(std::ostream& os, std::string const& source) {
+  auto const vdb = cpl::ogn::get_vehicle_database_ddb(os, source);
 
   // Count occurrences of types
   std::map<std::string, int> types;
@@ -432,6 +437,42 @@ void ddb_stats(std::ostream& os) {
   for (auto const& el : freq) {
     os << el.second << ' ' << el.first << std::endl;
   }
+
+  os << "Aircraft with single character competition number (CN):" << std::endl;
+  for (char c = 'A'; c <= 'Z'; ++c) {
+    auto const v = cpl::ogn::lookup_by_name2(vdb, std::string() + c);
+    os << "CN '" << c << "' is used by: ";
+    if (0 == v.size()) {
+      os << "(none)";
+    } else {
+      for (auto const& el : v) {
+        os << el.data.name1 << ' ';
+      }
+    }
+    os << '\n';
+  }
+
+  {
+    os << "Duplicate callsigns:\n";
+    auto const& idx = by_name1(vdb);
+    auto it = idx.begin();
+    while (idx.end() != it) {
+      auto const cs = it->data.name1;
+      std::vector<std::string> ids;
+      do {
+        ids.push_back(it->id);
+        ++it;
+      } while (idx.end() != it && cs == it->data.name1);
+      always_assert(1 <= ids.size());
+      if ("(hidden)" != cs && 2 <= ids.size()) {
+        os << cs << ": ";
+        for (auto const& id : ids) {
+          os << id << " ";
+        }
+        os << '\n';
+      }
+    }
+  }
 }
 
 
@@ -454,7 +495,10 @@ int main( int , char const* const* const argv ) {
   }
 
   if (cl.is_set("ddb_stats")) {
-    ddb_stats(std::cout);
+    std::string const ddb_source =
+          cl.is_set("ddb_source") ? cl.get_arg("ddb_source")
+        : cpl::ogn::default_ddb_url();
+    ddb_stats(std::cout, ddb_source);
     return 0;
   }
 

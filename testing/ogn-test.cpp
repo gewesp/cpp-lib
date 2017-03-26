@@ -454,6 +454,8 @@ void ddb_stats(std::ostream& os, std::string const& source) {
 
   {
     os << "Duplicate callsigns:\n";
+    // Cross-check total number of entries
+    unsigned total = 0;
     auto const& idx = by_name1(vdb);
     auto it = idx.begin();
     while (idx.end() != it) {
@@ -463,6 +465,7 @@ void ddb_stats(std::ostream& os, std::string const& source) {
         ids.push_back(it->id);
         ++it;
       } while (idx.end() != it && cs == it->data.name1);
+      total += ids.size();
       always_assert(1 <= ids.size());
       if ("(hidden)" != cs && 2 <= ids.size()) {
         os << cs << ": ";
@@ -472,6 +475,7 @@ void ddb_stats(std::ostream& os, std::string const& source) {
         os << '\n';
       }
     }
+    always_assert(total == vdb.size());
   }
 }
 

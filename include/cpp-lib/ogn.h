@@ -37,6 +37,10 @@
 #include "cpp-lib/registry.h"
 #include "cpp-lib/sys/network.h"
 
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/global_fun.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+
 #include <iostream>
 #include <thread>
 #include <unordered_map>
@@ -44,6 +48,8 @@
 namespace cpl {
 
 namespace ogn {
+
+namespace bmi = boost::multi_index;
 
 // FLARM random hopping, still?!
 short constexpr ID_TYPE_RANDOM = 0;
@@ -349,7 +355,10 @@ typedef std::pair<std::string, station_info> station_info_and_name;
 
 // Vehicle data and *unqualified* ID, i.e. just the
 // 6 hex digits
-typedef std::pair<std::string, vehicle_data> vehicle_data_and_name;
+struct vehicle_data_and_id {
+  std::string  id  ;
+  vehicle_data data;
+};
 
 // Aircraft database
 typedef std::map<std::string, aircraft_rx_info> aircraft_db;
@@ -360,7 +369,62 @@ typedef std::pair<std::string, aircraft_rx_info> aircraft_rx_info_and_name;
 // Vehicle database type.  Warning: Indexed by *unqualified* ID
 // (based on the OGN DDB primary key, which is also the unqualified
 // ID).
-typedef std::unordered_map<std::string, vehicle_data> vehicle_db;
+// typedef std::unordered_map<std::string, vehicle_data> vehicle_db;
+
+
+// Index extractors for boost::multi_index
+inline std::string extract_id   (vehicle_data_and_id const& veh)
+{ return veh.id        ; }
+inline std::string extract_name1(vehicle_data_and_id const& veh)
+{ return veh.data.name1; }
+inline std::string extract_name2(vehicle_data_and_id const& veh)
+{ return veh.data.name2; }
+
+// Tags for boost::multi_index
+struct tag_id    {};
+struct tag_name1 {};
+struct tag_name2 {};
+
+// The vehicle DB is indexed uniquely by ID and
+// non-uniquely by name1, name2
+// TODO: nonunique by canonicalise(name1)?
+typedef bmi::multi_index_container<
+  vehicle_data_and_id,
+  bmi::indexed_by<
+    // By unique ID (6 digit hex)
+    bmi::ordered_unique<
+      bmi::tag<tag_id>,
+      bmi::global_fun<const vehicle_data_and_id&, std::string, &extract_id   >
+    >,
+    // By callsign (could be unique, but not enforced in DDB)
+    bmi::ordered_non_unique<
+      bmi::tag<tag_name1>,
+      bmi::global_fun<const vehicle_data_and_id&, std::string, &extract_name1>
+    >,
+    // By competition number (definitely not unique)
+    bmi::ordered_non_unique<
+      bmi::tag<tag_name2>,
+      bmi::global_fun<const vehicle_data_and_id&, std::string, &extract_name2>
+    >
+  >
+> vehicle_db;
+
+typedef vehicle_db::index<tag_id   >::type
+vdb_by_id   ;
+typedef vehicle_db::index<tag_name1>::type
+vdb_by_name1;
+typedef vehicle_db::index<tag_name2>::type
+vdb_by_name2;
+
+// Index access
+inline vdb_by_id         & by_id   (vehicle_db      & vdb)
+{ return vdb.get<tag_id   >(); }
+inline vdb_by_id    const& by_id   (vehicle_db const& vdb)
+{ return vdb.get<tag_id   >(); }
+inline vdb_by_name1 const& by_name1(vehicle_db const& vdb)
+{ return vdb.get<tag_name1>(); }
+inline vdb_by_name2 const& by_name2(vehicle_db const& vdb)
+{ return vdb.get<tag_name2>(); }
 
 ////////////////////////////////////////////////////////////////////////
 // API
@@ -465,6 +529,11 @@ bool parse_aprs_aircraft(
   // Returns the entry associated with the given qualified id, or 
   // throws if not found.
   vehicle_data lookup(std::string const& id);
+
+  // Lookup based on non-unique data
+  // Doesn't throw, may return empty vector.
+  // std::vector<vehicle_data_and_id> lookup_from_name1(std::string const& name1);
+  // std::vector<vehicle_data_and_id> lookup_from_name2(std::string const& name2);
 
 private:
   double query_interval;

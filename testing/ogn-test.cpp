@@ -372,7 +372,7 @@ output:
 int count_id_type(cpl::ogn::vehicle_db const& vdb, short const id_type) {
   return std::count_if(vdb.begin(), vdb.end(),
       [id_type](cpl::ogn::vehicle_db::value_type const& v) {
-          return id_type == v.second.id_type_probably_wrong;
+          return id_type == v.data.id_type_probably_wrong;
         });
 }
 
@@ -382,7 +382,7 @@ void ddb_stats(std::ostream& os) {
   // Count occurrences of types
   std::map<std::string, int> types;
   for (auto const& el : vdb) {
-    ++types[el.second.type];
+    ++types[el.data.type];
   }
 
   // Sort found types in descending order of frequency
@@ -397,20 +397,20 @@ void ddb_stats(std::ostream& os) {
 
   auto const n_flarm_from_id = std::count_if(vdb.begin(), vdb.end(),
       [](cpl::ogn::vehicle_db::value_type const& v) {
-          return (   cpl::ogn::ID_TYPE_FLARM == v.second.id_type_probably_wrong
-                  || cpl::ogn::ID_TYPE_ICAO  == v.second.id_type_probably_wrong)
-                  && (   "DD" == v.first.substr(0, 2)
-                      || "DE" == v.first.substr(0, 2)
-                      || "DF" == v.first.substr(0, 2));
+          return (   cpl::ogn::ID_TYPE_FLARM == v.data.id_type_probably_wrong
+                  || cpl::ogn::ID_TYPE_ICAO  == v.data.id_type_probably_wrong)
+                  && (   "DD" == v.id.substr(0, 2)
+                      || "DE" == v.id.substr(0, 2)
+                      || "DF" == v.id.substr(0, 2));
         });
 
   auto const n_icao_from_id = std::count_if(vdb.begin(), vdb.end(),
       [](cpl::ogn::vehicle_db::value_type const& v) {
-          return (   cpl::ogn::ID_TYPE_FLARM == v.second.id_type_probably_wrong
-                  || cpl::ogn::ID_TYPE_ICAO  == v.second.id_type_probably_wrong)
-                  && not (   "DD" == v.first.substr(0, 2)
-                          || "DE" == v.first.substr(0, 2)
-                          || "DF" == v.first.substr(0, 2));
+          return (   cpl::ogn::ID_TYPE_FLARM == v.data.id_type_probably_wrong
+                  || cpl::ogn::ID_TYPE_ICAO  == v.data.id_type_probably_wrong)
+                  && not (   "DD" == v.id.substr(0, 2)
+                          || "DE" == v.id.substr(0, 2)
+                          || "DF" == v.id.substr(0, 2));
         });
 
   os << "Open Glider Network DDB statistics" << std::endl;

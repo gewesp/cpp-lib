@@ -39,11 +39,10 @@
 
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/global_fun.hpp>
-#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/hashed_index.hpp>
 
 #include <iostream>
 #include <thread>
-#include <unordered_map>
 
 namespace cpl {
 
@@ -366,12 +365,6 @@ typedef std::map<std::string, aircraft_rx_info> aircraft_db;
 // Complete aircraft RX info and ID
 typedef std::pair<std::string, aircraft_rx_info> aircraft_rx_info_and_name;
 
-// Vehicle database type.  Warning: Indexed by *unqualified* ID
-// (based on the OGN DDB primary key, which is also the unqualified
-// ID).
-// typedef std::unordered_map<std::string, vehicle_data> vehicle_db;
-
-
 // Index extractors for boost::multi_index
 inline std::string extract_id   (vehicle_data_and_id const& veh)
 { return veh.id        ; }
@@ -392,17 +385,17 @@ typedef bmi::multi_index_container<
   vehicle_data_and_id,
   bmi::indexed_by<
     // By unique ID (6 digit hex)
-    bmi::ordered_unique<
+    bmi::hashed_unique<
       bmi::tag<tag_id>,
       bmi::global_fun<const vehicle_data_and_id&, std::string, &extract_id   >
     >,
     // By callsign (could be unique, but not enforced in DDB)
-    bmi::ordered_non_unique<
+    bmi::hashed_non_unique<
       bmi::tag<tag_name1>,
       bmi::global_fun<const vehicle_data_and_id&, std::string, &extract_name1>
     >,
     // By competition number (definitely not unique)
-    bmi::ordered_non_unique<
+    bmi::hashed_non_unique<
       bmi::tag<tag_name2>,
       bmi::global_fun<const vehicle_data_and_id&, std::string, &extract_name2>
     >

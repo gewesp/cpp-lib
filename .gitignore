@@ -21,3 +21,4 @@ include/cpp-lib/platform
 include/cpp-lib/platform_rt
 prj/def.compiler
 prj/def.platform
+CMakeLists.txt.*

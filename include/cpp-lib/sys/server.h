@@ -44,13 +44,15 @@ namespace util {
 // Handler parameters are:
 // * The input line
 // * Input and output streams bound to the network connection
-// * A stream for logging.
+// * A stream for logging.  A new stream is created for 
+//   for each incoming connection.
 //
 // Handlers *must* be copyable.  Each thread serving a connection gets
 // a copy of the handler.
 //
-// The function must return false if the connection should be closed,
-// e.g. if the peer has issued a quit command.
+// Handler return value:
+//   The function must return false if the connection should be closed,
+//   e.g. if the peer has issued a quit command.
 //
 
 typedef std::function<
@@ -109,7 +111,8 @@ struct server_parameters {
 // Starts an IPv4 server on port params.service with the given
 // backlog.
 //
-// Logs start with params.server_name in syslog.
+// Logs start with params.server_name in syslog or on the given
+// ostream (sl), if non-null.
 //
 // If welcome is given, uses the function to write a message to its
 // stream argument at the beginning of each connection.
@@ -137,7 +140,8 @@ struct server_parameters {
 void run_server(
     input_handler_type const& handler,
     boost::optional<os_writer> welcome = boost::none,
-    server_parameters const& params = server_parameters());
+    server_parameters const& params = server_parameters(),
+    std::ostream* sl = nullptr);
 
 
 } // namespace util

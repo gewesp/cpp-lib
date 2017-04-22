@@ -862,7 +862,7 @@ void cpl::ogn::ddb_handler::apply(
   if (has_nontrivial_vdb) {
     auto const it = vdb.find(unqualified_id(acft.first));
     if (vdb.end() != it) {
-      acft.second.data = it->second;
+      acft.second.data = it->data;
     }
   }
 
@@ -874,12 +874,42 @@ cpl::ogn::vehicle_data cpl::ogn::ddb_handler::lookup(std::string const& id) {
     throw std::runtime_error("OGN: DDB lookup: DB not loaded, id: " + id);
   }
 
-  auto const it = vdb.find(unqualified_id(id));
+  auto const it = by_id(vdb).find(unqualified_id(id));
   if (vdb.end() == it) {
     throw std::runtime_error("OGN: DDB entry not found for " + id);
   }
 
-  return it->second;
+  return it->data;
+}
+
+std::vector<cpl::ogn::vehicle_data_and_id>
+cpl::ogn::lookup_by_name1(
+    cpl::ogn::vehicle_db const& vdb, std::string const& name1) {
+  std::vector<cpl::ogn::vehicle_data_and_id> ret;
+  auto const er = by_name1(vdb).equal_range(name1);
+  std::copy(er.first, er.second, std::back_inserter(ret));
+  return ret;
+}
+
+std::vector<cpl::ogn::vehicle_data_and_id>
+cpl::ogn::lookup_by_name2(
+    cpl::ogn::vehicle_db const& vdb, std::string const& name2) {
+  std::vector<cpl::ogn::vehicle_data_and_id> ret;
+  auto const er = by_name2(vdb).equal_range(name2);
+  std::copy(er.first, er.second, std::back_inserter(ret));
+  return ret;
+}
+
+std::vector<cpl::ogn::vehicle_data_and_id>
+cpl::ogn::ddb_handler::lookup_by_name1(std::string const& name1) {
+  std::lock_guard<std::mutex> lock(vdb_mutex);
+  return cpl::ogn::lookup_by_name1(vdb, name1);
+}
+
+std::vector<cpl::ogn::vehicle_data_and_id>
+cpl::ogn::ddb_handler::lookup_by_name2(std::string const& name2) {
+  std::lock_guard<std::mutex> lock(vdb_mutex);
+  return cpl::ogn::lookup_by_name2(vdb, name2);
 }
 
 // DDB functions
@@ -890,7 +920,7 @@ bool parse_bool(std::string const& s, std::string const& loc) {
   return "Y" == s;
 }
 
-cpl::ogn::vehicle_data_and_name parse_ddb_entry(cpl::util::lexer& lex) {
+cpl::ogn::vehicle_data_and_id parse_ddb_entry(cpl::util::lexer& lex) {
   cpl::util::expect(lex, cpl::util::STRING);
   auto const id_type_string = lex.string_value();
   cpl::util::verify(1 == id_type_string.size(), 
@@ -966,10 +996,11 @@ cpl::ogn::vehicle_data_and_name parse_ddb_entry(cpl::util::lexer& lex) {
   // Use unqualified ID.  This is a primary key in the DDB
   // and users regularly get the ID type wrong (called
   // 'Device type' in the UI as of July, 2015).
-  return std::make_pair(
-      // cpl::ogn::qualified_id(id, id_type),
-      id,
-      cpl::ogn::vehicle_data{callsign, cn, type, tracking, identify, id_type});
+  cpl::ogn::vehicle_data_and_id ret;
+  ret.id = id;
+  ret.data = 
+      cpl::ogn::vehicle_data{callsign, cn, type, tracking, identify, id_type};
+  return ret;
 }
 
 cpl::ogn::vehicle_db
@@ -1001,10 +1032,10 @@ cpl::ogn::get_vehicle_database_ddb(std::ostream& sl, std::string const& url) {
     cpl::util::lexer lex{*is, url, ddb_style};
 
     while (cpl::util::END != lex.peek_token()) {
-      cpl::ogn::vehicle_data_and_name ent;
+      cpl::ogn::vehicle_data_and_id ent;
       try {
         ent = parse_ddb_entry(lex);
-        ret.insert(ent);
+        by_id(ret).insert(ent);
       } catch (cpl::util::value_error const& e) {
         // value_error is recoverable, we just discard this entry
         // and continue parsing

@@ -15,46 +15,11 @@
 //
 
 #include "cpp-lib/dispatch.h"
+#include "cpp-lib/util.h"
 
+namespace {
 
-// Make sure that tasks is initialized before the thread is
-// started!
-// Initialize thread pool
-cpl::dispatch::thread_pool::thread_pool(int const n_threads)
-  : tasks{} {
-  cpl::util::verify(n_threads >= 0, 
-      "thread pool: number of worker threads must be >= 0");
-  workers.reserve(n_threads);
-  for (int i = 0; i < n_threads; ++i) {
-    workers.push_back(std::thread(&thread_pool::thread_function, this));
-  }
-}
-
-// TODO: allow detaching?
-cpl::dispatch::thread_pool::~thread_pool() {
-  // Signal 'EOF' to all workers---one thread will pop
-  // only one task wiht continue set to false
-  for (int i = 0; i < num_workers(); ++i) {
-    task empty([]{});
-    tasks.push(task_and_continue{std::move(empty), false});
-  }
-  // Join all workers
-  for (int i = 0; i < num_workers(); ++i) {
-    workers[i].join();
-  }
-}
-
-void cpl::dispatch::thread_pool::dispatch(cpl::dispatch::task&& t) {
-  if (num_workers() > 0) {
-    tasks.push(task_and_continue{std::move(t), true});
-  } else {
-    // Direct execution, re-throw exceptions (on get())
-    t();
-    t.get_future().get();
-  }
-}
-
-void cpl::dispatch::thread_pool::thread_function() {
+void thread_function(cpl::dispatch::thread_pool::queue_type& tasks) {
   do {
     auto tac = std::move(tasks.pop_front());
     if (!tac.second) {
@@ -65,4 +30,53 @@ void cpl::dispatch::thread_pool::thread_function() {
       tac.first();
     }
   } while (true);
+}
+
+} // anonymous namespace
+
+// Make sure that tasks is initialized before the thread is
+// started!
+// Initialize thread pool
+cpl::dispatch::thread_pool::thread_pool(int const n_threads)
+  : tasks(std::make_unique<queue_type>()) {
+  assert(tasks.get());  
+  cpl::util::verify(n_threads >= 0, 
+      "thread pool: number of worker threads must be >= 0");
+  workers.reserve(n_threads);
+  for (int i = 0; i < n_threads; ++i) {
+    // Each thread gets a reference to the task queue.  The queue
+    // is held indirectly via a pointer to enable move semantics
+    // of the thread_pool.
+    workers.push_back(std::thread(thread_function, std::ref(*tasks.get())));
+  }
+}
+
+// TODO: allow detaching?
+cpl::dispatch::thread_pool::~thread_pool() {
+  // Have we been moved from?  std::unique_ptr<> is
+  // guaranteed to be empty after a move operation.
+  if (!tasks.get()) {
+    return;
+  }
+  // Signal 'EOF' to all workers---one thread will pop
+  // only one task wiht continue set to false
+  for (int i = 0; i < num_workers(); ++i) {
+    task empty([]{});
+    tasks->push(task_and_continue{std::move(empty), false});
+  }
+  // Join all workers
+  for (int i = 0; i < num_workers(); ++i) {
+    workers[i].join();
+  }
+}
+
+void cpl::dispatch::thread_pool::dispatch(cpl::dispatch::task&& t) {
+  cpl::util::verify(tasks.get(), "using moved-from thread_pool");
+  if (num_workers() > 0) {
+    tasks->push(task_and_continue{std::move(t), true});
+  } else {
+    // Direct execution, re-throw exceptions (on get())
+    t();
+    t.get_future().get();
+  }
 }

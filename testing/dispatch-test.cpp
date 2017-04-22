@@ -23,15 +23,28 @@
 
 #include "cpp-lib/dispatch.h"
 
+#include "cpp-lib/assert.h"
+
 
 namespace {
 
 void test_dispatch() {
-  cpl::dispatch::thread_pool disq;
+  // Also tests move semantics
+  cpl::dispatch::thread_pool tp1;
 
-  for (int i = 0; i < 50; ++i) {
+  for (int i = 0; i < 25; ++i) {
     cpl::dispatch::task t([i]{ std::cout << i << std::endl; });
-    disq.dispatch(std::move(t));
+    tp1.dispatch(std::move(t));
+  }
+
+  auto tp2 = std::move(tp1);
+
+  auto fun = [&tp1] { tp1.dispatch(cpl::dispatch::task([] {})); } ;
+  cpl::util::verify_throws("moved-from", fun);
+
+  for (int i = 25; i < 50; ++i) {
+    cpl::dispatch::task t([i]{ std::cout << i << std::endl; });
+    tp2.dispatch(std::move(t));
   }
 }
 

@@ -584,7 +584,7 @@ struct second_order {
 // Discrete model block:  Average.
 //
 // State: Sum and number of added elements.
-// Output: result (the average), which is NaN if no update has been done.
+// Output: result (the average), or a default value if no update has been done.
 //
 
 template< typename T = double >
@@ -606,9 +606,9 @@ struct average {
     x.sum += u;
   }
 
-  T outputs(discrete_state_type const& x) const {
+  T outputs(discrete_state_type const& x, T const& default_value = 0.0) const {
     if (x.n < .5) {
-      return std::numeric_limits<T>::quiet_NaN();
+      return default_value;
     } else {
       return x.sum / x.n;
     }
@@ -1014,6 +1014,15 @@ private:
   std::vector<double> w;
 };
 
+// Safe function to calculate percentages.  Returns 0.0 in case
+// of divisions by zero.
+inline double percentage(const double& value, const double& reference) {
+  if (0.0 == reference) {
+    return 0.0;
+  } else {
+    return 100.0 * value / reference;
+  }
+}
 
 } // namespace math
 

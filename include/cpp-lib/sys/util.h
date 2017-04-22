@@ -35,6 +35,9 @@
 #include "cpp-lib/registry.h"
 #include "cpp-lib/sys/file.h"
 
+#include <atomic>
+#include <thread>
+
 namespace cpl {
 
 namespace util {
@@ -105,6 +108,35 @@ private:
   double n_next ;
 
 } ;
+
+// Create a pacemaker with an arbitrary object o
+// as constructor argument to have o.heartbeat() called every dt seconds
+// until the pacemaker goes out of scope.
+//
+// See testing/util-test.cpp for an example.
+template<typename OBJ> struct pacemaker {
+  pacemaker(
+    OBJ& o,
+    const double& dt,
+    const double& t0 = cpl::util::time()) 
+  : active_(true),
+    t_([this, dt, t0, &o] {
+      sleep_scheduler ss(dt, t0);
+      while (active_) {
+        o.heartbeat(ss.wait_next());
+      }
+    })
+  {}
+
+  ~pacemaker() {
+    active_ = false;
+    t_.join();
+  }
+
+private:
+  std::atomic<bool> active_;
+  std::thread t_;
+};
 
 
 //

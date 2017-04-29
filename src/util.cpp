@@ -336,6 +336,18 @@ void cpl::util::verify_alnum(std::string const& s, std::string const& extra) {
   }
 }
 
+std::string cpl::util::canonical(
+    std::string const& s, std::string const& extra) {
+  std::string ret;
+  for (char c : s) {
+    c = std::toupper(c);
+    if (std::isalnum(c) || std::string::npos != extra.find(c)) {
+      ret.push_back(c);
+    }
+  }
+  return ret;
+}
+
 ////////////////////////////////////////////////////////////////////////
 // UTF-8 stuff
 ////////////////////////////////////////////////////////////////////////

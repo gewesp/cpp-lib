@@ -889,6 +889,11 @@ std::string utf8_toupper(std::string const& s);
 // possibly extra characters.  Throws cpl::util::value_error on violation.
 void verify_alnum(std::string const& s, std::string const& extra = "");
 
+// Remove any non-alphanumeric or non-extra characters from s
+// and convert the remaining ones to upper case.  Returns the
+// result.
+std::string canonical(std::string const& s, std::string const& extra = "");
+
 // Writes a list of objects to os, optionally quoted by quote_char
 // and with separators specified by sep.
 template <typename IT> void

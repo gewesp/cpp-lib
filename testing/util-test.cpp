@@ -516,6 +516,13 @@ void test_stringutils(std::ostream& os) {
   cpl::util::verify_alnum("abc1234\"+.", "\"+.,");
   cpl::util::verify_alnum("abc1234\"+.", "\"+.,");
 
+  // canonical()
+  always_assert("" == cpl::util::canonical(""));
+  always_assert("" == cpl::util::canonical("", "-+"));
+  always_assert("HB1234" == cpl::util::canonical("hB-12 34"));
+  always_assert("HB1234" == cpl::util::canonical("HB12.34"));
+  always_assert("HB-1234" == cpl::util::canonical("HB-12.34", "-"));
+
   test_split(os, "", sv{""});
   test_split(os, "1", sv{"1"});
   test_split(os, "1,2", sv{"1", "2"});

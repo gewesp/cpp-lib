@@ -48,8 +48,20 @@ set(public-headers
     "include/cpp-lib/varlist.h"
     "include/cpp-lib/xdr.h"
 
+    "include/cpp-lib/detail/socket_lowlevel.h"
+
+    "include/cpp-lib/platform/net_impl.h"
     "include/cpp-lib/platform/platform.h"
+    "include/cpp-lib/platform/realtime.h"
     "include/cpp-lib/platform/wrappers.h"
+
+    "include/cpp-lib/sys/file.h"
+    "include/cpp-lib/sys/logger.h"
+    "include/cpp-lib/sys/network.h"
+    "include/cpp-lib/sys/realtime.h"
+    "include/cpp-lib/sys/server.h"
+    "include/cpp-lib/sys/syslogger.h"
+    "include/cpp-lib/sys/util.h"
     )
 set(private-headers
     "")
@@ -67,12 +79,27 @@ set(sources
     "src/interpolation.cpp"
     "src/map.cpp"
     "src/math-util.cpp"
+    "src/network.cpp"
     "src/nmea.cpp"
     "src/ogn.cpp"
     "src/random.cpp"
+    "src/registry.cpp"
     "src/util.cpp"
     "src/varlist.cpp"
+
+    "src/sys/file.cpp"
+    "src/sys/logger.cpp"
+    "src/sys/server.cpp"
+    "src/sys/syslogger.cpp"
+    "src/sys/util.cpp"
     )
+
+if (UNIX AND NOT APPLE)
+    list(APPEND sources
+         "src/posix/realtime.cpp"
+         "src/posix/wrappers.cpp"
+         )
+endif()
 
 add_library(cpp-lib
     ${public-headers}

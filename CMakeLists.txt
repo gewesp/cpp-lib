@@ -1,26 +1,15 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(ccp-lib VERSION 1.0.0)
+project(cpp-lib VERSION 1.0.0)
 
 # use own cmake modules.
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 # 3rd-party.
-find_package(Boost 1.58.0 REQUIRED)
+find_package(Boost 1.61.0 REQUIRED)
 find_package(png++ REQUIRED)
 find_package(PkgConfig)
 pkg_search_module(Eigen3 REQUIRED eigen3)
-
-set(include_platform_name "")
-if (UNIX)
-    set(include_platform_name "posix")
-endif()
-
-# create symlink to allow compiling.
-add_custom_target(link_platform
-    COMMAND ${CMAKE_COMMAND} -E create_symlink
-    "${CMAKE_CURRENT_LIST_DIR}/include/cpp-lib/${include_platform_name}"
-    "${CMAKE_CURRENT_LIST_DIR}/include/cpp-lib/platform")
 
 set(public-headers
     "include/cpp-lib/array_ops.h"
@@ -55,8 +44,12 @@ set(public-headers
     "include/cpp-lib/spatial-index.h"
     "include/cpp-lib/top-n.h"
     "include/cpp-lib/units.h"
+    "include/cpp-lib/util.h"
     "include/cpp-lib/varlist.h"
     "include/cpp-lib/xdr.h"
+
+    "include/cpp-lib/platform/platform.h"
+    "include/cpp-lib/platform/wrappers.h"
     )
 set(private-headers
     "")
@@ -81,19 +74,23 @@ set(sources
     "src/varlist.cpp"
     )
 
-include_directories(
-    ${Boost_INCLUDE_DIRS}
-    ${Eigen3_INCLUDE_DIRS}
-    "${png++_INCLUDE_DIRS}/png++"
-    "include"
-    )
-
 add_library(cpp-lib
     ${public-headers}
     ${private-headers}
     ${sources}
     )
-add_dependencies(cpp-lib link_platform)
+
+target_include_directories(cpp-lib PRIVATE
+    ${Boost_INCLUDE_DIRS}
+    ${Eigen3_INCLUDE_DIRS}
+    "${png++_INCLUDE_DIRS}/png++"
+    "include"
+)
+
+set_property(TARGET cpp-lib APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
 # ensures cpp std version through compiler feature.
 set_property(TARGET cpp-lib PROPERTY CXX_STANDARD 14)

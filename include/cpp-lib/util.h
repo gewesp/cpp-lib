@@ -763,16 +763,20 @@ private:
 struct logfile_manager {
 
   //
-  // Initializes a logfile_manager for at most n logfiles, the given
+  // Initializes a logfile_manager for at most n daily logfiles, the given
   // base name and current time.
   //
   // Files will be named basename.YYYY-MM-DD
+  //
+  // If remove_old is true, removes old logfiles with the same pattern
+  // between n and 2n days ago.
   //
 
   logfile_manager(
       long n,
       std::string const& basename ,
-      double utc_now ) ;
+      double utc_now ,
+      bool remove_old = true) ;
 
   //
   // Returns <basename>.YYYY-MM-DD (from utc).
@@ -884,6 +888,11 @@ std::string utf8_toupper(std::string const& s);
 // Verifies that a string contains only alphanumeric and
 // possibly extra characters.  Throws cpl::util::value_error on violation.
 void verify_alnum(std::string const& s, std::string const& extra = "");
+
+// Remove any non-alphanumeric or non-extra characters from s
+// and convert the remaining ones to upper case.  Returns the
+// result.
+std::string canonical(std::string const& s, std::string const& extra = "");
 
 // Writes a list of objects to os, optionally quoted by quote_char
 // and with separators specified by sep.

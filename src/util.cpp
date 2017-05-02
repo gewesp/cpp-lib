@@ -336,6 +336,18 @@ void cpl::util::verify_alnum(std::string const& s, std::string const& extra) {
   }
 }
 
+std::string cpl::util::canonical(
+    std::string const& s, std::string const& extra) {
+  std::string ret;
+  for (char c : s) {
+    c = std::toupper(c);
+    if (std::isalnum(c) || std::string::npos != extra.find(c)) {
+      ret.push_back(c);
+    }
+  }
+  return ret;
+}
+
 ////////////////////////////////////////////////////////////////////////
 // UTF-8 stuff
 ////////////////////////////////////////////////////////////////////////
@@ -455,12 +467,22 @@ std::string cpl::util::file::basename(
 cpl::util::file::logfile_manager::logfile_manager(
     long const n,
     std::string const& basename ,
-    double const utc )
+    double const utc ,
+    bool const remove_old )
   : basename( basename ) ,
     current_day( cpl::util::day_number( utc ) ) ,
     q( n ) ,
-    os( newfile( utc ) )
-{ }
+    os( newfile( utc ) ) {
+ if (!remove_old) {
+   return;
+ }
+
+ // Remove files n to 2n days back
+ for (long i = n; i <= 2 * n; ++i) {
+   auto const fn = filename(utc - cpl::units::day() * i);
+   cpl::util::file::unlink(fn, true /* ignore missing files */);
+ }
+}
 
 cpl::util::file::owning_ofstream 
 cpl::util::file::logfile_manager::newfile( double const utc ) {

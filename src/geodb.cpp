@@ -68,9 +68,6 @@ void cpl::gnss::airport_db_from_openaip(
   boost::property_tree::ptree pt;
   boost::property_tree::read_xml(filename, pt);
 
-  // Allowed characters besides alphanumeric in airport names
-  std::string const allowed_chars = ",-/ ";
-
   auto const& wp = pt.get_child("OPENAIP.WAYPOINTS");
   for (auto const& elt : wp) {
     cpl::gnss::lat_lon_alt lla;
@@ -109,7 +106,8 @@ void cpl::gnss::airport_db_from_openaip(
 
     if (name != boost::none) { 
       const int convert = capitalize ? 1 : 0;
-      v.name = cpl::util::utf8_canonical(name.get(), allowed_chars, convert);
+      v.name = cpl::util::utf8_canonical(
+          name.get(), cpl::util::allowed_characters_1(), convert);
 
       // Sanity check: Were any characters removed?
       if (capitalize) {

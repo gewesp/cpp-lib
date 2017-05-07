@@ -897,6 +897,8 @@ std::string utf8_canonical(
     std::string const& extra = std::string(),
     int convert = 0);
 
+// Returns: ",.-/() "
+std::string const& allowed_characters_1();
 
 // Verifies that a string contains only alphanumeric and
 // possibly extra characters.  Throws cpl::util::value_error on violation.

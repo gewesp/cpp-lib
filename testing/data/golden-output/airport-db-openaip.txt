@@ -1,4 +1,7 @@
 (NOTICE) Airport data: Reading from data/input/openaip_airports_switzerland_ch.aip
+(WARNING) Airport name contains invalid characters: HAUSEN AM ALBIS "R"
+(WARNING) Airport name contains invalid characters: MONTRICHER "R"
+(WARNING) Airport name contains invalid characters: WINTERTHUR "R"
 (NOTICE) Airport data: Read 77 entries
 query: 47 8 800; nearest: LSPG/1; alt: 464.82; dist: 21851.58174
 query: 47.649445 8.387971 800; nearest: LSPF/1; alt: 462.9912; dist: 11383.71416

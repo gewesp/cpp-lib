@@ -885,9 +885,22 @@ std::string utf8_tolower(std::string const& s);
 std::string utf8_toupper(std::string const& s);
 
 
+//
+// Removes any non-alphanumeric or non-extra characters from s
+// and returns the result.  If convert == 1, also converts all to
+// upper case.  If convert == -1, also converts all to lower case.
+// If convert == 0, doesn't do any case conversion.
+//
+
+std::string utf8_canonical(
+    std::string const& s,
+    std::string const& extra = std::string(),
+    int convert = 0);
+
+
 // Verifies that a string contains only alphanumeric and
 // possibly extra characters.  Throws cpl::util::value_error on violation.
-void verify_alnum(std::string const& s, std::string const& extra = "");
+void verify_alnum(std::string const& s, std::string const& extra = std::string());
 
 // Remove any non-alphanumeric or non-extra characters from s
 // and convert the remaining ones to upper case.  Returns the

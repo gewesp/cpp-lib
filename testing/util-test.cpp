@@ -534,7 +534,27 @@ void test_stringutils(std::ostream& os) {
   verify_throws("invalid", cpl::util::verify_alnum, "adsf+", "-");
 }
 
+void test_utf8_canonical() {
+  always_assert(u8"" == cpl::util::utf8_canonical(u8""));
+  always_assert(u8"" == cpl::util::utf8_canonical(u8"", "-+"));
+  always_assert(u8"hÖ1234" == cpl::util::utf8_canonical(u8"hÖ-12 34"));
+  always_assert(u8"HB1234" == cpl::util::utf8_canonical(u8"HB12.34"));
+
+  // To upper, to lower
+  always_assert(u8"HÜ-1234" ==
+      cpl::util::utf8_canonical(u8"Hü-12.34", "-", 1));
+  always_assert(u8"hü-1234" ==
+      cpl::util::utf8_canonical(u8"Hü-12.34", "-", -1));
+
+  always_assert(u8"CHÜCK YÄGER" == 
+      cpl::util::utf8_canonical(u8"chü.-\"'ck Yä&^,gEr...", " ", 1));
+
+  always_assert(u8"fritz jäger-müller" ==
+      cpl::util::utf8_canonical(u8"Fritz. Jäger-+Müller", "- ", -1));
+}
+
 void test_utf8(std::ostream& os) {
+  test_utf8_canonical();
   std::string grussen = u8"grüßEN";
 
   os << "Original " << grussen   << std::endl;

@@ -368,6 +368,31 @@ std::string cpl::util::utf8_toupper(std::string const& s) {
   return to_string(ws);
 }
 
+std::string cpl::util::utf8_canonical(
+    std::string const& s,
+    std::string const& extra,
+    int const convert) {
+  assert(-1 <= convert && convert <= 1);
+  auto ws = to_wstring(s);
+  std::wstring wret;
+  for (auto c : ws) {
+    char const cc = static_cast<char>(c);
+    if (   std::isalnum(c, utf8_locale)
+        // Check whether the wide char c has a char (i.e., ASCII) equivalent 
+        // and whether that is in the extra set
+        || (cc == c && std::string::npos != extra.find(cc))) {
+      if        ( 1 == convert) {
+        c = std::toupper(c, utf8_locale);
+      } else if (-1 == convert) {
+        c = std::tolower(c, utf8_locale);
+      }
+      wret.push_back(c);
+    }
+  }
+  return to_string(wret);
+}
+
+
 ////////////////////////////////////////////////////////////////////////
 // End UTF-8 stuff
 ////////////////////////////////////////////////////////////////////////

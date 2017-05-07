@@ -61,7 +61,7 @@ bool cpl::util::file::file_watcher::modified() {
 bool cpl::util::file::file_name_queue::add( std::string const& filename ) {
   
   q.push_back( filename ) ;
-  if ( static_cast< long >( q.size() ) > maxsize ) {
+  if ( static_cast< long >( q.size() ) > maxsize() ) {
     std::string const to_remove = std::move( q.front() ) ;
     q.pop_front() ;
     return cpl::detail_::remove( to_remove ) ;

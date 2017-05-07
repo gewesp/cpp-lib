@@ -737,8 +737,8 @@ struct file_name_queue {
   //
 
   file_name_queue( const long n )
-  : maxsize( n ) {
-    always_assert( maxsize > 0 ) ;
+  : maxsize_( n ) {
+    always_assert( maxsize_ > 0 ) ;
   }
 
   //
@@ -753,10 +753,12 @@ struct file_name_queue {
 
   long size() const { return q.size(); }
 
+  long maxsize() const { return maxsize_; }
+
 private:
   std::deque< std::string > q ;
 
-  long maxsize ;
+  long maxsize_ ;
 
 } ;
 
@@ -771,12 +773,15 @@ struct logfile_manager {
   // If remove_old is true, removes old logfiles with the same pattern
   // between n and 2n days ago.
   //
+  // Pre-fills the queue with file names n-1 to 1 days back to ensure
+  // these get deleted in due course.
+  //
 
   logfile_manager(
       long n,
       std::string const& basename ,
       double utc_now ,
-      bool remove_old = true) ;
+      bool remove_old = false) ;
 
   //
   // Returns <basename>.YYYY-MM-DD (from utc).
@@ -808,6 +813,8 @@ private:
   cpl::util::file::file_name_queue q ;
   cpl::util::file::owning_ofstream os ;
 
+  // Pre-fill queue with files from -n + 1 to -1
+  void initialize_queue(double const&);
 } ;
 
 template< typename T >

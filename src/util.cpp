@@ -505,16 +505,22 @@ cpl::util::file::logfile_manager::logfile_manager(
   : basename( basename ) ,
     current_day( cpl::util::day_number( utc ) ) ,
     q( n ) ,
-    os( newfile( utc ) ) {
- if (!remove_old) {
-   return;
- }
+    os((initialize_queue(utc), newfile( utc ))) {
 
- // Remove files n to 2n days back
- for (long i = n; i <= 2 * n; ++i) {
-   auto const fn = filename(utc - cpl::units::day() * i);
-   cpl::util::file::unlink(fn, true /* ignore missing files */);
- }
+  if (remove_old) {
+    // Remove files n to 2n days back
+    for (long i = n; i <= 2 * n; ++i) {
+      auto const fn = filename(utc - cpl::units::day() * i);
+      cpl::util::file::unlink(fn, true /* ignore missing files */);
+    }
+  }
+}
+
+void cpl::util::file::logfile_manager::initialize_queue(double const& utc) {
+  // Pre-fill the deletion queue with files from days [-n + 1 ... -1]
+  for (long i = -q.maxsize() + 1; i < 0; ++i) {
+    q.add(filename(utc + i * cpl::units::day()));
+  }
 }
 
 cpl::util::file::owning_ofstream 

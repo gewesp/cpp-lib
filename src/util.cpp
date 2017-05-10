@@ -289,11 +289,11 @@ double cpl::util::parse_datetime(
   const char* const res = strptime(buf, format, &t2);
 
   if (NULL == res) {
-    throw std::runtime_error("parse_datetime(): parsing failure");
+    throw std::runtime_error("parse_datetime(): parse error: " + s);
   }
 
   if (buf + s.size() != res) {
-    throw std::runtime_error("parse_datetime(): parsing incomplete");
+    throw std::runtime_error("parse_datetime(): parsing incomplete: " + s);
   }
 
   // from man mktime(3):

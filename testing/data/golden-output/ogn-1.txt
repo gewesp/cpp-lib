@@ -1840,4 +1840,4 @@ KEEPALIVE preceding line...
 KEEPALIVE Should fail, but doesn't (serendipitious find from KTrax hwsw test):
 AIRCRAFT flarm:DDE1DC 2 1 0 1 0 - - - 1436454740 47.295 1.696 849.7824 0 228 36.52555556 0.60452 -0.9 0 LFEK 0 8.5 2015 0
 KEEPALIVE Should work, new 0.2.6 format, just station info, no :>
-# WARNING: Couldn't parse: LFNS>APRS,TCPIP*,qAC,GLIDERN2:/194234h4416.93NI00555.98E&/A=001761
+STATION LFNS v0.0.0 GLIDERN2 1436470954 44.28216667 5.933 536.7528 0 0 0 0 0 0

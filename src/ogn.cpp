@@ -386,6 +386,8 @@ bool cpl::ogn::parse_aprs_station(
   char EW[2] = "";
 
   // Normal, special conversions
+  // Notice: Beginning with 0.2.6, no more 'special' conversions,
+  // see format with ":>" instead
   int constexpr n_normal  = 8;
   int constexpr n_special = 5;
   char special[n_special][31];
@@ -429,7 +431,7 @@ bool cpl::ogn::parse_aprs_station(
       special[3],
       special[4]);
 
-  if (n_normal + 4 <= conversions) {
+  if (n_normal <= conversions) {
     if (!my_double_cast(lon_v, stat.second.pt.lon)) {
       return false;
     }

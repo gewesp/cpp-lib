@@ -264,7 +264,6 @@ KEEPALIVE preceding line...
 # WARNING: Couldn't parse: FLRDDA631>APRS,qAS,LFNZ:/160149h4345.65N/00454.31E'020/049/A=001286 !W6FLRDDEFFA>APRS,qAR:/161054h4345.72N/00452.49E'065/061/A=001522 !W65! id06DDEFFA -672fpm +1.4rot 14.2dB 0e -5.2kHz gps3x4
 KEEPALIVE Should fail, but doesn't (serendipitious find from KTrax hwsw test):
 KEEPALIVE Should work, new 0.2.6 format, just station info, no :>
-# WARNING: Couldn't parse: LFNS>APRS,TCPIP*,qAC,GLIDERN2:/194234h4416.93NI00555.98E&/A=001761
 (NOTICE) Static info for tileset: thermals
 (NOTICE) Tile directory: 
 (NOTICE) Northwest corner: 47.8 4.8

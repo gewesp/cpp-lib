@@ -19,6 +19,6 @@
 #ifndef CPP_LIB_REALTIME_H
 #define CPP_LIB_REALTIME_H
 
-#include "cpp-lib/platform/realtime.h"
+#include "cpp-lib/platform_rt/realtime.h"
 
 #endif // CPP_LIB_REALTIME_H

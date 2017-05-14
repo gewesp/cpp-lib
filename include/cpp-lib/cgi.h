@@ -48,12 +48,18 @@ std::map<std::string, std::string> parse_query(std::string const&);
 std::map<std::string, std::string> parse_query(std::istream& is);
 
 // Given a map params, sets p to the value found in the map if present.
-// Doesn't touch p otherwise.
+// Doesn't touch p otherwise.  If decode_percent is true, decodes
+// URI percent-encoding, e.g. "foo%20bar becomes foo bar.
 template<typename T, typename M>
-void set_value(M const& params, T& p, std::string const& name) {
+void set_value(M const& params, T& p, std::string const& name,
+    bool const decode_percent = true) {
   auto const it = params.find(name);
   if (params.end() != it) {
-    p = boost::lexical_cast<T>(cpl::cgi::uri_decode(it->second));
+    if (decode_percent) {
+      p = boost::lexical_cast<T>(cpl::cgi::uri_decode(it->second));
+    } else {
+      p = boost::lexical_cast<T>(                     it->second );
+    }
   }
 }
 

@@ -107,10 +107,10 @@ struct station_info {
 // service.
 struct vehicle_data {
   // First name, typically callsign
-  std::string name1;
+  std::string name1 = "-";
 
   // Second name, typically competition number (for gliders)
-  std::string name2;
+  std::string name2 = "-";
 
   // Vehicle make/model (textual)
   std::string type;
@@ -143,9 +143,10 @@ struct vehicle_data {
     id_type_probably_wrong(id_type_probably_wrong_in)
   {}
 
+  // TODO: This constructor really needed?
   vehicle_data()
-  : name1(),
-    name2(),
+  : name1("-"),
+    name2("-"),
     type(),
     tracking(true),
     identify(false)

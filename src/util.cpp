@@ -64,6 +64,7 @@ std::string to_string(std::wstring const& s) {
 }
 
 std::string const allowed_characters_1_ = ",.-/() ";
+std::string const allowed_characters_2_ = ",.:/-"  ;
 
 } // anonymous namespace
 
@@ -354,6 +355,10 @@ std::string cpl::util::canonical(
 // COW is used...
 std::string const& cpl::util::allowed_characters_1() {
   return allowed_characters_1_;
+}
+
+std::string const& cpl::util::allowed_characters_2() {
+  return allowed_characters_2_;
 }
 
 ////////////////////////////////////////////////////////////////////////

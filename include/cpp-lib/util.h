@@ -907,6 +907,9 @@ std::string utf8_canonical(
 // Returns: ",.-/() "
 std::string const& allowed_characters_1();
 
+// Returns: ",.:/-"
+std::string const& allowed_characters_2();
+
 // Verifies that a string contains only alphanumeric and
 // possibly extra characters.  Throws cpl::util::value_error on violation.
 void verify_alnum(std::string const& s, std::string const& extra = std::string());

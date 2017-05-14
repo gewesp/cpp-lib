@@ -525,23 +525,29 @@ bool parse_aprs_aircraft(
 
   // If we have a DDB, apply it to the given aircraft record,
   // i.e. set its callsign from the ID.
-  void apply(aircraft_rx_info_and_name&);
+  void apply(aircraft_rx_info_and_name&) const;
+
+  // Writes all name1, name2 into a JSON array on the given stream,
+  // which is a stringstream to avoid deadlocks.
+  void write_names_json(std::ostringstream&) const;
 
   // Returns the entry associated with the given qualified id, or 
   // throws if not found.
-  vehicle_data lookup(std::string const& id);
+  vehicle_data lookup(std::string const& id) const;
 
   // Lookup based on non-unique data
   // Thread-safe versions of the free functions above
-  std::vector<vehicle_data_and_id> lookup_by_name1(std::string const& name1);
-  std::vector<vehicle_data_and_id> lookup_by_name2(std::string const& name2);
+  std::vector<vehicle_data_and_id>
+      lookup_by_name1(std::string const& name1) const;
+  std::vector<vehicle_data_and_id>
+      lookup_by_name2(std::string const& name2) const;
 
 private:
   double query_interval;
   bool query_thread_active;
   bool has_nontrivial_vdb;
   vehicle_db vdb;
-  std::mutex vdb_mutex;
+  mutable std::mutex vdb_mutex;
 
   std::thread query_thread;
 

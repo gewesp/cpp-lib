@@ -858,7 +858,7 @@ postprocess:
 }
 
 void cpl::ogn::ddb_handler::apply(
-    cpl::ogn::aircraft_rx_info_and_name& acft) {
+    cpl::ogn::aircraft_rx_info_and_name& acft) const {
 
   std::lock_guard<std::mutex> lock(vdb_mutex);
   if (has_nontrivial_vdb) {
@@ -870,7 +870,26 @@ void cpl::ogn::ddb_handler::apply(
 
 }
 
-cpl::ogn::vehicle_data cpl::ogn::ddb_handler::lookup(std::string const& id) {
+void cpl::ogn::ddb_handler::write_names_json(
+    std::ostringstream& oss) const {
+  oss << "[\n";
+  std::lock_guard<std::mutex> lock(vdb_mutex);
+
+  for (auto it  = by_id(vdb).begin(); 
+            it != by_id(vdb).end  (); /* no increment */) {
+    oss << '"' << extract_name1(*it) << "\", "
+        << '"' << extract_name2(*it) << '"';
+    ++it;
+    if (by_id(vdb).end() == it) {
+      break;
+    }
+    oss << ",\n";
+  }
+  oss << ']';
+}
+
+cpl::ogn::vehicle_data cpl::ogn::ddb_handler::lookup(
+    std::string const& id) const {
   std::lock_guard<std::mutex> lock(vdb_mutex);
   if (!has_nontrivial_vdb) {
     throw std::runtime_error("OGN: DDB lookup: DB not loaded, id: " + id);
@@ -903,13 +922,13 @@ cpl::ogn::lookup_by_name2(
 }
 
 std::vector<cpl::ogn::vehicle_data_and_id>
-cpl::ogn::ddb_handler::lookup_by_name1(std::string const& name1) {
+cpl::ogn::ddb_handler::lookup_by_name1(std::string const& name1) const {
   std::lock_guard<std::mutex> lock(vdb_mutex);
   return cpl::ogn::lookup_by_name1(vdb, name1);
 }
 
 std::vector<cpl::ogn::vehicle_data_and_id>
-cpl::ogn::ddb_handler::lookup_by_name2(std::string const& name2) {
+cpl::ogn::ddb_handler::lookup_by_name2(std::string const& name2) const {
   std::lock_guard<std::mutex> lock(vdb_mutex);
   return cpl::ogn::lookup_by_name2(vdb, name2);
 }

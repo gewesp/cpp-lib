@@ -871,14 +871,19 @@ void cpl::ogn::ddb_handler::apply(
 }
 
 void cpl::ogn::ddb_handler::write_names_json(
-    std::ostringstream& oss) const {
+    std::ostringstream& oss,
+    const int which) const {
   oss << "[\n";
+  cpl::util::verify_bounds(which, "which parameter", 1, 3);
+  auto const extract = 3 == which ? 
+    cpl::ogn::extract_id : (1 == which ? cpl::ogn::extract_name1 
+                                       : cpl::ogn::extract_name2);
+
   std::lock_guard<std::mutex> lock(vdb_mutex);
 
   for (auto it  = by_id(vdb).begin(); 
             it != by_id(vdb).end  (); /* no increment */) {
-    oss << '"' << extract_name1(*it) << "\", "
-        << '"' << extract_name2(*it) << '"';
+    oss << '"' << extract(*it) << '"';
     ++it;
     if (by_id(vdb).end() == it) {
       break;

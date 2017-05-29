@@ -174,6 +174,10 @@ It is *not* necessary to compile Boost.
 
 __Boost, png++ and Eigen are used in a header-only way.__
 
+__NOTE:__ On Ubuntu 16.04, apt-get appears to be broken in
+some cases.  Use aptitude instead with the same command
+lines.
+
 - Installing dependencies on Ubuntu:
   * `sudo apt-get install libeigen3-dev`
   * `sudo apt-get install libpng++-dev`

@@ -382,13 +382,14 @@ bool cpl::ogn::parse_aprs_station(
 
   long hhmmss = 0;
 
+  char slash_or_greater[2] = "";
   char NS[2] = "";
   char EW[2] = "";
 
   // Normal, special conversions
   // Notice: Beginning with 0.2.6, no more 'special' conversions,
   // see format with ":>" instead
-  int constexpr n_normal  = 8;
+  int constexpr n_normal  = 9;
   int constexpr n_special = 5;
   char special[n_special][31];
 
@@ -396,7 +397,8 @@ bool cpl::ogn::parse_aprs_station(
       "%40[^>]" // station name
       ">APRS,TCPIP*,qAC,"
       "%40[^:]" // network? (seen: GLIDERN1, GLIDERN2)
-      ":/"
+      ":"
+      "%1[/>]"  // ":/": We have a lat/lon, ":>" Status info, no lat/lon
       "%ld"     // HHMMSSh
       "h"       // zulu time
       "%lf"     // latitude
@@ -419,6 +421,7 @@ bool cpl::ogn::parse_aprs_station(
       line.c_str(), format, 
       station_v,
       network_v,
+      slash_or_greater,
       &hhmmss,
       &stat.second.pt.lat,
       NS,
@@ -432,6 +435,10 @@ bool cpl::ogn::parse_aprs_station(
       special[4]);
 
   if (n_normal <= conversions) {
+    // This must be a ":/"
+    if ('/' != slash_or_greater[0]) {
+      return false;
+    }
     if (!my_double_cast(lon_v, stat.second.pt.lon)) {
       return false;
     }
@@ -499,6 +506,13 @@ bool cpl::ogn::parse_aprs_station(
 
     return true;
   } else {
+    // If we have ":>" and the first 4, we're happy but 
+    // signal nothing parsed by setting name to ""
+    if (4 == conversions && '>' == slash_or_greater[0]) {
+      stat.first = "";
+      return true;
+    }
+
     return false;
   }
 }

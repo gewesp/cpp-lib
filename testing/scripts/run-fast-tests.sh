@@ -42,6 +42,8 @@ $BIN_DIR/ogn-test --file $INPUT_DIR/ogn-1.ogn --ddb_query_interval -1    \
                                             > $GOLDEN_DIR/ogn-1-thermals-2.txt
 $BIN_DIR/ogn-test --file $INPUT_DIR/ogn-2.ogn --ddb_query_interval -1    \
                                             > $GOLDEN_DIR/ogn-2.txt
+$BIN_DIR/ogn-test --file $INPUT_DIR/0.2.6.ogn --ddb_query_interval -1    \
+                                            > $GOLDEN_DIR/0.2.6.txt
 $BIN_DIR/ogn-test --unittests               > $GOLDEN_DIR/ogn-unittests.txt
 $BIN_DIR/table-test < $INPUT_DIR/table1.txt > $GOLDEN_DIR/table1.txt
 $BIN_DIR/util-test  < $INPUT_DIR/util.txt   > $GOLDEN_DIR/util.txt

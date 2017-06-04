@@ -1,0 +1,27 @@
+# AIRCRAFT id id_type vehicle_type stealth tracking identify callsign hwver swver time lat lon alt accuracy course speed v_down turn_rate baro_alt received_by relayed rssi frequency_deviation errors 
+# STATION id version network time lat lon alt cpu ram_used ram_max ntp_difference ntp_ppm temperature
+KEEPALIVE New format as of 0.2.6, from Angel Casado
+KEEPALIVE TODO: Update OGN parsing to understand that format and incorporate in
+KEEPALIVE tests
+# WARNING: Couldn't parse: ROBLE4>APRS,TCPIP*,qAC,GLIDERN3:/154256h3258.57SI07100.78W&/A=007226 Webcam: http://www.planeadores.cl
+# WARNING: Couldn't parse: ROBLE4>APRS,TCPIP*,qAC,GLIDERN3:>154256h v0.2.6.ARM CPU:1.0 RAM:715.4/970.5MB NTP:1.4ms/-14.6ppm +41.9C 1/1Acfts[1h] RF:+0+0.2ppm/+7.22dB/+9.2dB@10km[2141]/+15.0dB@10km[1/2]
+STATION UCC1 v0.2.5.ARM GLIDERN3 -29779 -31.48683333 -64.2415 477.012 0.6 752.9 970.8 1.2 1.7 47.6
+# WARNING: Couldn't parse: UCC1>APRS,TCPIP*,qAC,GLIDERN3:>154341h v0.2.5.ARM CPU:0.6 RAM:752.9/970.8MB NTP:1.2ms/+1.7ppm +47.6C 0/0Acfts[1h] RF:+48+31.8ppm/+0.03dB
+STATION TQL v0.2.4.RPI-GPU GLIDERN1 -29676 -35.9755 -62.7705 99.9744 1 158.5 389.3 1.4 -33.1 60.5
+# WARNING: Couldn't parse: WBUXTON>APRS,TCPIP*,qAC,GLIDERN3:/154751h3317.02SI07041.11W&/A=001735 Contact: achanes@manquehue.net, brito.felipe@gmail.com
+# WARNING: Couldn't parse: WBUXTON>APRS,TCPIP*,qAC,GLIDERN3:>154751h v0.2.6.RPI-GPU CPU:1.5 RAM:238.2/456.1MB NTP:1.6ms/-13.8ppm +37.4C 3/3Acfts[1h] RF:+71+14.7ppm/+2.36dB/+9.7dB@10km[1299]/+9.7dB@10km[2/3]
+# WARNING: Couldn't parse: ROBLE1>APRS,TCPIP*,qAC,GLIDERN3:/154754h3258.58SI07100.78W&/A=007229 El Roble hill, Club de Planeadores Vitacurs
+# WARNING: Couldn't parse: ROBLE1>APRS,TCPIP*,qAC,GLIDERN3:>154754h v0.2.6.ARM CPU:1.0 RAM:724.5/970.5MB NTP:2.5ms/-7.9ppm +38.6C 0/0Acfts[1h] RF:+0+0.0ppm/+5.69dB/+17.8dB@10km[16]
+# WARNING: Couldn't parse: ROBLE4>APRS,TCPIP*,qAC,GLIDERN3:/154756h3258.57SI07100.78W&/A=007226 Vitacura Municipal Aerodrome, Club de Planeadores Vitacurs
+# WARNING: Couldn't parse: ROBLE4>APRS,TCPIP*,qAC,GLIDERN3:>154756h v0.2.6.ARM CPU:1.0 RAM:715.7/970.5MB NTP:1.4ms/-14.6ppm +41.9C 0/0Acfts[1h] RF:+0+0.2ppm/+7.40dB/+9.2dB@10km[2141]/+15.0dB@10km[1/2]
+STATION UCC1 v0.2.5.ARM GLIDERN3 -29479 -31.48683333 -64.2415 477.012 0.6 753 970.8 1.2 1.7 47.6
+# WARNING: Couldn't parse: UCC1>APRS,TCPIP*,qAC,GLIDERN3:>154841h v0.2.5.ARM CPU:0.6 RAM:753.0/970.8MB NTP:1.2ms/+1.7ppm +47.6C 0/0Acfts[1h] RF:+48+31.8ppm/+0.03dB
+STATION TQL v0.2.4.RPI-GPU GLIDERN1 -29376 -35.9755 -62.7705 99.9744 0.8 158.4 389.3 1.4 -33.1 60.5
+# WARNING: Couldn't parse: WBUXTON>APRS,TCPIP*,qAC,GLIDERN3:/155251h3317.02SI07041.11W&/A=001735 Antenna: coax-collinear, on the W. Buxton house
+# WARNING: Couldn't parse: WBUXTON>APRS,TCPIP*,qAC,GLIDERN3:>155251h v0.2.6.RPI-GPU CPU:1.6 RAM:238.3/456.1MB NTP:1.6ms/-13.8ppm +37.9C 2/2Acfts[1h] RF:+71+14.9ppm/+2.24dB/+9.7dB@10km[1302]/+9.7dB@10km[2/3]
+# WARNING: Couldn't parse: ROBLE1>APRS,TCPIP*,qAC,GLIDERN3:/155254h3258.58SI07100.78W&/A=007229 Contact: achanes@manquehue.net, brito.felipe@gmail.com
+# WARNING: Couldn't parse: ROBLE1>APRS,TCPIP*,qAC,GLIDERN3:>155254h v0.2.6.ARM CPU:1.1 RAM:724.5/970.5MB NTP:2.5ms/-7.9ppm +39.2C 0/0Acfts[1h] RF:+0+0.0ppm/+4.89dB/+17.8dB@10km[16]
+# WARNING: Couldn't parse: ROBLE4>APRS,TCPIP*,qAC,GLIDERN3:/155256h3258.57SI07100.78W&/A=007226 Contact: achanes@manquehue.net, brito.felipe@gmail.com
+# WARNING: Couldn't parse: ROBLE4>APRS,TCPIP*,qAC,GLIDERN3:>155256h v0.2.6.ARM CPU:1.0 RAM:715.9/970.5MB NTP:1.4ms/-14.6ppm +41.3C 0/0Acfts[1h] RF:+0+0.3ppm/+7.16dB/+9.2dB@10km[2141]/+15.0dB@10km[1/2]
+KEEPALIVE Just pure station info
+STATION LFNS v0.0.0 GLIDERN2 -15446 44.28216667 5.933 536.7528 0 0 0 0 0 0

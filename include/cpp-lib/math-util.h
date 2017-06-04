@@ -1014,14 +1014,20 @@ private:
   std::vector<double> w;
 };
 
+// Safe division function.  Returns 0.0 in case of division
+// by zero.
+inline double safe_divide(const double num, const double den) {
+  if (0.0 == den) {
+    return 0.0;
+  } else {
+    return num / den;
+  }
+}
+
 // Safe function to calculate percentages.  Returns 0.0 in case
 // of divisions by zero.
 inline double percentage(const double& value, const double& reference) {
-  if (0.0 == reference) {
-    return 0.0;
-  } else {
-    return 100.0 * value / reference;
-  }
+  return 100.0 * safe_divide(value, reference);
 }
 
 } // namespace math

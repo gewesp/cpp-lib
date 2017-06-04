@@ -415,6 +415,11 @@ bool cpl::ogn::parse_aprs_station(
       "%30s "
       "%30s"
       // TODO: etc: RF:+40+2.7ppm/+0.8dB
+      // TODO: As of 0.2.6, the 'specials' appear for :> messages.
+      //       For :/ messages, we have 'Key: Value' pairs, e.g.
+      //   Webcam: http://www.vueloavela.cl or
+      //   Contact: web@master.com
+      //   See DEAD_CODE below
   ;
 
   const int conversions = std::sscanf(
@@ -449,6 +454,12 @@ bool cpl::ogn::parse_aprs_station(
 
     set_latlon(NS, EW, stat.second.pt.lat, stat.second.pt.lon);
     stat.second.pt.alt = alt_ft * cpl::units::foot();
+
+    return true;
+
+    // DEAD_CODE
+    // TODO: This should be parsed *without* lat/lon/alt when 
+    // we have a :> message.
 
     // Assert that conversions <= n_normal + n_special
     // hence i < conversions - n_normal <= n_special

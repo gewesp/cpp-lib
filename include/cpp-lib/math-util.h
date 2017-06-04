@@ -1030,6 +1030,14 @@ inline double percentage(const double& value, const double& reference) {
   return 100.0 * safe_divide(value, reference);
 }
 
+// Generalized round to the next multiple of C, e.g. C = 100.  Can be
+// used with any C > 0, including fractional, e.g. C = 0.25 to round 
+// to quarters.
+inline double round(const double x, const double C) {
+  assert(C > 0);
+  return C * std::round(x / C);
+}
+
 } // namespace math
 
 } // namespace cpl

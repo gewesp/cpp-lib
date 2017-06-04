@@ -467,7 +467,7 @@ void ddb_stats(std::ostream& os, std::string const& source) {
       } while (idx.end() != it && cs == it->data.name1);
       total += ids.size();
       always_assert(1 <= ids.size());
-      if ("(hidden)" != cs && 2 <= ids.size()) {
+      if ("-" != cs && 2 <= ids.size()) {
         os << cs << ": ";
         for (auto const& id : ids) {
           os << id << " ";

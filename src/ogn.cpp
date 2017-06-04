@@ -1036,8 +1036,11 @@ cpl::ogn::vehicle_data_and_id parse_ddb_entry(cpl::util::lexer& lex) {
   cpl::util::toupper(cn);
   cpl::util::verify_alnum(cn, "-_");
 
+  // Make sure that we don't disclose anything if identify is 'N'.
+  // As of 5/2017, ddb already seems to ensure that, but you
+  // never know.
   if (!identify || 0 == callsign.size()) {
-    callsign = "(hidden)";
+    callsign = "-";
   }
 
   if (!identify || 0 == cn.size()) {

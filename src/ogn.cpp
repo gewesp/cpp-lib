@@ -1039,12 +1039,22 @@ cpl::ogn::vehicle_data_and_id parse_ddb_entry(cpl::util::lexer& lex) {
   // Make sure that we don't disclose anything if identify is 'N'.
   // As of 5/2017, ddb already seems to ensure that, but you
   // never know.
-  if (!identify || 0 == callsign.size()) {
+  if (!identify) {
     callsign = "-";
-  }
-
-  if (!identify || 0 == cn.size()) {
-    cn = "-";
+    cn       = "-";
+  } else {
+    if (callsign.empty()) {
+      callsign = "-";
+      // Special case: Use 'hidden' for CN if callsign *and* CN are
+      // empty, but identify is allowed.  This allows client code
+      // to publish the FLARM ID in this case.
+      if (cn.empty()) {
+        cn = "(hidden)";
+      }
+    }
+    if (cn.empty()) {
+      cn = "-";
+    }
   }
 
   // Use unqualified ID.  This is a primary key in the DDB

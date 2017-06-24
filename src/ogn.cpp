@@ -923,7 +923,11 @@ cpl::ogn::vehicle_data cpl::ogn::ddb_handler::lookup(
     const bool throw_if_not_found) const {
   std::lock_guard<std::mutex> lock(vdb_mutex);
   if (!has_nontrivial_vdb) {
-    throw std::runtime_error("OGN: DDB lookup: DB not loaded, id: " + id);
+    if (throw_if_not_found) {
+      throw std::runtime_error("OGN: DDB lookup: DB not loaded, id: " + id);
+    } else {
+      return cpl::ogn::vehicle_data();
+    }
   }
 
   auto const it = by_id(vdb).find(unqualified_id(id));

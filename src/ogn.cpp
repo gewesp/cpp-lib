@@ -919,7 +919,8 @@ void cpl::ogn::ddb_handler::write_names_json(
 }
 
 cpl::ogn::vehicle_data cpl::ogn::ddb_handler::lookup(
-    std::string const& id) const {
+    std::string const& id,
+    const bool throw_if_not_found) const {
   std::lock_guard<std::mutex> lock(vdb_mutex);
   if (!has_nontrivial_vdb) {
     throw std::runtime_error("OGN: DDB lookup: DB not loaded, id: " + id);
@@ -927,7 +928,11 @@ cpl::ogn::vehicle_data cpl::ogn::ddb_handler::lookup(
 
   auto const it = by_id(vdb).find(unqualified_id(id));
   if (vdb.end() == it) {
-    throw std::runtime_error("OGN: DDB entry not found for " + id);
+    if (throw_if_not_found) {
+      throw std::runtime_error("OGN: DDB entry not found for " + id);
+    } else {
+      return cpl::ogn::vehicle_data();
+    }
   }
 
   return it->data;

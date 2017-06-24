@@ -143,7 +143,6 @@ struct vehicle_data {
     id_type_probably_wrong(id_type_probably_wrong_in)
   {}
 
-  // TODO: This constructor really needed?
   vehicle_data()
   : name1("-"),
     name2("-"),
@@ -532,9 +531,10 @@ bool parse_aprs_aircraft(
   // which == 1: name1, which == 2: name2, which == 3: ID, 
   void write_names_json(std::ostringstream&, int which = 1) const;
 
-  // Returns the entry associated with the given qualified id, or 
-  // throws if not found.
-  vehicle_data lookup(std::string const& id) const;
+  // Returns the entry associated with the given qualified id.  If
+  // not found, throws or returns a default-constructed vehicle_data.
+  vehicle_data lookup(std::string const& id,
+      const bool throw_if_not_found = true) const;
 
   // Lookup based on non-unique data
   // Thread-safe versions of the free functions above

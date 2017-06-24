@@ -398,6 +398,14 @@ void test_datetime() {
 
   std::cout << format_date(r(mstd)) << std::endl;
   std::cout << format_time(r(mstd)) << std::endl;
+
+  std::cout << format_datetime(-1) << std::endl;
+  // Things still work, but get a bit imprecise 100
+  // years back...
+  std::cout << format_datetime(-100 * cpl::units::year()) << std::endl;
+  std::cout << format_datetime(-2000 * cpl::units::year()) << std::endl;
+  std::cout << format_datetime(-100, default_datetime_format(), 0, "too old")
+            << std::endl;
 }
 
 template<typename F>

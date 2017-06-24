@@ -63,6 +63,8 @@ inline double constexpr day   () { return 86400. ; }
 inline double constexpr hour  () { return 3600.  ; }
 inline double constexpr minute() { return 60.    ; } 
 
+inline double constexpr year  () { return 365 * day() ; }
+
 inline double constexpr millisecond() { return 1e-3; }
 
 // Angle [radians].

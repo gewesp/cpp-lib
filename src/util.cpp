@@ -224,7 +224,12 @@ std::tm cpl::util::utc_tm(double const t) {
 }
 
 std::string cpl::util::format_datetime(
-    double const t, char const* const format) {
+    double const t, char const* const format,
+    double const past_limit, char const* const default_result) {
+  if (t < past_limit) {
+    return default_result;
+  }
+
   std::tm t2 = cpl::util::utc_tm(t);
 
   char ret[100];

@@ -107,6 +107,11 @@ inline const char* time_format_hh_mm_ss() {
   return "%H:%M:%S";
 }
 
+// Default format for format_datetime()
+inline const char* default_datetime_format() {
+  return "%FT%TZ";
+}
+
 //
 // Returns a textual representation of the UTC date/time given in t
 // ([s] since January 1, 1970).  The format is as for strftime(3).
@@ -118,8 +123,14 @@ inline const char* time_format_hh_mm_ss() {
 //
 // The function throws on errors.
 //
+// For dates before past_limit, default_result is returned.
+//
 
-std::string format_datetime(double t, const char* format = "%FT%TZ");
+std::string format_datetime(
+    double t, 
+    const char* format = default_datetime_format(),
+    const double past_limit = -1970 * cpl::units::year(),
+    const char* const default_result = "-");
 
 //
 // Same as the above, but format date only, e.g.:

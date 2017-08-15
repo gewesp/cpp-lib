@@ -141,7 +141,7 @@ void process(
          << "accuracy "
          << "course "
          << "speed "
-         << "v_down "
+         << "vertical_speed "
          << "turn_rate "
          << "baro_alt "
          << "received_by "

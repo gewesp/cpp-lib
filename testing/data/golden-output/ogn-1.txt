@@ -1,4 +1,4 @@
-# AIRCRAFT id id_type vehicle_type stealth tracking identify callsign hwver swver time lat lon alt accuracy course speed v_down turn_rate baro_alt received_by relayed rssi frequency_deviation errors 
+# AIRCRAFT id id_type vehicle_type stealth tracking identify callsign hwver swver time lat lon alt accuracy course speed vertical_speed turn_rate baro_alt received_by relayed rssi frequency_deviation errors 
 # STATION id version network time lat lon alt cpu ram_used ram_max ntp_difference ntp_ppm temperature
 KEEPALIVE aprsc 2.0.14-g28c5a6a
 KEEPALIVE logresp 0 unverified, server GLIDERN1

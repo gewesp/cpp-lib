@@ -1,4 +1,4 @@
-# AIRCRAFT id id_type vehicle_type stealth tracking identify callsign hwver swver time lat lon alt accuracy course speed v_down turn_rate baro_alt received_by relayed rssi frequency_deviation errors 
+# AIRCRAFT id id_type vehicle_type stealth tracking identify callsign hwver swver time lat lon alt accuracy course speed vertical_speed turn_rate baro_alt received_by relayed rssi frequency_deviation errors 
 # STATION id version network time lat lon alt cpu ram_used ram_max ntp_difference ntp_ppm temperature
 STATION EDTN  GLIDERN2 0 48.60966667 9.479166667 363.9312 0 0 0 0 0 0
 AIRCRAFT flarm:F94E00 2 1 0 1 0 - - - -6 42.90933333 2.060666667 395.9352 19 27 0 -0.59944 0 0 LFNW 0 32.8 3 0

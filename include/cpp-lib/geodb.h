@@ -99,7 +99,7 @@ struct geodb {
       int max_results = 1) const;
 
   // Finds max_results nearest element(s) to lla and returns the associated 
-  // tuples (position, value 3D distance).
+  // tuples (position, value, 3D distance).
   position_value_distance_vector nearest_positions(
       cpl::gnss::lat_lon_alt const& lla, 
       int max_results = 1) const;

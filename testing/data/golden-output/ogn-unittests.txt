@@ -10,3 +10,5 @@ hide_id("icao:", 100, 'X') = "icao:"
 hide_id("icao:", 0, 'X') = "icao:"
 hide_id("flarm342", 0, 'X') = "flarm342"
 hide_id("flarm342", 3, 'X') = "flarm342"
+Testing q construct: OGFLARM-1,qAS,LFLE
+Testing q construct: APRS,RELAY*,qAS,EPLR

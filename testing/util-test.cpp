@@ -502,12 +502,24 @@ void test_split(std::ostream& os, std::string const& s, sv const& expected) {
   sv actual;
   cpl::util::split(actual, s);
   if (actual != expected) {
-    os << "split failed: " << s << std::endl;
+    os << "split failed on: " << s << std::endl;
+    os << "results:" << std::endl;
     for (auto const& el : actual) {
       os << '"' << el << '"' << std::endl;
     }
   }
-  cpl::util::verify(actual == expected, "Split failed: " + s);
+
+  const sv actual2 = cpl::util::split(s);
+  if (actual2 != expected) {
+    os << "splitter failed on: " << s << std::endl;
+    os << "results:" << std::endl;
+    for (auto const& el : actual2) {
+      os << '"' << el << '"' << std::endl;
+    }
+  }
+
+  cpl::util::verify(actual  == expected, "Split failed: " + s);
+  cpl::util::verify(actual2 == expected, "Splitter failed: " + s);
 }
 
 void test_stringutils(std::ostream& os) {

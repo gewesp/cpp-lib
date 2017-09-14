@@ -391,6 +391,55 @@ template< typename Sequence > void split(
   boost::algorithm::split(seq, s, boost::algorithm::is_any_of(separators));
 }
 
+//
+// A string splitter returning the next string on each call.
+//
+// Usage:
+//   splitter split(input_string);
+//   std::string part;
+//   while (s.get_next(part)) { ... }
+//
+
+struct splitter {
+  splitter(const std::string& str, const char separator = ',')
+  : position_ (std::begin(str)),
+    end_      (std::end  (str)),
+    separator_(separator)
+  {}
+
+  // Invariant: position_ == end_ or there is a separator
+  // left of position_
+  bool get_next(std::string& result) {
+    if (exhausted_) {
+      return false;
+    }
+    const auto it = std::find(position_, end_, separator_);
+    result.assign(position_, it);
+    if (it == end_) { 
+      // Log that we're done
+      exhausted_ = true;
+    } else {
+      position_ = it + 1;
+    }
+    return true;
+  }
+
+private:
+  std::string::const_iterator position_;
+  std::string::const_iterator end_     ;
+  char separator_;
+  // Need a separate flag for exhausted since position_ can be on
+  // end_ for an empty input string
+  bool exhausted_ = false;
+};
+
+//
+// A second implementation for cross-checking, based on splitter
+//
+
+std::vector<std::string> split(
+    std::string const& s , char separator = ',');
+
 
 //
 // Copy is to os character-wise

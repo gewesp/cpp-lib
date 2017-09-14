@@ -73,6 +73,67 @@ short constexpr VEHICLE_TYPE_UAV         = 13;
 // 14 not assigned
 short constexpr VEHICLE_TYPE_STATIC      = 15;
 
+/*
+On Tue, 29 Aug 2017, Angel Casado wrote:
+Pawel et al:
+We can propose this for the TOCALLs: 
+
+OGNFLRx Looks OK to me
+OGDSXx for the T_advisory
+OGNTx  for the OGN tracker
+OGADSBx for the ADS-B just in case someone decodes the ADS-B and want 
+        to inject the data on the OGN APRS
+OGFNTx for the FANET
+OGAPWx for the PilotAware
+OGSPOT-x for the SPOT 
+OGSPIDERx for the Spider
+OGLT24x for the LiveTrack24 
+OGSKYLx for the Skyline (XCsoar)
+OGCAPTRx for the Capture
+
+and we can define more the TOCALLs as need it.
+We can start to test it /use it with the interface for the 
+SPOT/SPIDER/LT24/SKYLINE and on further version of the OGN-decode
+to introduce it.
+Cheers from Madrid today.
+
+Heikki et al:
+For my comfort, a well defined APRS messages will look something like this:
+
+If coming from an OGN station:
+ICA3836BC>OGFLARM-1,qAS,LFLE:/100956h4533.58N/00558.45E'000/000/A=000964 !W85! id053836BC +020fpm +0.0rot 32.5dB 0e +7.5kHz gps1x2
+
+and if coming from an ADSB receiver:
+ICA3836BC>OGADSB-1,qAS,ADSBNET:/100956h4533.58N/00558.45E'000/000/A=000964 !W85! id053836BC +020fpm +0.0rot 32.5dB 0e +7.5kHz gps1x2
+
+and if coming from the SPOT server:
+SPO3836BC>OGSPOT-1,qAS,SPOT:/100956h4533.58N/00558.45E'000/000/A=000964 !W85! id053836BC +020fpm  gps1x2 SPOTGOOD
+
+Relay:
+When you find an: 
+FLRDDF9DD>APRS,OGN1C590E*,qAS  ....
+means that the position of DDF9DD was relayed by the OGN tracker 1C590E 
+If the software can not find who was the relaying unit, it sets a 
+generic RELAY* id. 
+*/
+
+// Internal data structure, may be occasionally useful outside
+struct q_construct {
+  // TOCALL, see above
+  // May include version, e.g. OGADSB-1
+  std::string tocall;
+
+  // RELAY---generic or the specific ID, with asterisk.
+  // Empty if received directly.
+  std::string relay;
+
+  // Where does it come from: "SPOT", (OGN station name), "ADSBNET" (see above)
+  std::string from;
+};
+
+// Parses a q construct, returns true on success
+bool parse_q_construct(const std::string&, q_construct&);
+
 // OGN station information:
 // - Network name
 // - 4D position

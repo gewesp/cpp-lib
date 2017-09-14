@@ -628,6 +628,37 @@ std::ostream& cpl::ogn::operator<<(
   ;
   return os;
 }
+
+// Method: Search for qAS.  If it's 3 entries before that, we have a relay,
+// otherwise we don't
+bool cpl::ogn::parse_q_construct(
+    const std::string& s, cpl::ogn::q_construct& q) {
+  
+  cpl::util::splitter spl(s, ',');
+
+  if (!spl.get_next(q.tocall)) {
+    return false;
+  }
+
+  std::string qAS_or_relay;
+  int relay_count = 0;
+  q.relay = std::string();
+  while (spl.get_next(qAS_or_relay) && "qAS" != qAS_or_relay) {
+    q.relay = qAS_or_relay;
+    ++relay_count;
+  }
+
+  // Currently we support only one hop
+  if (relay_count > 1) {
+    return false;
+  }
+
+  if (!spl.get_next(q.from)) {
+    return false;
+  } 
+
+  return true;
+}
  
 // Parses APRS lines containing OGN targets.
 // If a vehicle_db is installed, fills in data from there.
@@ -648,24 +679,25 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
   char cse_spd[11] = "";
 
   char callsign_v[41] = "";
-  char station_v [41] = "";
+  char q_construct_v[81] = "";
   char lon_v[21] = "";
   char NS[2] = "";
   char EW[2] = "";
-  char relay_v[9] = "";
 
   // Normal, special conversions
-  int constexpr n_normal  = 10;
+  int constexpr n_normal  = 9;
   int constexpr n_special = 11;
   char special[n_special][31];
 
   // qAR / qAS: See 'q Construct', http://www.aprs-is.net/q.aspx
   // It's either qAS,<relay> or qAR for directly received packets
   // OGN only uses qAS, no qAR for stations (?)
+  // q construct: TOCALL,[(relay)*],qAS,FROM
+  // See struct q_construct in ogn.h
   const char* const format = 
       "%40[^>]"
-      ">APRS%8[RELAY*,]qAS,"
-      "%40[^:]"
+      ">"
+      "%80[^:]"
       ":/%ldh"
       "%lf"
       "%1[NS]"  // north/south
@@ -691,8 +723,7 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
   const int conversions = std::sscanf(
       line.c_str(), format, 
       callsign_v,
-      relay_v,
-      station_v,
+      q_construct_v,
       &hhmmss,
       &acft.second.pta.lat,
       NS,
@@ -712,13 +743,18 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
       special[9],
       special[10]);
 
+  q_construct q;
+  if (!parse_q_construct(q_construct_v, q)) {
+    return false;
+  }
+
   // Want at least 6 'special' conversions.
   // gpsNxM not there for OGN trackers
   int const special_converted = conversions - n_normal;
 
   // Relayed packets don't have kHz, dB and error count, so only
   // 3 'specials'.  Others should have at least 6.
-  acft.second.rx.is_relayed = ',' == relay_v[0] && 'R' == relay_v[1];
+  acft.second.rx.is_relayed = !q.relay.empty();
   int const min_special_converted = acft.second.rx.is_relayed ? 4 : 6;
   if (special_converted < min_special_converted) {
     return false;
@@ -739,7 +775,7 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
     }
   }
 
-  acft.second.rx.received_by = station_v ;
+  acft.second.rx.received_by = q.from;
   // As of 2015, no callsign is transmitted on the APRS network.
   // acft.second.data.name1 = callsign_v;
   acft.second.data.name1 = "-";
@@ -1277,6 +1313,24 @@ void cpl::ogn::update(cpl::ogn::thermal_detector_params const& params,
   }
 }
 
+namespace {
+
+void test_q(
+    std::ostream& os,
+    const std::string& s,
+    const std::string& tocall,
+    const std::string& relay,
+    const std::string& from) {
+  os << "Testing q construct: " << s << std::endl;
+  cpl::ogn::q_construct q;
+  always_assert(parse_q_construct(s, q));
+  always_assert(q.tocall == tocall);
+  always_assert(q.relay  == relay );
+  always_assert(q.from   == from  );
+}
+
+} // anonymous namespace
+
 void cpl::ogn::unittests(std::ostream& os) {
 double lat1 = 1, lon1 = 2;
   double lat2 = -1, lon2 = -2;
@@ -1300,4 +1354,7 @@ double lat1 = 1, lon1 = 2;
   test_hide_id(os, "icao:"       , 0  , 'X');
   test_hide_id(os, "flarm342"    , 0  , 'X');
   test_hide_id(os, "flarm342"    , 3  , 'X');
+
+  test_q(os, "OGFLARM-1,qAS,LFLE", "OGFLARM-1", "", "LFLE");
+  test_q(os, "APRS,RELAY*,qAS,EPLR", "APRS", "RELAY*", "EPLR");
 }

@@ -112,6 +112,21 @@ std::istream& cpl::util::getline(
   return is ;
 }
 
+std::vector<std::string> cpl::util::split(
+    std::string const& str,
+    char const sep) {
+  std::string back;
+  cpl::util::splitter s(str, sep);
+
+  std::vector<std::string> ret;
+  while (s.get_next(back)) {
+    ret.push_back(back);
+  }
+
+  return ret;
+}
+
+
 
 void cpl::util::death::die(
   std::string const& msg ,

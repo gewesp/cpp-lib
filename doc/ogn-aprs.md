@@ -116,6 +116,7 @@ Every 20 seconds:
 
 ### See also
 
+* https://github.com/glidernet/ogn-aprs-protocol
 * [APRS-IS Specifications](http://www.aprs-is.net/Specification.aspx)
 * [APRS protocol reference. Version 1.0.1](http://www.aprs.org/doc/APRS101.PDF) 
 * The file aprsmsgs.txt for updated examples as of September 2017

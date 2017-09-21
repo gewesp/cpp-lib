@@ -27,6 +27,7 @@
 #include "cpp-lib/cgi.h"
 #include "cpp-lib/container-util.h"
 #include "cpp-lib/random.h"
+#include "cpp-lib/safe_queue.h"
 #include "cpp-lib/util.h"
 #include "cpp-lib/xdr.h"
 

@@ -67,7 +67,7 @@
 #ifndef CPP_LIB_DISPATCH_H
 #define CPP_LIB_DISPATCH_H
 
-#include "cpp-lib/util.h"
+#include "cpp-lib/safe_queue.h"
 #include "cpp-lib/sys/syslogger.h"
 
 #include <iostream>

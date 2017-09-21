@@ -46,10 +46,13 @@ namespace util {
 // * Add a safeguard against destruction when there's still a reader or 
 //   writer?  Just acquiring a lock on the mutex in the destructor doesn't
 //   work because wait() unlocks the mutex.
-// * Add maximum size, empty() and full() conditions.
+// * Add maximum size and a full() condition.
 //
 
 template <class T> struct safe_queue {
+
+  // Adds an element to the queue.  Blocks only briefly in case a
+  // call to pop_front() or empty() is ongoing.
   void push(T&& t) {
     {
       std::lock_guard<std::mutex> lock{m};
@@ -59,6 +62,10 @@ template <class T> struct safe_queue {
     c.notify_one();
   }
 
+  // Waits for an element to become available, removes it from
+  // the queue and returns it.  If a previous call to empty()
+  // returned false and there is only one consumer, pop_front()
+  // does not block.
   T pop_front() {
     std::unique_lock<std::mutex> lock{m};
 
@@ -72,6 +79,12 @@ template <class T> struct safe_queue {
     T t = std::move(q.front());
     q.pop();
     return t;
+  }
+
+  // Returns true iff the queue is empty.
+  bool empty() const {
+    std::unique_lock<std::mutex> lock{m};
+    return q.empty();
   }
 
 private:

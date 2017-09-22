@@ -94,7 +94,7 @@ template <class T> struct safe_queue {
 
 private:
   std::queue<T> q;
-  std::mutex m;
+  mutable std::mutex m;
   std::condition_variable c;
 };
 

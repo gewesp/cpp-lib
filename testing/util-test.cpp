@@ -284,7 +284,7 @@ void test_safe_queue_destructor() {
 
   std::thread reader(
     [&q]{
-      q.pop_front();
+      q.pop();
   });
 
   q.push("hello world");
@@ -315,7 +315,7 @@ void test_safe_queue(long long const n) {
         long long prev = -10;
 
         for (long i = 0; i < n; ++i) {
-          long long const l = boost::lexical_cast<long long>(q.pop_front());
+          long long const l = boost::lexical_cast<long long>(q.pop());
           // std::cerr << "pop " << l << std::endl;
           if (prev >= 0) {
             always_assert(prev + 1 == l);

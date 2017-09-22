@@ -52,7 +52,7 @@ namespace util {
 template <class T> struct safe_queue {
 
   // Adds an element to the queue.  Blocks only briefly in case a
-  // call to pop_front() or empty() is ongoing.
+  // call to pop() or empty() is ongoing.
   void push(T&& t) {
     {
       std::lock_guard<std::mutex> lock{m};
@@ -64,9 +64,9 @@ template <class T> struct safe_queue {
 
   // Waits for an element to become available, removes it from
   // the queue and returns it.  If a previous call to empty()
-  // returned false and there is only one consumer, pop_front()
+  // returned false and there is only one consumer, pop()
   // does not block.
-  T pop_front() {
+  T pop() {
     std::unique_lock<std::mutex> lock{m};
 
     // If q.empty(), this was a spurious wakeup
@@ -79,6 +79,11 @@ template <class T> struct safe_queue {
     T t = std::move(q.front());
     q.pop();
     return t;
+  }
+
+  // Deprecated synonym for pop().  Use pop() instead.
+  T pop_front() {
+    return pop();
   }
 
   // Returns true iff the queue is empty.

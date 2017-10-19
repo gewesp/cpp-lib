@@ -59,7 +59,7 @@ template <class T> struct safe_queue {
       q.push(std::move(t));
     }
     // "(the lock does not need to be held for notification)"
-    c.notify_one();
+    has_data.notify_one();
   }
 
   // Waits for an element to become available, removes it from
@@ -72,7 +72,7 @@ template <class T> struct safe_queue {
     // If q.empty(), this was a spurious wakeup
     // http://en.cppreference.com/w/cpp/thread/condition_variable/wait
     while (q.empty()) {
-      c.wait(lock);
+      has_data.wait(lock);
     }
 
     // lock is re-acquired after waiting, so we're good to go
@@ -95,7 +95,7 @@ template <class T> struct safe_queue {
 private:
   std::queue<T> q;
   mutable std::mutex m;
-  std::condition_variable c;
+  std::condition_variable has_data;
 };
 
 

@@ -46,7 +46,8 @@ namespace util {
 // TODO:
 // * Add a safeguard against destruction when there's still a reader or 
 //   writer?  Just acquiring a lock on the mutex in the destructor doesn't
-//   work because wait() unlocks the mutex.
+//   work because wait() unlocks the mutex.  The use case didn't show
+//   show up in practice, however, so maybe this is YAGNI.  
 //
 
 template <class T, bool BOUNDED = false> struct safe_queue {
@@ -95,7 +96,10 @@ template <class T, bool BOUNDED = false> struct safe_queue {
     T t = std::move(q.front());
     q.pop();
 
-    // TODO: Should unlock the mutex *here*, after pop()
+    // We popped the element, good to unlock now.
+    // Again, "(the lock does not need to be held for notification)"
+    lock.unlock();
+
     if (BOUNDED) {
       has_space.notify_one();
     }

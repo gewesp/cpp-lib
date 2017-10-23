@@ -171,6 +171,10 @@ void test_safe_queue(std::ostream& os) {
   // Some corner cases
   test_safe_queue<true>(os, 1, 100, 1000, 1000000);
   test_safe_queue<true>(os, 1, 100, 1000, 1);
+  test_safe_queue<true>(os, 1, 100, 0, 1);
+  test_safe_queue<true>(os, 111, 100, 1, 1);
+  test_safe_queue<true>(os, 111, 100, 1, 2);
+  test_safe_queue<true>(os, 111, 100, 1, 7);
 }
 
 void test_dispatch() {

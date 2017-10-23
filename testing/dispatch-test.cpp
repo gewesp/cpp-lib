@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+#include <array>
 #include <exception>
 #include <iostream>
 #include <map>
@@ -27,6 +28,150 @@
 
 
 namespace {
+
+template<bool BOUNDED>
+void producer(
+    std::reference_wrapper<cpl::util::safe_queue<int, BOUNDED>> out_ref,
+    int const N_NUMBERS) {
+  auto& out = out_ref.get();
+  for (int i = 0; i < N_NUMBERS; ++i) {
+    int ii = i;
+    out.push(std::move(ii));
+  }
+}
+
+template<bool BOUNDED>
+void worker(
+    std::reference_wrapper<cpl::util::safe_queue<int, BOUNDED>>  in_ref,
+    std::reference_wrapper<cpl::util::safe_queue<int, BOUNDED>> out_ref) {
+  auto& in  =  in_ref.get();
+  auto& out = out_ref.get();
+  int i;
+  while ((i = in.pop()) >= 0) {
+    out.push(std::move(i));
+  }
+}
+
+template<bool BOUNDED>
+void consumer(
+    cpl::util::safe_queue<int, BOUNDED>& in,
+    std::ostream& os,
+    const long N_PRODUCERS,
+    const long N_NUMBERS) {
+
+  std::vector<int> numbers(N_NUMBERS);
+
+  long count = 0;
+  while (count < N_PRODUCERS * N_NUMBERS) {
+    const int i = in.pop();
+    // std::cout << "C";
+    ++numbers.at(i);
+    ++count;
+  }
+
+  for (int i = 0; i < N_NUMBERS; ++i) {
+    if (N_PRODUCERS != numbers.at(i)) {
+      os << "ERROR: "
+         << "Number " << i
+         << ": " 
+         << numbers.at(i)
+         << " occurrances" << std::endl;
+      throw std::runtime_error("safe_queue test failed");
+    }
+  }
+}
+
+// Test multi-producer multi-consumer queue
+template<bool BOUNDED>
+void test_safe_queue(
+  std::ostream& os,  
+  int const N_PRODUCERS, 
+  int const N_WORKERS  ,
+  int const N_NUMBERS  ,
+  long const QUEUE_SIZE = std::numeric_limits<long>::max()) {
+
+  os << "Testing "
+     << (BOUNDED ? "bounded" : "unbounded")
+     << " safe_queue with "
+     << N_PRODUCERS << " producer(s), "
+     << N_WORKERS   << " worker(s), "
+     << N_NUMBERS   << " number(s)";
+  if (BOUNDED) {
+    os << ", size " << QUEUE_SIZE;
+  }
+  os << " ... " << std::flush;
+
+  std::vector<std::thread> producer_threads;
+  std::vector<std::thread>   worker_threads;
+
+  cpl::util::safe_queue<int, BOUNDED> producer_worker  (QUEUE_SIZE);
+  cpl::util::safe_queue<int, BOUNDED>   worker_consumer(QUEUE_SIZE);
+
+  for (int i = 0; i < N_PRODUCERS; ++i) {
+    producer_threads.push_back(
+        std::thread(producer<BOUNDED>, std::ref(producer_worker), N_NUMBERS));
+  }
+
+  for (int i = 0; i < N_WORKERS; ++i) {
+    worker_threads.push_back(
+        std::thread(worker<BOUNDED>,
+        std::ref(producer_worker), 
+        std::ref(worker_consumer)));
+  }
+
+  consumer<BOUNDED>(worker_consumer, os, N_PRODUCERS, N_NUMBERS);
+
+  // Producers should be joinable once the consumer
+  // has seen enough (N_PRODUCERS * N_NUMBERS) inputs.
+  // os << "Joining producers" << std::endl;
+  for (auto& t : producer_threads) {
+    t.join();
+  }
+
+  // Now, we can tell the workers to go home.  Each one will
+  // pop a -1 and exit.  Better to do that here than
+  // in the producers because the producers don't know
+  // the number of workers.
+  // os << "Laying off workers" << std::endl;
+  for (int i = 0; i < N_WORKERS; ++i) {
+    producer_worker.push(-1);
+  }
+
+  // After this, all workers should be joinable.
+  // os << "Joining workers" << std::endl;
+  for (auto& t : worker_threads) {
+    t.join();
+  }
+
+  os << "OK" << std::endl;
+}
+
+void test_safe_queue(std::ostream& os) {
+  // Unbounded case first
+  // N_PRODUCERS, N_WORKERS, N_NUMBERS  
+  test_safe_queue<false>(os, 5, 10, 100000);
+  test_safe_queue<false>(os, 10, 5, 100000);
+  test_safe_queue<false>(os, 5, 1 , 100000);
+  test_safe_queue<false>(os, 1, 5 , 100000);
+  test_safe_queue<false>(os, 2, 5 , 100000);
+
+  test_safe_queue<false>(os, 2, 5, 1);
+  // Bounded case
+  // N_PRODUCERS, N_WORKERS, N_NUMBERS, QUEUE_SIZE  
+  test_safe_queue<true>(os, 1, 10, 1000, 10);
+  test_safe_queue<true>(os, 2, 9, 1000, 10);
+  test_safe_queue<true>(os, 3, 8, 1000, 10);
+  test_safe_queue<true>(os, 4, 7, 1000, 10);
+  test_safe_queue<true>(os, 6, 3, 1000, 10);
+  test_safe_queue<true>(os, 8, 2, 1000, 10);
+  test_safe_queue<true>(os, 100, 2, 1000, 10);
+  test_safe_queue<true>(os, 100, 1, 1000, 10);
+  test_safe_queue<true>(os, 1, 100, 1000, 10);
+
+  // Some corner cases
+  test_safe_queue<true>(os, 1, 100, 1000, 1000000);
+  test_safe_queue<true>(os, 1, 100, 1000, 1);
+}
 
 void test_dispatch() {
   // Also tests move semantics
@@ -149,6 +294,7 @@ void test_dispatch_many(
 int main() {
 
   try {
+    test_safe_queue(std::cout);
     test_dispatch();
 
     // test_dispatch_manual(std::cout);

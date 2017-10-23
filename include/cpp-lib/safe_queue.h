@@ -21,6 +21,7 @@
 
 
 #include <condition_variable>
+#include <limits>
 #include <mutex>
 #include <queue>
 
@@ -46,16 +47,31 @@ namespace util {
 // * Add a safeguard against destruction when there's still a reader or 
 //   writer?  Just acquiring a lock on the mutex in the destructor doesn't
 //   work because wait() unlocks the mutex.
-// * Add maximum size and a full() condition.
 //
 
-template <class T> struct safe_queue {
+template <class T, bool BOUNDED = false> struct safe_queue {
+  safe_queue(long capacity = std::numeric_limits<long>::max())
+  : capacity_(capacity) {
+    if (!BOUNDED && capacity != std::numeric_limits<long>::max()) {
+      throw std::logic_error(
+          "Attempt to construct unbounded queue with limited capacity");
+    }
+    if (capacity < 1) {
+      throw std::runtime_error("Queue capacity must be >= 1");
+    }
+  }
 
-  // Adds an element to the queue.  Blocks only briefly in case a
-  // call to pop() or empty() is ongoing.
+  // Adds an element to the queue.  For unbounded queues, blocks only 
+  // briefly in case a call to pop() or empty() is ongoing.
+  // For bounded queues, blocks until space is available.
   void push(T&& t) {
     {
-      std::lock_guard<std::mutex> lock{m};
+      std::unique_lock<std::mutex> lock{m};
+      if (BOUNDED) {
+        while (static_cast<long>(q.size()) == capacity()) {
+          has_space.wait(lock);
+        }
+      }
       q.push(std::move(t));
     }
     // "(the lock does not need to be held for notification)"
@@ -78,6 +94,11 @@ template <class T> struct safe_queue {
     // lock is re-acquired after waiting, so we're good to go
     T t = std::move(q.front());
     q.pop();
+
+    // TODO: Should unlock the mutex *here*, after pop()
+    if (BOUNDED) {
+      has_space.notify_one();
+    }
     return t;
   }
 
@@ -92,10 +113,29 @@ template <class T> struct safe_queue {
     return q.empty();
   }
 
+  // Returns true iff the queue is bounded and full.
+  bool full() const {
+    if (!BOUNDED) {
+      return false;
+    }
+    std::unique_lock<std::mutex> lock{m};
+    return q.size() == capacity();
+  }
+
+  long capacity() const {
+    if (!BOUNDED) {
+      throw std::logic_error(
+          "Attempt to obtain capacity of unbounded queue");
+    }
+    return capacity_;
+  }
+
 private:
   std::queue<T> q;
+  long capacity_;
   mutable std::mutex m;
   std::condition_variable has_data;
+  std::condition_variable has_space;
 };
 
 

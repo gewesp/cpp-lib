@@ -6,6 +6,8 @@
 #
 # Reconnects after 10 seconds if the connection drops.
 #
+# Requires: nc (netcat), install on Ubuntu: apt-get install netcat
+#
 
 TAG=OGN-SEARCH
 

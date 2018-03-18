@@ -93,7 +93,8 @@ POSIX1B_OBJECTS =							\
 	$(OBJ_DIR)/posix1b/realtime.$(OBJ_EXTENSION)
 
 APPS  =				                                \
-	$(BIN_DIR)/igctool
+	$(BIN_DIR)/igctool                                      \
+	$(BIN_DIR)/bilingual
 
 TESTS =				                                \
 	$(BIN_DIR)/audio-test   	               		\

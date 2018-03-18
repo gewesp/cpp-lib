@@ -25,6 +25,9 @@ std::string intermediate_instruction(const std::string& s) {
 bool is_instruction(const std::string& line) {
   assert (line.size() >= 1);
   if ('(' == line.at(0)) {
+    if (')' != line.back()) {
+      std::cerr << line << std::endl;
+    }
     assert(')' == line.back());
     return true;
   } else {
@@ -48,7 +51,7 @@ std::string flush_block(
   const unsigned N = block.size();
 
   std::ostringstream oss;
-  oss << person(block.at(0));
+  oss << person(block.at(0)) << '\n';
   for (unsigned i = 1; i < N; ++i) {
     const auto& line = block.at(i);
     const char t     = types.at(i);
@@ -56,7 +59,7 @@ std::string flush_block(
       oss << line;
       // Linebreak if continued verse
       if (i + 1 < N && 'V' == types.at(i + 1)) {
-        oss << "\\\\";
+        oss << " \\\\";
       }
       oss << '\n';
     } else if ('I' == t) {
@@ -97,9 +100,11 @@ std::vector<std::string> convert(std::istream& is) {
 
     if (allcaps(line)) {
       // New person is speaking : flush
-      ret.push_back(flush_block(block, types));
-      block.clear();
-      types.clear();
+      if (!block.empty()) {
+        ret.push_back(flush_block(block, types));
+        block.clear();
+        types.clear();
+      }
       block.push_back(line);
       types.push_back('P');
     } else if (is_instruction(line)) {
@@ -113,6 +118,28 @@ std::vector<std::string> convert(std::istream& is) {
   return ret;
 }
 
+std::string empty() {
+  return person("UNKNOWN CHARACTER") + '\n';
+}
+
+void output(
+    std::ostream& os,
+    const std::vector<std::vector<std::string>>& blocks) {
+  assert(2 == blocks.size());
+
+  const unsigned N = std::max(blocks.at(0).size(), blocks.at(1).size());
+
+  for (unsigned i = 0; i < N; ++i) {
+    const auto b0 = i < blocks.at(0).size() ? blocks.at(0).at(i) : empty();
+    const auto b1 = i < blocks.at(1).size() ? blocks.at(1).at(i) : empty();
+    os << "\\begin{paracol}{2}\n"
+       << b0
+       << "\n\\switchcolumn\n\n"
+       << b1
+       << "\\end{paracol}\n\n";
+  }
+}
+
 
 int main() {
   try {
@@ -121,8 +148,10 @@ int main() {
 
   std::ofstream out("generated.tex");
 
-  const auto ll1 = convert(l1);
-  const auto ll2 = convert(l2);
+  const std::vector<std::vector<std::string>> blocks(
+      {convert(l1), convert(l2)});
+
+  output(out, blocks);
 
   } catch (std::exception const& e) {
     std::cerr << e.what() << std::endl;

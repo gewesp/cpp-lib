@@ -1,3 +1,4 @@
+#include "cpp-lib/assert.h"
 #include "cpp-lib/util.h"
 
 #include "boost/algorithm/string.hpp"
@@ -23,12 +24,12 @@ std::string intermediate_instruction(const std::string& s) {
 }
 
 bool is_instruction(const std::string& line) {
-  assert (line.size() >= 1);
+  always_assert (line.size() >= 1);
   if ('(' == line.at(0)) {
     if (')' != line.back()) {
       std::cerr << line << std::endl;
     }
-    assert(')' == line.back());
+    always_assert(')' == line.back());
     return true;
   } else {
     return false;
@@ -44,9 +45,9 @@ bool allcaps(const std::string& line) {
 std::string flush_block(
     const std::vector<std::string>& block,
     const std::vector<char>& types) {
-  assert(1 <= block.size());
-  assert(block.size() == types.size());
-  assert('P' == types.at(0));
+  always_assert(1 <= block.size());
+  always_assert(block.size() == types.size());
+  always_assert('P' == types.at(0));
 
   const unsigned N = block.size();
 
@@ -69,7 +70,7 @@ std::string flush_block(
         oss << intermediate_instruction(line) << '\n';
       }
     } else {
-      assert(!"Unknown type");
+      always_assert(!"Unknown type");
     }
   }
 
@@ -125,7 +126,7 @@ std::string empty() {
 void output(
     std::ostream& os,
     const std::vector<std::vector<std::string>>& blocks) {
-  assert(2 == blocks.size());
+  always_assert(2 == blocks.size());
 
   const unsigned N = std::max(blocks.at(0).size(), blocks.at(1).size());
 

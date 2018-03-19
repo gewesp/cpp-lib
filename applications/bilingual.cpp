@@ -116,6 +116,9 @@ std::vector<std::string> convert(std::istream& is) {
       types.push_back('V');
     }
   }
+  if (!block.empty()) {
+    ret.push_back(flush_block(block, types));
+  }
   return ret;
 }
 

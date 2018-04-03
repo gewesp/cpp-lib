@@ -23,6 +23,10 @@ std::string intermediate_instruction(const std::string& s) {
   return "\\intermediateinstruction{" + s + "}";
 }
 
+std::string final_instruction(const std::string& s) {
+  return "\\finalinstruction{" + s + "}";
+}
+
 bool is_instruction(const std::string& line) {
   always_assert (line.size() >= 1);
   if ('(' == line.at(0)) {
@@ -66,6 +70,8 @@ std::string flush_block(
     } else if ('I' == t) {
       if (1 == i) {
         oss << initial_instruction(line) << '\n';
+      } else if (N - 1 == i) {
+        oss << final_instruction(line) << '\n';
       } else {
         oss << intermediate_instruction(line) << '\n';
       }

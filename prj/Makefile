@@ -94,7 +94,7 @@ POSIX1B_OBJECTS =							\
 
 APPS  =				                                \
 	$(BIN_DIR)/igctool                                      \
-	$(BIN_DIR)/bilingual
+	$(BIN_DIR)/bilang
 
 TESTS =				                                \
 	$(BIN_DIR)/audio-test   	               		\

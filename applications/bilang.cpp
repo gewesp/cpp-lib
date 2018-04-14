@@ -8,12 +8,18 @@
 #include <sstream>
 #include <vector>
 
-namespace {
+struct parsing_context {
+  long the_line_number = 0;
+  std::string the_file;
+  std::ifstream is;
 
-long the_line_number = 0;
-std::string the_file;
-
-}
+  void open(const std::string& fn) {
+    is.close();
+    is.open(fn);
+    the_file = fn;
+    the_line_number = 0;
+  }
+};
 
 ////////////////////////////////////////////////////////////////////////
 // Output
@@ -93,7 +99,7 @@ std::string flush_block(
 
 
 // Generates blocks for one language
-std::vector<std::string> convert(std::istream& is) {
+std::vector<std::string> convert(parsing_context& ctx) {
   std::string line;
 
   std::vector<std::string> ret;
@@ -105,9 +111,9 @@ std::vector<std::string> convert(std::istream& is) {
   // I .... stage direction
   // V .... verse
   std::vector<char>        types;
-  
-  while (std::getline(is, line)) {
-    ++the_line_number;
+
+  while (std::getline(ctx.is, line)) {
+    ++ctx.the_line_number;
     boost::trim(line);
     if (line.empty()) { continue; }
 
@@ -158,23 +164,20 @@ void output(
 
 
 int main() {
+  parsing_context ctx;
+
   try {
-  std::ifstream l1("german.txt");
-  std::ifstream l2("english.txt");
+  ctx.open("german.txt");
+  auto b1 = convert(ctx);
 
-  the_file = "german.txt";
-  the_line_number = 0;
-  auto b1 = convert(l1);
-
-  the_file = "english.txt";
-  the_line_number = 0;
-  auto b2 = convert(l2);
+  ctx.open("english.txt");
+  auto b2 = convert(ctx);
 
   std::ofstream out("generated.tex");
   output(out, {b1, b2});
 
   } catch (std::exception const& e) {
-    std::cerr << the_file << ":" << the_line_number << ": " 
+    std::cerr << ctx.the_file << ":" << ctx.the_line_number << ": " 
               << e.what() << std::endl;
     return 1;
   }

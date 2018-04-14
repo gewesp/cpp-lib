@@ -15,16 +15,12 @@ std::string person(const std::string& s) {
   return "\\person{" + s + "}";
 }
 
-std::string initial_instruction(const std::string& s) {
-  return "\\initialinstruction{" + s + "}";
+std::string stage_direction(const std::string& s) {
+  return "\\stagedirection{" + s + "}";
 }
 
-std::string intermediate_instruction(const std::string& s) {
-  return "\\intermediateinstruction{" + s + "}";
-}
-
-std::string final_instruction(const std::string& s) {
-  return "\\finalinstruction{" + s + "}";
+std::string stage_direction_sep() {
+  return "\\stagedirectionsep";
 }
 
 bool is_instruction(const std::string& line) {
@@ -67,13 +63,15 @@ std::string flush_block(
         oss << " \\\\";
       }
       oss << '\n';
+      if (i + 1 < N && 'I' == types.at(i + 1)) {
+        oss << stage_direction_sep() << '\n';
+      }
     } else if ('I' == t) {
-      if (1 == i) {
-        oss << initial_instruction(line) << '\n';
-      } else if (N - 1 == i) {
-        oss << final_instruction(line) << '\n';
-      } else {
-        oss << intermediate_instruction(line) << '\n';
+      // Stage direction.
+      // Add vspace iff followed by verse or another stage direction.
+      oss << stage_direction(line) << '\n';
+      if (i + 1 < N) {
+        oss << stage_direction_sep() << '\n';
       }
     } else {
       always_assert(!"Unknown type");
@@ -97,7 +95,7 @@ std::vector<std::string> convert(std::istream& is) {
   std::vector<std::string> block;
   // and their types
   // P .... person 
-  // I .... instruction 
+  // I .... stage direction
   // V .... verse
   std::vector<char>        types;
   

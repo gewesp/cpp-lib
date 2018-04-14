@@ -8,6 +8,13 @@
 #include <sstream>
 #include <vector>
 
+namespace {
+
+long the_line_number = 0;
+std::string the_file;
+
+}
+
 ////////////////////////////////////////////////////////////////////////
 // Output
 ////////////////////////////////////////////////////////////////////////
@@ -47,7 +54,7 @@ std::string flush_block(
     const std::vector<char>& types) {
   always_assert(1 <= block.size());
   always_assert(block.size() == types.size());
-  always_assert('P' == types.at(0));
+  cpl::util::verify('P' == types.at(0), "Block doesn't start with person");
 
   const unsigned N = block.size();
 
@@ -100,6 +107,7 @@ std::vector<std::string> convert(std::istream& is) {
   std::vector<char>        types;
   
   while (std::getline(is, line)) {
+    ++the_line_number;
     boost::trim(line);
     if (line.empty()) { continue; }
 
@@ -154,15 +162,20 @@ int main() {
   std::ifstream l1("german.txt");
   std::ifstream l2("english.txt");
 
+  the_file = "german.txt";
+  the_line_number = 0;
+  auto b1 = convert(l1);
+
+  the_file = "english.txt";
+  the_line_number = 0;
+  auto b2 = convert(l2);
+
   std::ofstream out("generated.tex");
-
-  const std::vector<std::vector<std::string>> blocks(
-      {convert(l1), convert(l2)});
-
-  output(out, blocks);
+  output(out, {b1, b2});
 
   } catch (std::exception const& e) {
-    std::cerr << e.what() << std::endl;
+    std::cerr << the_file << ":" << the_line_number << ": " 
+              << e.what() << std::endl;
     return 1;
   }
 }

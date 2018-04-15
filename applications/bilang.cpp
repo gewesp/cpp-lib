@@ -115,7 +115,9 @@ std::vector<std::string> convert(parsing_context& ctx) {
   while (std::getline(ctx.is, line)) {
     ++ctx.the_line_number;
     boost::trim(line);
-    if (line.empty()) { continue; }
+    // Ignore empty lines and comments
+    if (line.empty())      { continue; }
+    if ('%' == line.at(0)) { continue; }
 
     if (allcaps(line)) {
       // New person is speaking : flush

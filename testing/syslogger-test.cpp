@@ -36,10 +36,11 @@ void loop(std::ostream& l, const int n) {
 }
 
 void log_all_prios(std::ostream& sl) {
-  sl << prio::DEBUG   << "DEBUG"     << std::endl;
-  sl << prio::INFO    << "INFO"      << std::endl;
-  sl << prio::NOTICE  << "NOTICE"    << std::endl;
-  sl << prio::WARNING << "WARNING"   << std::endl;
+  sl << prio_from_string("DEBUG"  ) << "DEBUG"     << std::endl;
+  sl << prio_from_string("INFO"   ) << "INFO"      << std::endl;
+  sl << prio_from_string("NOTICE" ) << "NOTICE"    << std::endl;
+  sl << prio_from_string("WARNING") << "WARNING"   << std::endl;
+
   sl << prio::ERR     << "ERROR"     << std::endl;
   sl << prio::CRIT    << "CRITICAL"  << std::endl;
   sl << prio::ALERT   << "ALERT"     << std::endl;

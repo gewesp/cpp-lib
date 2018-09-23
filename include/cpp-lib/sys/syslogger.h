@@ -56,7 +56,12 @@ enum class prio {
 inline prio default_prio() { return prio::INFO; }
 
 // Textual representation of the given value.
-char const* to_string(prio);
+const char* to_string(prio);
+
+// Logging priority from string.  Throws if s is not
+// any of ERROR, WARNING, etc. (NOT the enum names, 
+// but prionames in .cpp).
+prio prio_from_string(std::string const& s);
 
 // Flags for setminprio(): Set minimum priority for syslog, echo
 // stream or both.

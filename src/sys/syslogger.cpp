@@ -18,6 +18,7 @@
 
 #include "cpp-lib/sys/syslogger.h"
 
+#include <array>
 #include <iostream>
 #include <cassert>
 
@@ -30,7 +31,9 @@ using namespace cpl::util::log ;
 
 namespace {
 
-char const* prionames[] = {
+// Initializer list: Use double curly braces
+// https://stackoverflow.com/questions/22501368/why-wasnt-a-double-curly-braces-syntax-preferred-for-constructors-taking-a-std
+std::array<const char*, 8> prionames = {{
   "EMERGENCY" ,
   "ALERT"     ,
   "CRITICAL"  ,
@@ -38,15 +41,25 @@ char const* prionames[] = {
   "WARNING"   ,
   "NOTICE"    ,
   "INFO"      ,
-  "DEBUG"
-};
+  "DEBUG"    
+}};
 
 } // anonymous namespace
 
-char const* cpl::util::log::to_string(cpl::util::log::prio const p) {
+const char* cpl::util::log::to_string(cpl::util::log::prio const p) {
   assert(cpl::util::log::prio::EMERG <= p);
   assert(                          p <= cpl::util::log::prio::DEBUG);
   return prionames[static_cast<int>(p)];
+}
+
+cpl::util::log::prio cpl::util::log::prio_from_string(std::string const& s) {
+  for (unsigned i = 0; i < prionames.size(); ++i) {
+    if (s == prionames.at(i)) {
+      return static_cast<cpl::util::log::prio>(i);
+    }
+  }
+
+  throw std::runtime_error("Syslogger: Unknown logging priority: " + s);
 }
 
 // Set log priority for next message

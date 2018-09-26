@@ -359,15 +359,6 @@ cpl::ogn::ddb_handler::ddb_handler(
   }
 }
 
-namespace {
-
-
-
-
-
-
-} // end anonymous namespace
-
 
 bool cpl::ogn::parse_aprs_station(
     const std::string& line, 
@@ -393,10 +384,9 @@ bool cpl::ogn::parse_aprs_station(
   int constexpr n_special = 5;
   char special[n_special][31];
 
-  //    ">%*[^,],TCPIP*,qAC,"
   const char* const format = 
       "%40[^>]" // station name
-      ">APRS,TCPIP*,qAC,"
+      ">%*[^,],TCPIP*,qAC,"
       "%40[^:]" // network? (seen: GLIDERN1, GLIDERN2)
       ":"
       "%1[/>]"  // ":/": We have a lat/lon, ":>" Status info, no lat/lon
@@ -1333,7 +1323,7 @@ void test_q(
 } // anonymous namespace
 
 void cpl::ogn::unittests(std::ostream& os) {
-double lat1 = 1, lon1 = 2;
+  double lat1 = 1, lon1 = 2;
   double lat2 = -1, lon2 = -2;
 
   os << "OGN unit tests" << std::endl;

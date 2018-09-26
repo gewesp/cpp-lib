@@ -621,12 +621,16 @@ using aprs_parser = ddb_handler;
   
 // Parses an APRS line containing receiver station info 
 // and stores data in stat.
-// Returns true on success.
+// Returns true on success, 
+// CAUTION: When a 'new' (9/2018) station line with :> is parsed, 
+// returns true but an empty station data structure.
 //
 // Example format:
 // LFLO>APRS,TCPIP*,qAC,GLIDERN2:/175435h4603.32NI00359.99E&/A=001020 CPU:0.6 RAM:340.6/492.2MB NTP:0.6ms/-30.5ppm +67.0C RF:+46-1.2ppm/+0.3dB
 // See parse_aprs_aircraft() for the utc parameter.
 // TODO: Only station name, position, time and NTP are currently parsed.
+// TODO: Support new-style station info like
+// Barton>OGNSDR,TCPIP*,qAC,GLIDERN2:>233133h v0.2.7.RPI-GPU CPU:1.0 RAM:204.3/970.5MB NTP:1.4ms/-4.6ppm +52.5C 1/1Acfts[1h] RF:+10+3.1ppm/+6.85dB
 bool parse_aprs_station(
     std::string const& line, 
     station_info_and_name& stat,

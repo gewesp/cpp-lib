@@ -393,6 +393,7 @@ bool cpl::ogn::parse_aprs_station(
   int constexpr n_special = 5;
   char special[n_special][31];
 
+  //    ">%*[^,],TCPIP*,qAC,"
   const char* const format = 
       "%40[^>]" // station name
       ">APRS,TCPIP*,qAC,"

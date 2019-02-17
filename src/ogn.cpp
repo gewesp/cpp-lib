@@ -669,7 +669,11 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
 
   char cse_spd[11] = "";
 
-  char callsign_v[41] = "";
+  // TODO: This is now FLRXXXXXX or OGNXXXXXX or PAWXXXXXX or ICAXXXXXX.
+  // Support more ID types (extend the 2 id bits from the id... field)
+  // and treat data accordingly downstream.
+  // Cross-check with id below and set ID type accordingly.
+  char station_id_v[41] = "";
   char q_construct_v[81] = "";
   char lon_v[21] = "";
   char NS[2] = "";
@@ -713,7 +717,7 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
 
   const int conversions = std::sscanf(
       line.c_str(), format, 
-      callsign_v,
+      station_id_v,
       q_construct_v,
       &hhmmss,
       &acft.second.pta.lat,
@@ -767,8 +771,6 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
   }
 
   acft.second.rx.received_by = q.from;
-  // As of 2015, no callsign is transmitted on the APRS network.
-  // acft.second.data.name1 = callsign_v;
   acft.second.data.name1 = "-";
   acft.second.pta.time = adapt_utc(hhmmss_to_seconds(hhmmss), utc);
 

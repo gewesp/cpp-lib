@@ -56,6 +56,10 @@ short constexpr ID_TYPE_ICAO   = 1;
 short constexpr ID_TYPE_FLARM  = 2;
 short constexpr ID_TYPE_OGN    = 3;
 
+// https://pilotaware.com/
+// TODO: Implement.  Use when IDs start with "PAW".
+short constexpr ID_TYPE_PILOT_AWARE = 10;
+
 // http://www.ediatec.ch/pdf/FLARM_DataportManual_v6.00E.pdf
 short constexpr VEHICLE_TYPE_GLIDER      = 1;
 short constexpr VEHICLE_TYPE_TOW_PLANE   = 2;

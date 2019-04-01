@@ -179,13 +179,14 @@ some cases.  Use aptitude instead with the same command
 lines.
 
 - Installing dependencies on Ubuntu:
-  * `sudo apt-get install libeigen3-dev`
-  * `sudo apt-get install libpng++-dev`
+  * `sudo apt install libeigen3-dev`
+  * `sudo apt install libpng++-dev`
+  * `sudo apt install libboost1.65-dev`
 
-- Installing clang++ on Ubuntu (example: Version 3.6):
-  * `sudo apt-get install clang-3.6`
-  * `sudo apt-get install libc++-dev`
-  * `sudo apt-get install libc++abi-dev`
+- Installing clang++ on Ubuntu:
+  * `sudo apt install clang-7`
+  * `sudo apt install libc++-7-dev`
+  * `sudo apt install libc++abi-7-dev`
 
 - Installing g++-5 on old Ubuntu versions (e.g. 14.04):
   `sudo add-apt-repository ppa:ubuntu-toolchain-r/test`
@@ -194,10 +195,17 @@ lines.
 
 ### Tested versions
 
-- Boost: 1.58.0, 1.60.0 (`#include "boost/version.hpp"`)
-- libpng: 1.2.50, 1.6.18 (`libpng-config --version`)
-- png++: 0.2.5
-- Eigen: 3.2.5
+- Boost: 1.58.0, 1.60.0 1.65.1(`#include "boost/version.hpp"`)
+- libpng: 1.2.50, 1.6.18, 1.6.34 (`libpng-config --version`)
+- png++: 0.2.5, 0.2.9 (`dpkg --status libpng++-dev`)
+- Eigen: 3.2.5, 3.3.4-4 (`dpkg --status libeigen3-dev`)
+
+### Tested hardware platforms
+
+See `uname -m`
+
+* aarch64 (ARMv8)
+* x86_64 (Intel)
 
 ### Build
 

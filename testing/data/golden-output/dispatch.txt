@@ -1,3 +1,24 @@
+Testing unbounded safe_queue with 5 producer(s), 10 worker(s), 100000 number(s) ... OK
+Testing unbounded safe_queue with 10 producer(s), 5 worker(s), 100000 number(s) ... OK
+Testing unbounded safe_queue with 5 producer(s), 1 worker(s), 100000 number(s) ... OK
+Testing unbounded safe_queue with 1 producer(s), 5 worker(s), 100000 number(s) ... OK
+Testing unbounded safe_queue with 2 producer(s), 5 worker(s), 100000 number(s) ... OK
+Testing unbounded safe_queue with 2 producer(s), 5 worker(s), 1 number(s) ... OK
+Testing bounded safe_queue with 1 producer(s), 10 worker(s), 1000 number(s), size 10 ... OK
+Testing bounded safe_queue with 2 producer(s), 9 worker(s), 1000 number(s), size 10 ... OK
+Testing bounded safe_queue with 3 producer(s), 8 worker(s), 1000 number(s), size 10 ... OK
+Testing bounded safe_queue with 4 producer(s), 7 worker(s), 1000 number(s), size 10 ... OK
+Testing bounded safe_queue with 6 producer(s), 3 worker(s), 1000 number(s), size 10 ... OK
+Testing bounded safe_queue with 8 producer(s), 2 worker(s), 1000 number(s), size 10 ... OK
+Testing bounded safe_queue with 100 producer(s), 2 worker(s), 1000 number(s), size 10 ... OK
+Testing bounded safe_queue with 100 producer(s), 1 worker(s), 1000 number(s), size 10 ... OK
+Testing bounded safe_queue with 1 producer(s), 100 worker(s), 1000 number(s), size 10 ... OK
+Testing bounded safe_queue with 1 producer(s), 100 worker(s), 1000 number(s), size 1000000 ... OK
+Testing bounded safe_queue with 1 producer(s), 100 worker(s), 1000 number(s), size 1 ... OK
+Testing bounded safe_queue with 1 producer(s), 100 worker(s), 0 number(s), size 1 ... OK
+Testing bounded safe_queue with 111 producer(s), 100 worker(s), 1 number(s), size 1 ... OK
+Testing bounded safe_queue with 111 producer(s), 100 worker(s), 1 number(s), size 2 ... OK
+Testing bounded safe_queue with 111 producer(s), 100 worker(s), 1 number(s), size 7 ... OK
 0
 1
 2

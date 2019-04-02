@@ -38,7 +38,7 @@ void output_delta(
     const double delta ,
     const double threshold ) {
   always_assert(delta <= threshold or delta >= 1.5);
-  os << "delta ";
+  os << "delta";
   if ( delta <= threshold ) {
     os << " < " << threshold ;
   } else {
@@ -210,7 +210,8 @@ void rosenbrock_gradient_test() {
       const double relerr =   cpl::matrix::norm_2( df1 - df2 ) 
                             / cpl::matrix::norm_2( df2 ) ;
       // std::cout << "d gradient = " << transpose( df1 - df2 ) ;
-      std::cout << "relerr = " << relerr << std::endl ;
+      always_assert( relerr <= 1e-9 ) ;
+      // std::cout << "relerr = " << relerr << std::endl ;
 
     }
 

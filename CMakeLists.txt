@@ -6,7 +6,7 @@ project(cpp-lib VERSION 1.0.0)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 # 3rd-party.
-find_package(Boost 1.61.0 REQUIRED)
+find_package(Boost 1.58.0 REQUIRED)
 find_package(png++ REQUIRED)
 find_package(PkgConfig)
 pkg_search_module(Eigen3 REQUIRED eigen3)
@@ -51,7 +51,6 @@ set(public-headers
     "include/cpp-lib/detail/socket_lowlevel.h"
 
     "include/cpp-lib/platform/net_impl.h"
-    "include/cpp-lib/platform/platform.h"
     "include/cpp-lib/platform/realtime.h"
     "include/cpp-lib/platform/wrappers.h"
 

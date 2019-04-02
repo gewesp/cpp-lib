@@ -1,6 +1,10 @@
 #! /bin/sh
 
+set -e
+
 . scripts/testenv.sh
+
+set -e
 
 $BIN_DIR/gnss-test unittest                 > $GOLDEN_DIR/gnss.txt
 $BIN_DIR/map-test                           > $GOLDEN_DIR/map.txt

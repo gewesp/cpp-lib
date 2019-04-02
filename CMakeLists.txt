@@ -1,15 +1,29 @@
 cmake_minimum_required(VERSION 3.0)
 
+# TODO: Real version
 project(cpp-lib VERSION 1.0.0)
 
 # use own cmake modules.
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
+# Global paths
+set(TEST_SRC_DIR "testing")
+
 # 3rd-party.
 find_package(Boost 1.58.0 REQUIRED)
 find_package(png++ REQUIRED)
-find_package(PkgConfig)
-pkg_search_module(Eigen3 REQUIRED eigen3)
+find_package(Eigen3 REQUIRED)
+
+
+message("-- Boost libraries version:  ${Boost_VERSION}"            )
+message("-- Boost include directory:  ${Boost_INCLUDE_DIRS}"       )
+
+message("-- Eigen library version:    ${EIGEN3_VERSION_STRING}"    )
+message("-- Eigen include directory:  ${EIGEN3_INCLUDE_DIRS}"      )
+
+message("-- png++ include directory:  ${png++_INCLUDE_DIRS}/png++" )
+
+
 
 set(public-headers
     "include/cpp-lib/array_ops.h"
@@ -100,26 +114,39 @@ if (UNIX AND NOT APPLE)
          )
 endif()
 
+############################################################################
+# TARGET CONFIGURATION
+############################################################################
+add_executable(ogn-test
+  ${TEST_SRC_DIR}/ogn-test.cpp)
+
 add_library(cpp-lib
     ${public-headers}
     ${private-headers}
     ${sources}
     )
 
+target_link_libraries(ogn-test
+  cpp-lib
+  pthread)
+
+
 target_include_directories(cpp-lib PRIVATE
     ${Boost_INCLUDE_DIRS}
     ${Eigen3_INCLUDE_DIRS}
-    "${png++_INCLUDE_DIRS}/png++"
-    "include"
+    ${png++_INCLUDE_DIRS}/png++
+    include
 )
 
-set_property(TARGET cpp-lib APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
+include_directories(
+  ${PROJECT_SOURCE_DIR}/include
+  ${EIGEN3_INCLUDE_DIRS}
+  ${png++_INCLUDE_DIRS}/png++
 )
 
-# ensures cpp std version through compiler feature.
-set_property(TARGET cpp-lib PROPERTY CXX_STANDARD 14)
+# C++ standard
+# TODO: Define standard library (see def.compiler)
+set_target_properties(cpp-lib ogn-test PROPERTIES CXX_STANDARD 14)
 
 # for library export definitions.
 include(GenerateExportHeader)

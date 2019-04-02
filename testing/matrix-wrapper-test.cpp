@@ -191,10 +191,32 @@ void rotation_matrix_test(std::ostream& os) {
   matrix_2_t const rot180   = rot90  * rot90 ;
   matrix_2_t const identity = rot180 * rot180;
 
-  os << rot45    << std::endl;
-  os << rot90    << std::endl;
-  os << rot180   << std::endl;
-  os << identity << std::endl;
+  // os << rot45    << std::endl;
+  // os << rot90    << std::endl;
+  // os << rot180   << std::endl;
+  // os << identity << std::endl;
+
+  matrix_2_t expected_rot45   ;
+  matrix_2_t expected_rot90   ;
+  matrix_2_t expected_rot180  ;
+  matrix_2_t expected_identity;
+  expected_rot45  << 0.7071067811865476 , -0.7071067811865476 ,
+                     0.7071067811865476 ,  0.7071067811865476
+  ;
+  expected_rot90  << 0 , -1 ,
+                     1 ,  0
+  ;
+  expected_rot180 << -1 ,  0 ,
+                      0 , -1
+  ;
+  expected_identity << 1 , 0 ,
+                       0 , 1
+  ;
+
+  always_assert((rot45    - expected_rot45   ).squaredNorm() <= 1e-14);
+  always_assert((rot90    - expected_rot90   ).squaredNorm() <= 1e-14);
+  always_assert((rot180   - expected_rot180  ).squaredNorm() <= 1e-14);
+  always_assert((identity - expected_identity).squaredNorm() <= 1e-14);
 }
 
 int main() {

@@ -160,8 +160,9 @@ int main() {
 
   }
 
-  std::cout << "max residual: "
-            << v_res_max << '\n' ;
+  always_assert( v_res_max <= 1e-14 ) ;
+  // std::cout << "max residual: "
+  //           << v_res_max << '\n' ;
 
 
   std::cout << "Testing spherical <-> cartesian coordinate conversion.\n" ;
@@ -188,8 +189,10 @@ int main() {
 
   }
 
-  std::cout << "max residual: "
-            << v_res_max << '\n' ;
+  // WARNING: Quite impresice!
+  always_assert( v_res_max <= 1e-4 ) ;
+  // std::cout << "max residual: "
+  //           << v_res_max << '\n' ;
 
 
   std::cout << "Testing quaternion rotation wrt Euler angle rotation.\n" ;
@@ -213,10 +216,8 @@ int main() {
 
   }
 
-  std::cout << "max value (should be around double epsilon = "
-            << std::numeric_limits< double >::epsilon()
-            << "): "
-            << v_res_max << '\n' ;
+  // Should be ca. double epsilon
+  always_assert( v_res_max <= 1e-15 ) ;
 
   std::cout << "Testing quaternion -> dcm conversion.\n" ;
 
@@ -236,11 +237,8 @@ int main() {
 
   }
 
-  std::cout << "max value (should be around double epsilon = "
-            << std::numeric_limits< double >::epsilon()
-            << "): "
-            << v_res_max << '\n' ;
-
+  // Should be ca. double epsilon
+  always_assert( v_res_max <= 1e-15 ) ;
 
   std::cout << "Testing DCM -> euler angles -> quaternion -> DCM.\n" ;
 
@@ -258,8 +256,7 @@ int main() {
 
   }
 
-  std::cout << "max residual: "
-            << v_res_max << '\n' ;
+  always_assert( v_res_max <= 1e-14 ) ;
 
 
   std::cout << "Testing quaternion <-> Euler angles conversion.\n" ;
@@ -305,15 +302,19 @@ int main() {
 
   }
 
-  std::cout << "max conversion residual:   "
-            << q_res_max
-            << '\n' ;
-  std::cout << "max change_psi() residual: "
-            << change_psi_max
-            << '\n' ;
-  std::cout << "max change_psi() residual (DCM): "
-            << change_psi_max_dcm
-            << '\n' ;
+  always_assert( q_res_max          <= 1e-14 ) ;
+  always_assert( change_psi_max     <= 1e-14 ) ;
+  always_assert( change_psi_max_dcm <= 1e-14 ) ;
+
+  // std::cout << "max conversion residual:   "
+  //           << q_res_max
+  //           << '\n' ;
+  // std::cout << "max change_psi() residual: "
+  //           << change_psi_max
+  //           << '\n' ;
+  // std::cout << "max change_psi() residual (DCM): "
+  //           << change_psi_max_dcm
+  //           << '\n' ;
 
   std::cout
     << "Testing rotation_quaternion():\n"
@@ -334,7 +335,9 @@ int main() {
     { v = rotation( q , v ) ; }
 
     // Now v should again be v0.
-    std::cout << "residual: " << norm_2( v - v0 ) << '\n' ;
+    // std::cout << "residual: " << norm_2( v - v0 ) << '\n' ;
+    always_assert( norm_2( v - v0 ) < 3e-15 * n ) ;
+    std::cout << std::endl;
 
   }
 

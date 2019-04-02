@@ -1,0 +1,18 @@
+#
+# Clang++
+#
+
+WARNINGS_IGNORE =                \
+  -Wno-unused-parameter -Wno-deprecated-register -Wno-ignored-qualifiers
+CXX      = clang++-7
+LANGFLAGS = -std=c++14 -stdlib=libc++
+CXXFLAGS = -Wall -Wextra $(WARNINGS_IGNORE)
+MTFLAGS  =
+LDFLAGS  =
+DEBUG    = -g -O0 -fno-inline
+# Profiling with Instrumentation:
+# http://clang.llvm.org/docs/UsersManual.html#profile-guided-optimization
+# PROFILE  = -fprofile-instr-generate
+# Sampling profile (see man sample(1), MacOS)
+PROFILE = -g
+OPTIMIZE = -O3 -DNDEBUG -DBOOST_DISABLE_ASSERTS

@@ -77,8 +77,8 @@ int main( int argc , char const * const * const argv ) {
 	auto is = open_read ( bf , I , name  ) ;
 	auto os = open_write(          bname ) ;
 
-	char c ;
-	while( EOF != ( c = is.get() ) ) { os << c ; }
+	int c ;
+	while( EOF != ( c = is.get() ) ) { os << static_cast<char>(c) ; }
 
   } else {
 
@@ -89,8 +89,8 @@ int main( int argc , char const * const * const argv ) {
 	auto is = open_read (          name  ) ;
 	auto os = open_write( bf , I , cname ) ;
 
-	char c ;
-	while( EOF != ( c = is.get() ) ) { os << c ; }
+	int c ;
+	while( EOF != ( c = is.get() ) ) { os << static_cast<char>(c) ; }
 
   }
 

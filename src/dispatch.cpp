@@ -21,7 +21,7 @@ namespace {
 
 void thread_function(cpl::dispatch::thread_pool::queue_type& tasks) {
   do {
-    auto tac = std::move(tasks.pop());
+    auto tac = tasks.pop();
     if (!tac.second) {
       return;
     } else {

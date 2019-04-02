@@ -711,7 +711,7 @@ inline owning_ifstream open_read(
 inline owning_ifstream open_read(
   std::string const& name ,
   std::vector< std::string > const& path = std::vector< std::string >()
-) { std::string dummy ; return std::move( open_read( name , dummy , path ) ) ; }
+) { std::string dummy ; return open_read( name , dummy , path ) ; }
 
 
 // Open a file buffer for writing.

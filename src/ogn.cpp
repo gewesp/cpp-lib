@@ -252,7 +252,7 @@ std::unique_ptr<cpl::util::network::connection> cpl::ogn::connect(
   log << prio::NOTICE << "Local address: " << ret->local() << std::endl ;
   log << prio::NOTICE << "Peer address: "  << ret->peer () << std::endl ;
 
-  return std::move(ret);
+  return ret;
 }
 
 void cpl::ogn::login(

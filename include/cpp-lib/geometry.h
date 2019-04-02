@@ -46,6 +46,9 @@ namespace math     {
 //
 // Cf. http://mathworld.wolfram.com/SphericalCoordinates.html
 //
+// WARNING: Spherical coordinates can be quite inaccurate, cf. the
+// tests.  Presumably due to singularities near the poles.
+//
 
 cpl::matrix::vector_3_t spherical_to_cartesian( 
   double const& theta ,

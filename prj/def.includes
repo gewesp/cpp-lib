@@ -3,6 +3,12 @@
 #
 
 #
+# This is a bad hack.  Many versions are outdated.  OK though
+# if the $(HOME)/src files are not there.
+#
+# We set a multitude of paths, increasing the chance of finding a
+# working one.
+#
 # CAUTION: Avoid setting /usr/include if multiple compilers (e.g., MinGW
 # and cygwin) are installed on a system, otherwise the compiler might
 # use the wrong system includes, leading to absurd problems.

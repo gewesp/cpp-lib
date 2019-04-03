@@ -265,8 +265,7 @@ void minimize_test_rosenbrock() {
 
   std::cout << "Minimizing d-dimensional Rosenbrock function for random "
             << "starting values.\n" ;
-  std::cout << "Showing dimension and Euclidian distance to actual minimum "
-            << "at (1,...,1).\n" ;
+  std::cout << "Calculating distance to actual minimum " << "at (1,...,1).\n" ;
   std::cout << "For d >= 4, this may not be zero, because the function has "
             << "a second local minimum. "
             << "Only if the gradient at the minimum is too large, the test "
@@ -315,7 +314,7 @@ void minimize_test_rosenbrock() {
         ;
         always_assert( false ) ;
       }
-      ::output_delta( std::cout , err , 1e-7 ) ;
+      ::output_delta( std::cout , err , 1e-6 ) ;
 
     }
 

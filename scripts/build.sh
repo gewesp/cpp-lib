@@ -13,4 +13,4 @@ rm -rf build CMakeCache.txt CMakeFiles/
 mkdir build
 cd build
 cmake -D CMAKE_CXX_COMPILER=clang++ $build_type ..
-make -j$(nproc)
+make -j6

@@ -8,23 +8,47 @@ project(cpp-lib VERSION 0.19.1)
 # Some of our own modules
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
-# PNG++ dependent stuff: Too lazy to compile libpng on MacOS
-set(PNG_STUFF UNIX and not APPLE)
+# PNG++ dependent stuff: Only Unix
+if (UNIX)
+  set(PNG_STUFF TRUE)
+else()
+  set(PNG_STUFF FALSE)
+endif()
 
 # Required 3rd party stuff
 # png++ is found using stuff in CMAKE_MODULE_PATH
 find_package(Boost 1.58.0 REQUIRED)
-find_package(Eigen3 REQUIRED)
+
+# Eigen3, png++ isn't cmake compliant yet on my system.  Argh.
+# Please provide env variables.
+if (APPLE)
+  # Eigen3
+  # NOT DEFINED etc. *must* be capitalized!!
+  if (NOT DEFINED ENV{EIGEN3_INCLUDE_DIR})
+    message (FATAL_ERROR "Please provide the environment variable EIGEN3_INCLUDE_DIR to the include directory of your Eigen3 installation.")
+  else()
+    include_directories (SYSTEM "$ENV{EIGEN3_INCLUDE_DIR}")
+  endif()
+else()
+  find_package(Eigen3 REQUIRED)
+  message("-- Eigen library version:    ${EIGEN3_VERSION_STRING}"    )
+  message("-- Eigen include directory:  ${EIGEN3_INCLUDE_DIRS}"      )
+endif()
 
 message("-- Boost libraries version:  ${Boost_VERSION}"            )
 message("-- Boost include directory:  ${Boost_INCLUDE_DIRS}"       )
 
-message("-- Eigen library version:    ${EIGEN3_VERSION_STRING}"    )
-message("-- Eigen include directory:  ${EIGEN3_INCLUDE_DIRS}"      )
-
 if (PNG_STUFF)
-  find_package(png++ REQUIRED)
-  message("-- png++ include directory:  ${png++_INCLUDE_DIRS}/png++" )
+  if (NOT APPLE)
+    find_package(png++ REQUIRED)
+    message("-- png++ include directory:  ${png++_INCLUDE_DIRS}/png++" )
+  else()
+    if (NOT DEFINED ENV{PNGPP_INCLUDE_DIR})
+      message (FATAL_ERROR "Please provide the environment variable PNGPP_INCLUDE_DIR to the include directory of your PNG++ installation.")
+    else()
+      include_directories (SYSTEM "$ENV{PNGPP_INCLUDE_DIR}")
+    endif()
+  endif()
 else()
   message("-- Not including stuff dependent on libpng")
 endif()
@@ -187,15 +211,9 @@ add_library(cpp-lib
     ${sources}
     )
 
-target_include_directories(cpp-lib PRIVATE
-    ${Boost_INCLUDE_DIRS}
-    ${Eigen3_INCLUDE_DIRS}
-    ${png++_INCLUDE_DIRS}/png++
-    include
-)
-
-include_directories(
+include_directories(SYSTEM
   ${PROJECT_SOURCE_DIR}/include
+  ${Boost_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIRS}
   ${png++_INCLUDE_DIRS}/png++
 )

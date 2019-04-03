@@ -48,6 +48,16 @@ if (PNG_STUFF)
     else()
       include_directories (SYSTEM "$ENV{PNGPP_INCLUDE_DIR}")
     endif()
+    
+    execute_process(
+      COMMAND libpng-config --libdir 
+      OUTPUT_VARIABLE PNG_LIBRARY_DIR)
+    message("-- PNG library directory: ${PNG_LIBRARY_DIR}")
+    link_directories(${PNG_LIBRARY_DIR})
+    find_library(PNG_LIBRARY
+      name png
+      HINTS ${PNG_LIBRARY_DIR})
+    message("-- PNG library: ${PNG_LIBRARY}")
   endif()
 else()
   message("-- Not including stuff dependent on libpng")
@@ -185,11 +195,11 @@ set(sources
     "src/sys/util.cpp"
     )
 
-if (UNIX AND NOT APPLE)
-    list(APPEND sources
-         "src/posix/realtime.cpp"
-         "src/posix/wrappers.cpp"
-         )
+if (UNIX)
+  list(APPEND sources
+    "src/posix/realtime.cpp"
+    "src/posix/wrappers.cpp"
+  )
 endif()
 
 ############################################################################
@@ -202,7 +212,11 @@ foreach(TEST ${TESTS})
 endforeach()
 
 if(PNG_STUFF)
-  target_link_libraries(png-test png)
+  if (APPLE)
+    target_link_libraries(png-test ${PNG_LIBRARY})
+  else()
+    target_link_libraries(png-test png)
+  endif()
 endif()
 
 add_library(cpp-lib

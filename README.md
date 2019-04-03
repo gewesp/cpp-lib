@@ -1,5 +1,7 @@
 # README for cpp-lib
 
+Last updated: Version 0.19.1
+
 ## What is it?
 
   Cpp-lib is a general purpose library of ISO C++ functions and classes.

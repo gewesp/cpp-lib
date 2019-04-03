@@ -1,19 +1,18 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 
-# TODO: Real version
-project(cpp-lib VERSION 1.0.0)
+# This is a C++14 project
+set (CMAKE_CXX_STANDARD 14)
+
+project(cpp-lib VERSION 0.19.1)
 
 # use own cmake modules.
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
-# Global paths
-set(TEST_SRC_DIR "testing")
-
-# 3rd-party.
+# Required 3rd party stuff
+# png++ is found using stuff in CMAKE_MODULE_PATH
 find_package(Boost 1.58.0 REQUIRED)
-find_package(png++ REQUIRED)
 find_package(Eigen3 REQUIRED)
-
+find_package(png++ REQUIRED)
 
 message("-- Boost libraries version:  ${Boost_VERSION}"            )
 message("-- Boost include directory:  ${Boost_INCLUDE_DIRS}"       )
@@ -23,7 +22,51 @@ message("-- Eigen include directory:  ${EIGEN3_INCLUDE_DIRS}"      )
 
 message("-- png++ include directory:  ${png++_INCLUDE_DIRS}/png++" )
 
+# Test targets (see testing/)
+set(TESTS 
+    audio-test
+    blowfish-test
+    blowfish-util
+    command_line-test
+    crypt_stream-test
+    dispatch-test
+    # file-test
+    gnss-test
+    interpolation-test
+    # iowait
+    logger-test
+    map-test
+    math-test
+    matrix-wrapper-test
+    # netutil
+    ogn-minimal
+    ogn-test
+    optimization-test
+    png-test
+    quaternion-test
+    random-test
+    registry-test
+    rosenbrock-search
+    rtree-test
+    # sched-test
+    sched-thread-test
+    spatial-index-test
+    syslogger-test
+    table-test
+    tcp-test
+    top-n-test
+    udp-test
+    utc-test
+    util-test
+    varlist-test)
 
+# serial uses a Windows API
+# TODO: Append that to cpp-lib sources as well
+if (WINDOWS)
+  list(APPEND TESTS serial-test)
+endif()
+
+############################################################################
 
 set(public-headers
     "include/cpp-lib/array_ops.h"
@@ -117,19 +160,17 @@ endif()
 ############################################################################
 # TARGET CONFIGURATION
 ############################################################################
-add_executable(ogn-test
-  ${TEST_SRC_DIR}/ogn-test.cpp)
+
+foreach(TEST ${TESTS})
+  add_executable(${TEST} testing/${TEST}.cpp)
+  target_link_libraries(${TEST} cpp-lib pthread)
+endforeach()
 
 add_library(cpp-lib
     ${public-headers}
     ${private-headers}
     ${sources}
     )
-
-target_link_libraries(ogn-test
-  cpp-lib
-  pthread)
-
 
 target_include_directories(cpp-lib PRIVATE
     ${Boost_INCLUDE_DIRS}
@@ -143,10 +184,6 @@ include_directories(
   ${EIGEN3_INCLUDE_DIRS}
   ${png++_INCLUDE_DIRS}/png++
 )
-
-# C++ standard
-# TODO: Define standard library (see def.compiler)
-set_target_properties(cpp-lib ogn-test PROPERTIES CXX_STANDARD 14)
 
 # for library export definitions.
 include(GenerateExportHeader)

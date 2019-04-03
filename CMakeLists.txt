@@ -5,14 +5,16 @@ set (CMAKE_CXX_STANDARD 14)
 
 project(cpp-lib VERSION 0.19.1)
 
-# use own cmake modules.
+# Some of our own modules
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
+# PNG++ dependent stuff: Too lazy to compile libpng on MacOS
+set(PNG_STUFF UNIX and not APPLE)
 
 # Required 3rd party stuff
 # png++ is found using stuff in CMAKE_MODULE_PATH
 find_package(Boost 1.58.0 REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(png++ REQUIRED)
 
 message("-- Boost libraries version:  ${Boost_VERSION}"            )
 message("-- Boost include directory:  ${Boost_INCLUDE_DIRS}"       )
@@ -20,7 +22,12 @@ message("-- Boost include directory:  ${Boost_INCLUDE_DIRS}"       )
 message("-- Eigen library version:    ${EIGEN3_VERSION_STRING}"    )
 message("-- Eigen include directory:  ${EIGEN3_INCLUDE_DIRS}"      )
 
-message("-- png++ include directory:  ${png++_INCLUDE_DIRS}/png++" )
+if (PNG_STUFF)
+  find_package(png++ REQUIRED)
+  message("-- png++ include directory:  ${png++_INCLUDE_DIRS}/png++" )
+else()
+  message("-- Not including stuff dependent on libpng")
+endif()
 
 # Test targets (see testing/)
 set(TESTS 
@@ -42,7 +49,7 @@ set(TESTS
     ogn-minimal
     ogn-test
     optimization-test
-    png-test
+    # png-test
     quaternion-test
     random-test
     registry-test
@@ -60,10 +67,14 @@ set(TESTS
     util-test
     varlist-test)
 
-# serial uses a Windows API
+# The serial library is only implemented using a Windows API
 # TODO: Append that to cpp-lib sources as well
 if (WINDOWS)
   list(APPEND TESTS serial-test)
+endif()
+
+if (PNG_STUFF)
+  list(APPEND TESTS png-test)
 endif()
 
 ############################################################################
@@ -165,6 +176,10 @@ foreach(TEST ${TESTS})
   add_executable(${TEST} testing/${TEST}.cpp)
   target_link_libraries(${TEST} cpp-lib pthread)
 endforeach()
+
+if(PNG_STUFF)
+  target_link_libraries(png-test png)
+endif()
 
 add_library(cpp-lib
     ${public-headers}

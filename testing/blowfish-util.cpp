@@ -24,6 +24,8 @@
 
 #include <sys/stat.h>
 
+#include <cstring>
+
 #include "cpp-lib/blowfish.h"
 
 
@@ -54,11 +56,11 @@ int main(int argC, char* argV[])
     return 1;
   }
 
-  if (strcmp(argV[1], "encrypt") == 0)
+  if (std::strcmp(argV[1], "encrypt") == 0)
   {
     operation = encrypt;
   }
-  else if (strcmp(argV[1], "decrypt") == 0)
+  else if (std::strcmp(argV[1], "decrypt") == 0)
   {
     operation = decrypt;
   }
@@ -75,15 +77,15 @@ int main(int argC, char* argV[])
 
   for (int i=2; i<8; i+=2)
   {
-    if (strcmp(argV[i], "-in") == 0)
+    if (std::strcmp(argV[i], "-in") == 0)
     {
       inFile.assign(argV[i+1]);
     }
-    else if (strcmp(argV[i], "-out") == 0)
+    else if (std::strcmp(argV[i], "-out") == 0)
     {
       outFile.assign(argV[i+1]);
     }
-    else if (strcmp(argV[i], "-key") == 0)
+    else if (std::strcmp(argV[i], "-key") == 0)
     {
       key.assign(argV[i+1]);
     }

@@ -53,7 +53,9 @@ if (PNG_STUFF)
       COMMAND libpng-config --libdir 
       OUTPUT_VARIABLE PNG_LIBRARY_DIR)
     message("-- PNG library directory: ${PNG_LIBRARY_DIR}")
-    link_directories(${PNG_LIBRARY_DIR})
+    # link_directories is harmful!  If we
+    # have link_directories(${PNG_LIBRARY_DIR}) here,
+    # cmake will refuse to link with cpp-lib itself.  WTF.
     find_library(PNG_LIBRARY
       name png
       HINTS ${PNG_LIBRARY_DIR})
@@ -206,6 +208,12 @@ endif()
 # TARGET CONFIGURATION
 ############################################################################
 
+add_library(cpp-lib
+    ${public-headers}
+    ${private-headers}
+    ${sources}
+    )
+
 foreach(TEST ${TESTS})
   add_executable(${TEST} testing/${TEST}.cpp)
   target_link_libraries(${TEST} cpp-lib pthread)
@@ -218,12 +226,6 @@ if(PNG_STUFF)
     target_link_libraries(png-test png)
   endif()
 endif()
-
-add_library(cpp-lib
-    ${public-headers}
-    ${private-headers}
-    ${sources}
-    )
 
 include_directories(SYSTEM
   ${PROJECT_SOURCE_DIR}/include

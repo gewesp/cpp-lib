@@ -12,12 +12,6 @@ $BIN_DIR/math-test                          > $GOLDEN_DIR/math.txt
 $BIN_DIR/matrix-wrapper-test                > $GOLDEN_DIR/matrix-wrapper.txt
 $BIN_DIR/interpolation-test                 > $GOLDEN_DIR/interpolation.txt
 $BIN_DIR/optimization-test                  > $GOLDEN_DIR/optimization.txt
-$BIN_DIR/rosenbrock-search --repeat 10 4                                 \
-  > $GOLDEN_DIR/rosenbrock-search-4.txt
-$BIN_DIR/rosenbrock-search --repeat 10 5                                 \
-  > $GOLDEN_DIR/rosenbrock-search-5.txt
-$BIN_DIR/rosenbrock-search --repeat 1 --arguments 5                      \
-  > $GOLDEN_DIR/rosenbrock-search-5-instrumented.txt
 $BIN_DIR/quaternion-test                    > $GOLDEN_DIR/quaternion.txt
 $BIN_DIR/registry-test                      > $GOLDEN_DIR/registry.txt
 

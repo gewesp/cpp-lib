@@ -33,18 +33,10 @@ using namespace cpl::math ;
 
 namespace {
 
-void output_delta(
-    std::ostream& os ,
+void check_delta(
     const double delta ,
     const double threshold ) {
   always_assert(delta <= threshold or delta >= 1.5);
-  os << "delta";
-  if ( delta <= threshold ) {
-    os << " < " << threshold ;
-  } else {
-    os << " >= 1.5" ;
-  }
-  os << std::endl ;
 }
 
 //
@@ -314,7 +306,7 @@ void minimize_test_rosenbrock() {
         ;
         always_assert( false ) ;
       }
-      ::output_delta( std::cout , err , 1e-6 ) ;
+      ::check_delta( err , 1e-6 ) ;
 
     }
 
@@ -393,7 +385,7 @@ void ds_test_rosenbrock() {
       auto const x = 
         downhill_simplex( x0 , r , 10e-12 , 10e-8 , 1000000 , 1 , .95 ) ;
 
-      ::output_delta( std::cout, cpl::matrix::norm_2( x - x_expected ) , 1e-9 ) ;
+      ::check_delta(cpl::matrix::norm_2( x - x_expected ) , 1e-9 ) ;
 
     }
 
@@ -430,7 +422,7 @@ void ds_test_quadratic() {
           downhill_simplex( x0 , q , 1e-12 , 1e-12 , 10000000 ,
                                            1 , .7 ) ;
 
-      ::output_delta( std::cout, cpl::matrix::norm_2( x - a ) , 1e-9 ) ;
+      ::check_delta( cpl::matrix::norm_2( x - a ) , 1e-9 ) ;
 
     }
 

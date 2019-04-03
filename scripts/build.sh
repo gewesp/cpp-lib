@@ -3,14 +3,15 @@
 # Exit if any subprogram exits with an error
 set -e
 
-if [ "" != "$CMAKE_BUILD_TYPE" ] ; then
-  build_type="-D CMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE"
+if [ "" = "$1" ] ; then
+  build_type=RelWithDebInfo
 else
-  build_type=""
+  build_type="$1"
 fi
 
 rm -rf build CMakeCache.txt CMakeFiles/
 mkdir build
 cd build
-cmake -D CMAKE_CXX_COMPILER=clang++ $build_type ..
+echo "Configuring for $build_type ..."
+cmake -D CMAKE_CXX_COMPILER=clang++ -D CMAKE_BUILD_TYPE=$build_type ..
 make -j6

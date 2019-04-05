@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.1)
 
+message("-- Cpp-lib cmake file")
+message("-- Project source directory: ${PROJECT_SOURCE_DIR}")
+
 # This is a C++14 project
 set (CMAKE_CXX_STANDARD 14)
 
@@ -216,7 +219,7 @@ add_library(cpp-lib
 
 foreach(TEST ${TESTS})
   add_executable(${TEST} testing/${TEST}.cpp)
-  target_link_libraries(${TEST} cpp-lib pthread)
+  target_link_libraries(${TEST} cpp-lib pthread rt)
 endforeach()
 
 if(PNG_STUFF)

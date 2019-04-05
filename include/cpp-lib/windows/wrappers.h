@@ -65,7 +65,7 @@ namespace detail_  {
 
 
 // 
-// See the corresponding function in posix_wrappers.h .  Under Windows,
+// See the corresponding function in the POSIX wrappers.h .  Under Windows,
 // this is a NOOP because EINTR is not returned.  (TODO: verify!)
 //
 

@@ -152,12 +152,6 @@ set(public-headers
     "include/cpp-lib/varlist.h"
     "include/cpp-lib/xdr.h"
 
-    "include/cpp-lib/detail/socket_lowlevel.h"
-
-    "include/cpp-lib/platform/net_impl.h"
-    "include/cpp-lib/platform/realtime.h"
-    "include/cpp-lib/platform/wrappers.h"
-
     "include/cpp-lib/sys/file.h"
     "include/cpp-lib/sys/logger.h"
     "include/cpp-lib/sys/network.h"

@@ -219,7 +219,10 @@ add_library(cpp-lib
 
 foreach(TEST ${TESTS})
   add_executable(${TEST} testing/${TEST}.cpp)
-  target_link_libraries(${TEST} cpp-lib pthread rt)
+  target_link_libraries(${TEST} cpp-lib pthread)
+  if (UNIX AND NOT APPLE)
+    target_link_libraries(${TEST} rt)
+  endif()
 endforeach()
 
 if(PNG_STUFF)

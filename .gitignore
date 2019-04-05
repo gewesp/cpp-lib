@@ -18,8 +18,6 @@ bin
 *.caf
 .DS_Store
 tags
-include/cpp-lib/platform
-include/cpp-lib/platform_rt
 prj/def.compiler
 prj/def.platform
 CMakeFiles/

@@ -4,7 +4,6 @@
 # TODO: 
 # - tests and applications must be subdirectories of src, then the three build
 #   rules can be collapsed into one.
-# - Get rid of the symlinks, use += on SOURCES instead (or similar).
 #
 # Usage:
 # Release build:
@@ -166,35 +165,11 @@ endif
 endif
 
 
-ifdef DONT_KNOW_SYMLINKS
-LINK = cp -r
-else
-LINK = ln -sf
-endif
-
-
-symlinks:
-	( cd $(INCLUDE_CPP_LIB) ; rm -f platform    )
-	( cd $(INCLUDE_CPP_LIB) ; rm -f platform_rt )
-ifeq ($(POSIX_STUFF),yes)
-ifeq ($(POSIX1B_STUFF),yes)
-	( cd $(INCLUDE_CPP_LIB) ; $(LINK) posix1b platform_rt )
-else
-	( cd $(INCLUDE_CPP_LIB) ; $(LINK) posix   platform_rt )
-endif
-	( cd $(INCLUDE_CPP_LIB) ; $(LINK) posix   platform    )
-endif
-ifeq ($(WINDOWS_STUFF),yes)
-	( cd $(INCLUDE_CPP_LIB) ; $(LINK) windows platform_rt )
-	( cd $(INCLUDE_CPP_LIB) ; $(LINK) windows platform    )
-endif
-
-
 SOURCES = $(subst .o,.cpp,$(OBJECTS))
 
 directories: $(OBJ_DIR) $(OBJ_SUBDIRS) $(BIN_DIR) 
 
-$(CPP_LIB_LIBRARY): symlinks $(OBJECTS)
+$(CPP_LIB_LIBRARY): $(OBJECTS)
 	$(CREATELIB)
 	$(RANLIB) $(CPP_LIB_LIBRARY)
 
@@ -236,8 +211,6 @@ clean:
 	rm -f $(TEST_DIR)/surface.out.*
 	rm -f $(TEST_DIR)/*.crypt
 	rm -f $(TEST_DIR)/*.stackdump
-	rm -rf $(INCLUDE_CPP_LIB)/platform
-	rm -rf $(INCLUDE_CPP_LIB)/platform_rt
 
 distclean: clean
 	rm -f def.compiler

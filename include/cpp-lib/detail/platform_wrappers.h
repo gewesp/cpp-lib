@@ -1,5 +1,5 @@
 //
-// Copyright 2015 KISS Technologies GmbH, Switzerland
+// Copyright 2019 and onwards by KISS Technologies GmbH, Switzerland
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,28 +14,18 @@
 // limitations under the License.
 //
 
+#ifndef CPP_LIB_DETAIL_PATFORM_WRAPPERS_H
+#define CPP_LIB_DETAIL_PATFORM_WRAPPERS_H
 
-#include <cmath>
+// This is .h, not .hpp like everything else in boost.  WTF.
+#include "boost/predef.h"
 
-#include "cpp-lib/sys/util.h"
+#if (BOOST_OS_LINUX || BOOST_OS_MACOS)
+#  include "cpp-lib/posix/wrappers.h"
+#elif (BOOST_OS_WINDOWS)
+#  include "cpp-lib/windows/wrappers.h"
+#else
+#  error "This operating system platform is not supported by cpp-lib."
+#endif
 
-#include "cpp-lib/detail/platform_wrappers.h"
-
-
-using namespace cpl::util ;
-
-
-double cpl::util::sleep_scheduler::wait_next() {
-
-  double const n = ( this->time() - t_0 ) * hz ;
-
-  if( n > n_next ) {   n_next = std::ceil( n ) ; } // Missed a slice.
-  else             { ++n_next ;                  }
-
-  assert( n_next >= n ) ;
-
-  cpl::util::sleep( dt * ( n_next - n ) ) ;
-
-  return t_0 + dt * n_next ;
-
-}
+#endif // CPP_LIB_DETAIL_PATFORM_WRAPPERS_H

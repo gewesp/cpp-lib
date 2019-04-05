@@ -1,5 +1,5 @@
 //
-// Copyright 2015 KISS Technologies GmbH, Switzerland
+// Copyright 2019 and onwards by KISS Technologies GmbH, Switzerland
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,6 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+
+// This is .h, not .hpp like everything else in boost.  WTF.
+#include "boost/predef.h"
+
+// This is only supported on Linux.
+#if (BOOST_OS_LINUX)
+#  include "cpp-lib/linux/realtime.h"
 
 #include <exception>
 #include <stdexcept>
@@ -98,3 +105,9 @@ cpl::util::realtime_scheduler::~realtime_scheduler() {
   ( ::setitimer( MY_TIMER , &itv , 0 ) ) ;
 
 }
+
+#else
+#  warning "Realtime functions not supported on this operating system platform"
+#  warning "You can safely ignore this warning provided you don't include"
+#  warning "cpp-lib/realtime.h in your project."
+#endif

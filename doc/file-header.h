@@ -1,5 +1,5 @@
 //
-// Copyright 2015 KISS Technologies GmbH, Switzerland
+// Copyright 2019 and onwards by KISS Technologies GmbH, Switzerland
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,29 +13,3 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
-
-#include <cmath>
-
-#include "cpp-lib/sys/util.h"
-
-#include "cpp-lib/detail/platform_wrappers.h"
-
-
-using namespace cpl::util ;
-
-
-double cpl::util::sleep_scheduler::wait_next() {
-
-  double const n = ( this->time() - t_0 ) * hz ;
-
-  if( n > n_next ) {   n_next = std::ceil( n ) ; } // Missed a slice.
-  else             { ++n_next ;                  }
-
-  assert( n_next >= n ) ;
-
-  cpl::util::sleep( dt * ( n_next - n ) ) ;
-
-  return t_0 + dt * n_next ;
-
-}

@@ -50,9 +50,7 @@
 
 #include "cpp-lib/util.h"
 
-
 #include "cpp-lib/detail/socket_lowlevel.h"
-#include "cpp-lib/platform/wrappers.h"
 
 namespace cpl {
 

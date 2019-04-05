@@ -19,6 +19,14 @@
 #ifndef CPP_LIB_REALTIME_H
 #define CPP_LIB_REALTIME_H
 
-#include "cpp-lib/platform_rt/realtime.h"
+// This is .h, not .hpp like everything else in boost.  WTF.
+#include "boost/predef.h"
+
+// This is only supported on Linux.
+#if (BOOST_OS_LINUX)
+#  include "cpp-lib/linux/realtime.h"
+#else
+#  error "Realtime functions not supported on this operating system platform"
+#endif
 
 #endif // CPP_LIB_REALTIME_H

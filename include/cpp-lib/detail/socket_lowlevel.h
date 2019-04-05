@@ -19,7 +19,7 @@
 #ifndef CPP_LIB_DETAIL_SOCKET_LOWLEVEL_H
 #define CPP_LIB_DETAIL_SOCKET_LOWLEVEL_H
 
-#include "cpp-lib/platform/wrappers.h"
+#include "cpp-lib/detail/platform_wrappers.h"
 
 namespace cpl {
 

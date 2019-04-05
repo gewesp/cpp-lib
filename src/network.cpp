@@ -28,6 +28,8 @@
 #include "boost/lexical_cast.hpp"
 #include "boost/any.hpp"
 #include "boost/cast.hpp"
+// .h, not .hpp like everything else in boost.  WTF.
+#include "boost/predef.h"
 
 
 #include "cpp-lib/util.h"
@@ -37,9 +39,15 @@ using namespace cpl::util::network ;
 using namespace cpl::util          ;
 using namespace cpl::detail_       ;
 
-#include "cpp-lib/platform/net_impl.h"
-#include "cpp-lib/detail/socket_lowlevel.h"
+#if (BOOST_OS_LINUX || BOOST_OS_MACOS)
+#  include "cpp-lib/posix/net_impl.h"
+#elif (BOOST_OS_WINDOWS)
+#  include "cpp-lib/windows/net_impl.h"
+#else
+#  error "This operating system platform is not supported by cpp-lib."
+#endif
 
+#include "cpp-lib/detail/socket_lowlevel.h"
 
 namespace {
  

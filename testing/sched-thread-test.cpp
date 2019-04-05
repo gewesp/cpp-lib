@@ -14,6 +14,12 @@
 // limitations under the License.
 //
 
+#include "boost/predef.h"
+
+
+// Compile a null program if we're on anything else than Linux
+#if (BOOST_OS_LINUX)
+
 #include <iostream>
 #include <string>
 #include <thread>
@@ -104,3 +110,10 @@ int main( int const argc , char const * const * const argv ) {
   { std::cerr << e.what() << std::endl ; return 1 ; }
 
 }
+
+#else
+
+// Empty main().  Realtime functions not supported on this OS.
+int main() {}
+
+#endif

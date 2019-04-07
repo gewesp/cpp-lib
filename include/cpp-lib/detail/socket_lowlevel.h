@@ -21,6 +21,8 @@
 
 #include "cpp-lib/detail/platform_wrappers.h"
 
+#include "boost/predef.h"
+
 namespace cpl {
 
 namespace detail_ {
@@ -75,7 +77,7 @@ inline void time_sockopt(
 // TODO: Other systems.
 inline int socketsend( socketfd_t const fd , char const* const data , 
     std::size_t const size ) {
-#ifdef CPP_LIB_PLATFORM_linux
+#if (BOOST_OS_LINUX)
   const int flags = MSG_NOSIGNAL ;
 #else
   const int flags = 0 ;
@@ -85,13 +87,12 @@ inline int socketsend( socketfd_t const fd , char const* const data ,
 
 // Platform dependent setup for stream sockets
 inline void setup_stream_socket( socketfd_t const fd ) {
-#ifdef CPP_LIB_PLATFORM_darwin
+#if (BOOST_OS_MACOS)
   bool_sockopt( fd , SO_NOSIGPIPE ) ;
 #else
   static_cast<void>(fd);
 #endif
 }
-
 
 } // detail_
 

@@ -1,10 +1,5 @@
 # README for cpp-lib
 
-## TODOs
-
-* Update CI for cmake and remove make-based build infrastructure
-
-
 ## What is it?
 
   Cpp-lib is a general purpose library of ISO C++ functions and classes.
@@ -272,66 +267,51 @@ Most modern platforms satisfy this requirement.
   __The `realtime_scheduler` class may only be instantiated once per process
 on POSIX systems.__
 
-## Bugs
+## Bugs and TODOs
 
-Please see [TODO](TODO.md).
+* Update CI for cmake and remove make-based build infrastructure
+
+Please see also [TODO](TODO.md) and issues on the github page.
 
 
 ## Coding style
 
 - General: Stick with the style of code around you.
-
 - Lines no longer than 80 characters.
-
 - Two characters indentation.
-
 - No tabs, use spaces instead.
-
 - UNIX line endings.
-
 - C++ style comments (//).
-
 - `lower_case_and_underscore` style.
 
 
 ### Library design principles
 
 - Performance and ease of use.
-
 - Realtime guarantee:  Generally, data structures and algorithms are designed 
   to allocate all resources at initialization time.
-
 - Seamless integration with the C++ standard library.  E.g., the TCP and
   serial interface provide standard C++ streambufs.
-
 - RAII (resource acquisition is initialization).  Constructors
   either yield a ready-to-use object or throw.
-
 - Better safe than sorry.  Assertions even in tight loops.
-
 - Platform independency, not multiplatform dependency.  Avoid
   `#ifdef _LINUX_/WIN32/etc.` mess, but rather factor out minimal generic 
   interfaces for platform-specific functionality (see e.g. posix/wrappers.cpp
   and windows/wrappers.cpp)
-
 - Orthogonality/DRY: Don't repeat yourself
 
 
 ## Contributor guidelines
 
 - Please follow the library design guidelines above.
-
 - Commits that add or change functionality should be kept small and
   with well readable diffs for code review.
-
 - To achieve the above, isolate as much as possible of the work in 
-  'zero functional change' (ZFC) commits.  That is, refactor before
+  'no functional change' (NFC) commits.  That is, refactor before
   you add or change functionality.
-
-- Any whitespace changes should be in a separate ZFC commit.
-
-- Make sure that ZFC commits don't change any test results or break tests.
-
+- Any whitespace changes should be in a separate NFC commit.
+- Make sure that NFC commits don't change any test results or break tests.
 - Add test cases for new functionality, modify test cases for modified
   functionality.
 
@@ -339,7 +319,7 @@ Please see [TODO](TODO.md).
 
 Examples:
 - ADD: Shiny new feature
-- MOD/ZFC: Refactoring the xyz component (zero functional change)
+- MOD/NFC: Refactoring the xyz component (zero functional change)
 - REMOVE: We no longer need the abc() function (use xyz() instead)
 - FIX: Fixed a bug in the uvw module causing the server to crash.
 

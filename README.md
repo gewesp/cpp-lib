@@ -1,6 +1,9 @@
 # README for cpp-lib
 
-Last updated: Version 0.19.1
+## TODOs
+
+* Update CI for cmake and remove make-based build infrastructure
+
 
 ## What is it?
 
@@ -145,10 +148,9 @@ meaningful `what()` message.
 ## Supported platforms
 
   Cpp-lib is written in ISO C++ and makes use of C++14 features.
-Due to multiple problems with GNU g++, we currently recommend clang++
-(October 2015).
+We recommend clang++ to compile cpp-lib.
 
-- clang++: Based on LLVM 3.5.0 or higher (MacOS X and Linux).
+- clang++: Based on LLVM 3.5.0 or higher (Tested: Linux).
 - The Microsoft Visual Studio Express (C++) and CYGWIN builds are looking
   for maintainers.
 
@@ -160,25 +162,15 @@ for embedded applications.
 
 ### Dependencies
 
-- A C++ compiler supporting C++14 or later (Tested: clang++)
-- GNU make (BSD make does *not* work)
-- The [BOOST] [1] header files (version 1.58.0 or higher).
+- A C++ compiler supporting C++14 or later (Recommended: clang++)
+- [Cmake] [11], version 3.1 or later
+- The [BOOST] [1] libraries, version 1.58.0 or later
 - The [Eigen] [10] library
-- If `PNG_STUFF` is enabled: [libpng] [8] and [png++] [9]
+- The [libpng] [8] and [png++] [9] libraries
 
 See Tested Versions below.
 
-On old Ubuntu versions (14.04), it is currently necessary to install the
-Boost source code directly from here:
-`http://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.tar.bz2`
-It is *not* necessary to compile Boost.
-
-
-__Boost, png++ and Eigen are used in a header-only way.__
-
-__NOTE:__ On Ubuntu 16.04, apt-get appears to be broken in
-some cases.  Use aptitude instead with the same command
-lines.
+__Boost, png++ and Eigen are currently used in a header-only way.__
 
 - Installing dependencies on Ubuntu:
   * `sudo apt install libeigen3-dev`
@@ -189,11 +181,6 @@ lines.
   * `sudo apt install clang-7`
   * `sudo apt install libc++-7-dev`
   * `sudo apt install libc++abi-7-dev`
-
-- Installing g++-5 on old Ubuntu versions (e.g. 14.04):
-  `sudo add-apt-repository ppa:ubuntu-toolchain-r/test`
-  `sudo apt-get update`
-  `sudo apt-get install g++-5`
 
 ### Tested versions
 
@@ -206,42 +193,19 @@ lines.
 
 See `uname -m`
 
-* aarch64 (ARMv8)
-* x86_64 (Intel)
+* `aarch64` (ARMv8)
+* `x86_64` (Intel)
 
 ### Build
 
-- `cd prj`
+From the main directory, run `scripts/build.sh`.
 
-- Create symbolic links appropriate for your system or copy the files:
+Please see the script for options (build type, compiler etc.).
 
 
-#### Setup on Ubuntu
+### Test
 
-  ```
-  ln -s def.compiler.clang-3.6 def.compiler
-  ln -s def.platform.linux-clang-libc++ def.platform
-  ```
-
-#### Setup on MacOS X (Darwin)
-
-  ```
-  ln -s def.compiler.clang def.compiler
-  ln -s def.platform.darwin def.platform
-  ```
-
-#### Compile
-
-- `make -j4 tests` to build the library and tests.
-
--  Use `export debug=true; make; make tests` to build a debug version of 
-  the library and the tests.
-  Release and debug versions are kept in separate directories.
-
-  __Always use the same `debug` setting (true or false) for `make`,
-  `make tests` and `make clean`.__
-
-#### Test
+Prerequisite: Successful build.
 
   `cd testing/`
 
@@ -251,66 +215,17 @@ See `uname -m`
   `git diff` to look out for unexpected changes.
 
 
-#### Clean
- Use `make clean` to delete object files and executables.
-
-  __The supplied Makefile assumes GNU make.__
-
-  The Makefile is based on separate configuration of compiler (file
-def.compiler), platform (def.platform) and include files (def.includes).
-
-  Examples are provided for certain supported platforms and compilers
-(including cross compilation with MinGW).  See `def.platform.*` and
-`def.compiler.*`.  Not all combinations make sense!
-
-  The library and tests will be built under `.../cpp-lib/build/$(PLATFORM)` .
-Note that many tests use input files, which are found in
-`.../cpp-lib/testing`.
-
-  The `def.platform.*` files set the variables `WINDOWS_STUFF`, 
-`POSIX_STUFF` and `POSIX1B_STUFF` to yes to include the respective 
-platform-specific functionality.  Exactly one of `WINDOWS_STUFF` or 
-`POSIX_STUFF` must be set to yes.
-
-  `WINDOWS_STUFF` indicates that cpp-lib should use the Microsoft Windows
-API, `POSIX_STUFF` the POSIX (SUSv3) API.  Note that the target
-operating system may be Windows while the POSIX API is used, as is the
-case for the cygwin environment.
-
-  Depending on the platform settings, the Makefile will create symbolic
-links (or copies for compilers which don't support symbolic links) of
-the respective platform subdirectories in the source and header
-directories to `platform` and `platform_rt`, resp.
-
-
-###  BOOST notes
-
-Set `BOOST_INCLUDES` in def.includes to point to your BOOST header files.
-
-  If you use a cross compiler, it may be preferable to have
-  a separate set of BOOST header files (i.e., not under /usr/include).
-
-
-
 ### Windows compilation notes
 
-  GNU make is available e.g. in [cygwin] [2].
-
-  No project for the Visual Studio .NET IDE is supplied.  To compile
-using the Microsoft C++ compiler, start the Visual Studio .NET command
-prompt and cygwin from it (typically, enter c:\cygwin\cygwin).  This
-procedure ensures that the environment variables for the compiler are
-visible inside the cygwin environment.
-
-  Code using the Windows API (`WINDOWS_STUFF` set to yes) assumes that the
-WIN32 preprocessor symbol is set.
+  The Windows build is looking for a maintainer.  The first TODO item
+would be to add CMake support.  It should be possible 
+to compile using Visual Studio, cygwin or MinGW.
 
 
 ### FreeBSD compilation notes
 
-  The default make utility of FreeBSD is *not* GNU make.  You need to
-install and use the gmake port.
-
+  The build should work, but installation of requirements may be different
+to Ubuntu.  Maintainers welcome.
 
 ## Using cpp-lib in your own code
 
@@ -341,7 +256,7 @@ debugging easier if inlining is switched off for debug builds.  On g++, use
 * `include/cpp-lib/`  C++ headers (.h).
 * `testing/`          Test/example programs.
 * `testing/data/`     Test data and golden output.
-* `prj/`              Makefiles and platform/compiler definition files.
+* `prj/`              __DEPRECATED__, use cmake instead.  Makefiles and platform/compiler definition files.
 * `obj/`              Build directory, created by the makefile.
 * `obj/{opt,dbg}`     Object files and libraries.
 * `bin/{opt,dbg}`     Executable files
@@ -440,6 +355,7 @@ Examples:
 [8]: http://www.libpng.org/
 [9]: http://www.nongnu.org/pngpp/
 [10]: http://eigen.tuxfamily.org/
+[11]: https://cmake.org/
 
 
 ## See also

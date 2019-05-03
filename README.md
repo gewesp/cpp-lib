@@ -61,13 +61,13 @@ or not ready for production.
 
 ### MATH
 
-- Some components are based on the [Eigen] [10] matrix library.
+- Some components are based on the [Eigen] matrix library.
 - 3-dimensional geometry, quaternions, Euler angles, etc.
 - ODE solvers and some state-space modeling blocks.
 - Unconstrained multidimensional minimization with gradients (a C++ version
-  of [minimize] [4]).
+  of [minimize]).
 - Unconstrained multidimensional minimization without gradients (see
-  [Nelder/Mead] [5], [downhill simplex][6], [Wolfram] [7]).
+  [Nelder/Mead], [downhill simplex], [Wolfram optimization tutorial]).
 - A spatial index based on boost::rtree.
 
 
@@ -158,10 +158,10 @@ for embedded applications.
 ### Dependencies
 
 - A C++ compiler supporting C++14 or later (Recommended: clang++)
-- [Cmake] [11], version 3.1 or later
-- The [BOOST] [1] libraries, version 1.58.0 or later
-- The [Eigen] [10] library
-- The [libpng] [8] and [png++] [9] libraries
+- [CMake], version 3.1 or later
+- The [BOOST] libraries, version 1.58.0 or later
+- The [Eigen] library
+- The [libpng] and [libpng++] libraries
 
 See Tested Versions below.
 
@@ -325,17 +325,16 @@ Examples:
 
 ## References
 
-[1]: http://www.boost.org/
-[2]: http://www.cygwin.com/
-[3]: http://jmarshall.com/easy/http/ "HTTP made really easy."
-[4]: http://www.kyb.tuebingen.mpg.de/bs/people/carl/code/minimize/
-[5]: http://en.wikipedia.org/wiki/Nelder-Mead_method
-[6]: http://de.wikipedia.org/wiki/Downhill-Simplex-Verfahren
-[7]: http://reference.wolfram.com/mathematica/tutorial/ConstrainedOptimizationGlobalNumerical.html "Mathematica Tutorial: Numerical Nonlinear Global Optimization."
-[8]: http://www.libpng.org/
-[9]: http://www.nongnu.org/pngpp/
-[10]: http://eigen.tuxfamily.org/
-[11]: https://cmake.org/
+[BOOST]: http://www.boost.org/
+[Cygwin]: http://www.cygwin.com/
+[minimize]: http://www.kyb.tuebingen.mpg.de/bs/people/carl/code/minimize/
+[Nelder/Mead]: http://en.wikipedia.org/wiki/Nelder-Mead_method
+[downhill simplex]: http://de.wikipedia.org/wiki/Downhill-Simplex-Verfahren
+[Wolfram optimization tutorial]: http://reference.wolfram.com/mathematica/tutorial/ConstrainedOptimizationGlobalNumerical.html "Mathematica Tutorial: Numerical Nonlinear Global Optimization."
+[libpng]: http://www.libpng.org/
+[libpng++]: http://www.nongnu.org/pngpp/
+[Eigen]: http://eigen.tuxfamily.org/
+[CMake]: https://cmake.org/
 
 
 ## See also

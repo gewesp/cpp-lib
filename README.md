@@ -323,7 +323,6 @@ Examples:
 - REMOVE: We no longer need the abc() function (use xyz() instead)
 - FIX: Fixed a bug in the uvw module causing the server to crash.
 
-## References
 
 [BOOST]: http://www.boost.org/
 [Cygwin]: http://www.cygwin.com/

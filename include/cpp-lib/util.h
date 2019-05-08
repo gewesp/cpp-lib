@@ -482,34 +482,38 @@ std::ostream& write_array(std::ostream& os, boost::multi_array<T, 2> const& A) {
 }
 
 
-//
-// A per-thread death class.
-//
+///
+/// A per-thread death class for fatal situations.  The purpose is to
+/// get a message across to the user through a variety of channels
+/// before exiting.  These channels are std::cout, std::cerr and a
+/// instance-specific channel that may be specified in the constructor
+/// and defaults to the syslog.
+///
 
 struct death {
 
-  death() : os( 0 ) {}
+  /// Constructs with an instance-specific channel of syslog.
+  death();
 
+  /// Constructs with an instance-specific channel of \a os.
   death( std::ostream* os ) : os( os ) {}
 
-  virtual ~death() { }
+  virtual ~death() {}
 
-  void set_output( std::ostream* os_ ) { os = os_ ; }
+  /// Changes the instance-specific channel to os_in.
+  void set_output( std::ostream* os_in ) { os = os_in ; }
 
-  // Exit method may be overridden by the user.
+  /// Exit method; May be overridden by the user.
   virtual void exit( int const code ) { std::exit( code ) ; }
 
-  //
-  // Try to write \a msg to os,
-  // std::cerr, std::clog, \a name in turn.
-  // Then call exit() with \a exit_code.  If \a name == "",
-  // the system will try to write to "CPP_LIB_DIE_OUTPUT".
-  //
-  // os is given in the constructor or set by set_output().
-  //
+  ///
+  /// Tries to write \a msg to the instance-specific channel,
+  /// std::cerr, std::clog and name.
+  /// If \a name == "", tries to write to "CPP_LIB_DIE_OUTPUT".
+  /// Finally, calls exit() with \a exit_code.
 
   void die(
-    std::string const& msg ,
+    std::string msg ,
     std::string name = "" ,
     int const exit_code = 1
   ) ;

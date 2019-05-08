@@ -36,6 +36,7 @@
 #include "cpp-lib/exception.h"
 
 #include "cpp-lib/detail/platform_wrappers.h"
+#include "cpp-lib/sys/syslogger.h"
 
 
 using namespace cpl::util ;
@@ -128,16 +129,33 @@ std::vector<std::string> cpl::util::split(
 }
 
 
+death::death()
+: os( nullptr )
+{}
 
 void cpl::util::death::die(
-  std::string const& msg ,
+  std::string msg ,
   std::string name ,
   int const exit_code
 ) {
 
-  if( os && *os        << msg << std::endl ) { goto suicide ; }
-  if(       std::cerr  << msg << std::endl ) { goto suicide ; }
-  if(       std::clog  << msg << std::endl ) { goto suicide ; }
+  using namespace cpl::util::log;
+
+  if( nullptr != os ) {
+    *os << prio::EMERG << msg << std::endl ;
+  } else {
+    try {
+      syslogger sl ;
+      sl << prio::EMERG << msg << std::endl ;
+    } catch ( std::exception const& e ) {
+      msg += "(Writing to syslog failed: " ;
+      msg += e.what()                      ;
+      msg += ")"                           ;
+    }
+  }
+
+  std::cerr << prio::EMERG << msg << std::endl;
+  std::clog << prio::EMERG << msg << std::endl;
 
   if( name == "" )
   { name = die_output_name() ; }
@@ -145,12 +163,10 @@ void cpl::util::death::die(
   {
     // If the following fails, we're really f**cked up :-)
     std::ofstream last_chance( name.c_str() ) ;
-    last_chance << msg << std::endl ;
+    last_chance << prio::EMERG << msg << std::endl ;
   }
 
-suicide:
   this->exit( exit_code ) ;
-
 }
 
 void cpl::util::die(

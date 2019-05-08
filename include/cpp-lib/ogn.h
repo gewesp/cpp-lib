@@ -135,8 +135,14 @@ struct q_construct {
   std::string from;
 };
 
-// Parses a q construct, returns true on success
-bool parse_q_construct(const std::string&, q_construct&);
+/// Parses a qAS construct, returns true on success
+bool parse_qas_construct(const std::string&, q_construct&);
+
+/// Deprecated, backwards compatibility only.  Use parse_qas_construct()
+/// instead.
+inline bool parse_q_construct(const std::string& s, q_construct& qc) {
+  return parse_qas_construct(s, qc);
+}
 
 // OGN station information:
 // - Network name
@@ -558,6 +564,9 @@ struct ddb_handler {
 // converting units as appropriate.
 // Returns true on success.
 //
+// When a 'new' (9/2018) aircraft line with :> is parsed, 
+// returns true but acft has an empty name.
+//
 // Example format:
 // ICA3D28CB>APRS,qAS,EDMC:/175426h4829.84N/01014.30E'353/122/A=002467 id053D28CB -078fpm +0.4rot 6.0dB 0e +2.3kHz gps2x2
 //
@@ -625,9 +634,10 @@ using aprs_parser = ddb_handler;
   
 // Parses an APRS line containing receiver station info 
 // and stores data in stat.
-// Returns true on success, 
-// CAUTION: When a 'new' (9/2018) station line with :> is parsed, 
-// returns true but an empty station data structure.
+// Returns true on success, false on failure.
+//
+// When a 'new' (9/2018) station line with :> is parsed, 
+// returns true but the station has an empty name.
 //
 // Example format:
 // LFLO>APRS,TCPIP*,qAC,GLIDERN2:/175435h4603.32NI00359.99E&/A=001020 CPU:0.6 RAM:340.6/492.2MB NTP:0.6ms/-30.5ppm +67.0C RF:+46-1.2ppm/+0.3dB

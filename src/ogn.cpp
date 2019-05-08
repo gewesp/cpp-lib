@@ -389,7 +389,7 @@ bool cpl::ogn::parse_aprs_station(
       ">%*[^,],TCPIP*,qAC,"
       "%40[^:]" // network? (seen: GLIDERN1, GLIDERN2)
       ":"
-      "%1[/>]"  // ":/": We have a lat/lon, ":>" Status info, no lat/lon
+      "%1[/>]"  // slash_or_greater ":/": We have a lat/lon, ":>" Status info, no lat/lon
       "%ld"     // HHMMSSh
       "h"       // zulu time
       "%lf"     // latitude
@@ -448,6 +448,7 @@ bool cpl::ogn::parse_aprs_station(
 
     return true;
 
+#if 0
     // DEAD_CODE
     // TODO: This should be parsed *without* lat/lon/alt when 
     // we have a :> message.
@@ -507,6 +508,8 @@ bool cpl::ogn::parse_aprs_station(
     }
 
     return true;
+#endif
+
   } else {
     // If we have ":>" and the first 4, we're happy but 
     // signal nothing parsed by setting name to ""
@@ -622,7 +625,7 @@ std::ostream& cpl::ogn::operator<<(
 
 // Method: Search for qAS.  If it's 3 entries before that, we have a relay,
 // otherwise we don't
-bool cpl::ogn::parse_q_construct(
+bool cpl::ogn::parse_qas_construct(
     const std::string& s, cpl::ogn::q_construct& q) {
   
   cpl::util::splitter spl(s, ',');
@@ -675,12 +678,13 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
   // Cross-check with id below and set ID type accordingly.
   char station_id_v[41] = "";
   char q_construct_v[81] = "";
+  char slash_or_greater[2] = "";
   char lon_v[21] = "";
   char NS[2] = "";
   char EW[2] = "";
 
   // Normal, special conversions
-  int constexpr n_normal  = 9;
+  int constexpr n_normal  = 10;
   int constexpr n_special = 11;
   char special[n_special][31];
 
@@ -692,14 +696,17 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
   const char* const format = 
       "%40[^>]"
       ">"
-      "%80[^:]"
-      ":/%ldh"
+      "%80[^:]"   // q_construct_v
+      ":"
+      "%1[/>]"    // slash_or_greater; ':/' or ':>'.  Only ':/' is supported.
+                  // The second results in an empty name.
+      "%ldh"
       "%lf"
-      "%1[NS]"  // north/south
-      "%*[/\\]" // separator, may be slash or backslash (!)
+      "%1[NS]"    // north/south
+      "%*[/\\]"   // separator, may be slash or backslash (!)
       "%20[0-9.]"
-      "%1[EW]"  // east/west
-      "%*c"      // z, ', ... (movement indicator?)
+      "%1[EW]"    // east/west
+      "%*c"       // z, ', ... (movement indicator?)
       "%10[^A]"  // course/speed, either "CCC/SSS/" or just "/" if not moving
       "A=%lf "   // altitude [ft]
       "%30s "
@@ -719,6 +726,7 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
       line.c_str(), format, 
       station_id_v,
       q_construct_v,
+      slash_or_greater,
       &hhmmss,
       &acft.second.pta.lat,
       NS,
@@ -738,9 +746,19 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
       special[9],
       special[10]);
 
-  q_construct q;
-  if (!parse_q_construct(q_construct_v, q)) {
+  if (conversions < 4) {
     return false;
+  }
+
+  q_construct q;
+  if (not parse_qas_construct(q_construct_v, q)) {
+    return false;
+  }
+
+  // Ignore ':>' lines with status info.
+  if ('>' == slash_or_greater[0]) {
+    acft.first = "";
+    return true;
   }
 
   // Want at least 6 'special' conversions.
@@ -1316,7 +1334,7 @@ void test_q(
     const std::string& from) {
   os << "Testing q construct: " << s << std::endl;
   cpl::ogn::q_construct q;
-  always_assert(parse_q_construct(s, q));
+  always_assert(parse_qas_construct(s, q));
   always_assert(q.tocall == tocall);
   always_assert(q.relay  == relay );
   always_assert(q.from   == from  );

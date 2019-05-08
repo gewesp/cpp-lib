@@ -343,6 +343,8 @@ Barton>OGNSDR,TCPIP*,qAC,GLIDERN2:>233133h v0.2.7.RPI-GPU CPU:1.0 RAM:204.3/970.
 OGN395F39>OGNT,qAS,Barton:/233135h5145.94N/00111.50W'000/000/A=000367 !W99! id07395F39 -019fpm +0.0rot 46.2dB 0e +2.9kHz gps5x7
 OGN395F39>OGNT,qAS,Barton:/233145h5145.94N/00111.50W'000/000/A=000361 !W99! id07395F39 -039fpm +0.0rot 47.5dB 0e +2.9kHz gps5x7
 OGN395F39>OGNT,qAS,Barton:/233155h5145.94N/00111.50W'000/000/A=000354 !W99! id07395F39 -058fpm +0.0rot 47.5dB 0e +2.9kHz gps5x7
+# This is a status message from a OGN tracker.  Not yet supported,
+# parsing returns structure with an empty name to avoid warning.
 OGN395F39>OGNT,qAS,Barton:>233207h h00 v00 9sat/2 107m 0.0hPa -0.2degC 0% 3.22V 14/-104.0dBm 0/min
 OGN395F39>OGNT,qAS,Barton:/233203h5145.94N/00111.50W'000/000/A=000348 !W99! id07395F39 -078fpm +0.0rot 46.8dB 0e +2.9kHz gps5x7
 

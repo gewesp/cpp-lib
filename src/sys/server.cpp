@@ -103,7 +103,9 @@ void connection_thread::operator()() {
   }
 
   } catch (std::exception const& e) {
-    sl << prio::ERR << e.what() << std::endl;
+    sl << prio::ERR << "In connection from " << c->peer()
+       << ": " 
+       << e.what() << std::endl;
   }
 }
 

@@ -20,6 +20,12 @@
 //
 // TODO:
 // * Server shutdown (needs a way to interrupt the acceptor---timeout?)
+// * More general, allow monitoring a server.  This could be done
+//   by a use count in the acceptor (and/or shared pointer; even a
+//   list of peer addresses is conceivable) and a monitoring thread
+//   which logs parameters once in a while.  The monitoring thread
+//   could then also terminate the server.
+//   This requires support in the network data structures.
 //
 
 #ifndef CPP_LIB_SYS_SERVER_H

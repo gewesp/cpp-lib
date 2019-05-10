@@ -34,6 +34,9 @@ struct table_statistics {
   /// Table name
   std::string name;
 
+  /// Table type (e.g. spatial index, simple list etc.)
+  std::string type;
+
   /// Number of items stored
   double size = 0;
 

@@ -22,7 +22,8 @@
 
 
 void cpl::db::write(std::ostream& os, const cpl::db::table_statistics& stats) {
-  os << "Memory consumption for table: " << stats.name << std::endl;
+  os << "Table " << stats.name 
+     << ": Type: " << stats.type << std::endl;
   os << "Table " << stats.name 
      << ": Number of items: " << stats.size << std::endl;
   os << "Table " << stats.name 

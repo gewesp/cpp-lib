@@ -12,7 +12,7 @@
 (WARNING) Ignoring airport: LSZD; type = closed
 (WARNING) Ignoring airport: LSZY; type = closed
 (NOTICE) Airport data: Read 754 entries
-Memory consumption for table: Airport database data/input/airfields.csv
+Table Airport database data/input/airfields.csv: Type: GEODB (ECEF based; optimized for planetary surface)
 Table Airport database data/input/airfields.csv: Number of items: 754
 Table Airport database data/input/airfields.csv: Estimated number of bytes: 69368
 Table Airport database data/input/airfields.csv: Precise number of bytes: (not computed)

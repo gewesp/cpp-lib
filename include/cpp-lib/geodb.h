@@ -213,6 +213,7 @@ cpl::db::table_statistics
 cpl::gnss::geodb<T, STRAT>::get_table_statistics() const {
   cpl::db::table_statistics ret;
   ret.name = name();
+  ret.type = "GEODB (ECEF based; optimized for planetary surface)";
   ret.size = size();
   ret.bytes_estimate = bytes_estimate();
   // Not computed

@@ -375,6 +375,7 @@ template<typename T1, typename T2, typename T3, typename T4>
 cpl::db::table_statistics spatial_index<T1, T2, T3, T4>::get_table_statistics() const {
   cpl::db::table_statistics ret;
   ret.name = name_;
+  ret.type = "SPATIAL_INDEX (two dimensional latitude/longitude)";
   ret.size = size();
   ret.bytes_estimate = bytes_per_entry_ * size();
   ret.bytes_precise = -1;

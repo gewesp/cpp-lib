@@ -307,7 +307,8 @@ cpl::ogn::ddb_handler::~ddb_handler() {
 cpl::db::table_statistics
 cpl::ogn::get_table_statistics(const cpl::ogn::vehicle_db& vdb) {
   cpl::db::table_statistics ret;
-  ret.name = "OGN Device Database";
+  ret.name = "(unnamed)";
+  ret.type = "OGN Device Database";
 
   ret.size = vdb.size();
   

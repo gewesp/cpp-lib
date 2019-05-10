@@ -23,7 +23,9 @@
 #include <iostream>
 #include <string>
 
+#include "cpp-lib/assert.h"
 #include "cpp-lib/bg-typedefs.h"
+#include "cpp-lib/database.h"
 #include "cpp-lib/gnss.h"
 #include "cpp-lib/math-util.h"
 #include "cpp-lib/matrix-wrapper.h"
@@ -72,19 +74,27 @@ struct geodb {
   // Creates a database with a given name and radius (default to Earth).
   // The DB name should reflect the contents or purpose of the DB.
   geodb(std::string const& name = "(unnamed)",
-        double const& R = cpl::units::earth_radius())
+        const double R = cpl::units::earth_radius())
   : dbname_(name),
     radius_(R)
   {}
 
-  // Returns planet radius [m]
+  /// @return Planet radius [m]
   double radius() const { return radius_; }
 
-  // Returns database name
-  double name  () const { return dbname_; }
+  /// @return Database name
+  const std::string& name() const { return dbname_; }
 
-  // Returns number of stored DB elements
+  /// @return Average bytes per entry
+  double bytes_estimate() const { return bytes_estimate_; }
+
+  /// @return Number of stored DB elements
   long size() const { return tr.size(); }
+
+  /// @return Table statistics (only with estimate), based on
+  /// bytes_per_entry constructor parameter
+  /// @todo As of 5/2019, this completely ignores admin data from the r-tree.
+  cpl::db::table_statistics get_table_statistics() const;
 
   // Adds a the given element
   // CAUTION: Being ECEF-based, the DB *does* take altitude into account.
@@ -107,6 +117,7 @@ struct geodb {
 private:
   std::string dbname_;
   double radius_;
+  double bytes_estimate_;
 
   tree_type tr;
 };
@@ -129,6 +140,9 @@ struct airport_data {
   // TODO: Runway direction(s)
 };
 
+/// @return Approximate number of bytes used by @a ad
+long memory_consumption(const airport_data& ad);
+
 typedef geodb<airport_data> airport_db;
 
 // Read an airport DB from a CSV file.
@@ -141,10 +155,11 @@ airport_db airport_db_from_csv(
     std::string const& filename,
     std::ostream* log = NULL);
 
-// Reads an airport DB from an openAIP file, adding to adb.
-// capitalize: Capitalize names (ICAO codes are always
-// capitalized)
-// Blacklist: Exclude these names or ICAO codes from the DB.
+/// Reads an airport DB from an openAIP file, adding to adb.
+/// capitalize: Capitalize names (ICAO codes are always
+/// capitalized)
+/// Blacklist: Exclude these names or ICAO codes from the DB.
+/// @return Estimated number of bytes in DB.
 void airport_db_from_openaip(
     airport_db& adb,
     std::string const& filename,
@@ -188,6 +203,22 @@ void cpl::gnss::geodb<T, STRAT>::add_element(
   auto const p = cpl::math::to_point_3_t(x);
 
   tr.insert(std::make_pair(p, v));
+
+  bytes_estimate_ += memory_consumption(lla);
+  bytes_estimate_ += memory_consumption(v);
+}
+
+template <typename T, typename STRAT>
+cpl::db::table_statistics
+cpl::gnss::geodb<T, STRAT>::get_table_statistics() const {
+  cpl::db::table_statistics ret;
+  ret.name = name();
+  ret.size = size();
+  ret.bytes_estimate = bytes_estimate();
+  // Not computed
+  ret.bytes_precise = -1;
+
+  return ret;
 }
 
 template <typename T, typename STRAT>

@@ -21,6 +21,7 @@
 
 #include "cpp-lib/geodb.h"
 
+#include "cpp-lib/memory.h"
 #include "cpp-lib/units.h"
 #include "cpp-lib/util.h"
 #include "cpp-lib/sys/syslogger.h"
@@ -51,14 +52,19 @@ unsigned type_from_openaip(std::string const& t) {
   }
 }
 
-    
+long cpl::gnss::memory_consumption(const cpl::gnss::airport_data& ad) {
+  return   cpl::util::memory_consumption(ad.name)
+         + cpl::util::memory_consumption(ad.icao)
+         + cpl::util::memory_consumption(ad.type)
+         ;
+}
+
 void cpl::gnss::airport_db_from_openaip(
     cpl::gnss::airport_db& ret,
     std::string const& filename,
     bool const capitalize,
     std::ostream* const sl,
     std::set<std::string> const& blacklist) {
-
   if (sl) {
     *sl << prio::NOTICE << "Airport data: Reading from " 
         << filename
@@ -203,7 +209,7 @@ cpl::gnss::airport_db_from_csv(
   }
 
   auto is = cpl::util::file::open_read(filename);
-  cpl::gnss::airport_db ret;
+  cpl::gnss::airport_db ret("Airport database " + filename);
 
   std::string line;
   long n = 0;

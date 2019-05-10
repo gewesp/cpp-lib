@@ -201,6 +201,7 @@ void test_airport_db(
     std::string const& query_filename,
     std::ostream& os) {
   auto const adb = cpl::gnss::airport_db_from_csv(filename, &os);
+  write(os, adb.get_table_statistics());
   run_queries(adb, query_filename, os);
 }
 

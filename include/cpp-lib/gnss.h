@@ -358,6 +358,10 @@ inline double wgs84_from_msl(lat_lon_alt const& lla) {
   return lla.alt + geoid_height(lla);
 }
 
+inline long memory_consumption(const lat_lon_alt& lla) {
+  return sizeof(lla);
+}
+
 } // namespace gnss
 
 namespace math {

@@ -22,6 +22,7 @@
 #define CPP_SPATIAL_INDEX_H
 
 #include "cpp-lib/bg-typedefs.h"
+#include "cpp-lib/database.h"
 
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/point.hpp>
@@ -283,7 +284,7 @@ template<typename ID, typename T, typename TR = spatial_index_traits<T>,
   // primary_iterator, e.g. std::back_inserter<std::vector<primary_iterator> >
   template<typename I>
   void nearest(point const& p, I oit, 
-              long const max_results) {
+              long const max_results) const {
     validate("before nearest");
     // The query result iterates over tree elements from which we extract
     // the back references to the primary index.

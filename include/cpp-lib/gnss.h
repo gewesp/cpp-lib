@@ -362,6 +362,10 @@ inline long memory_consumption(const lat_lon_alt& lla) {
   return sizeof(lla);
 }
 
+inline long memory_consumption(const position_time& pt) {
+  return sizeof(pt);
+}
+
 } // namespace gnss
 
 namespace math {

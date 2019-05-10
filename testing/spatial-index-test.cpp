@@ -19,6 +19,7 @@
 
 #include "cpp-lib/container-util.h"
 #include "cpp-lib/gnss.h"
+#include "cpp-lib/memory.h"
 #include "cpp-lib/spatial-index.h"
 #include "cpp-lib/util.h"
 
@@ -147,6 +148,8 @@ void test_index(
   std::uniform_real_distribution<double> U(-max_xy, max_xy);
   std::uniform_int_distribution<int> I(0, max_ids - 1);
 
+  write(os, idx.get_table_statistics());
+
   std::vector<my_index::primary_iterator> near;
   for (long j = 0; j < repeat; ++j) {
     double size_sum = 0;
@@ -180,8 +183,8 @@ void test_index(
     os << interval << " update/query pairs; elements: " << idx.size()
        << "; average result set size: " << size_sum / interval
        << std::endl;
+    write(os, idx.get_table_statistics());
   }
-
 }
 
 // Create an index of n random points and perform n_queries nearest
@@ -274,7 +277,16 @@ int main() {
     // [-89, 89]^2, 1 degree query box -> 13.5 average result set size
     // Timing: About 10 seconds on MacBook Pro as of February 2015
     std::cout << "Arbitrary result set size\n";
-    my_index idx;
+    my_index idx("Test table 2");
+
+    // id_type is a builtin type, so use the default implementation
+    // of memory_consumption().
+    // value_type is user defined and uses argument-dependent
+    // lookup (Koenig lookup).
+    idx.set_bytes_per_entry(
+          cpl::util::memory_consumption(id_type())
+        +            memory_consumption(value_type()));
+
     test_index(std::cout, idx, 8, 100000, 100000, 89.0, 1.0, 
                std::numeric_limits<long>::max());
     erase_all(idx);

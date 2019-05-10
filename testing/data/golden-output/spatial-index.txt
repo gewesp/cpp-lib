@@ -1,25 +1,105 @@
 Testing dupes
 Crash regression test
+Memory consumption for table: (unnamed)
+Table (unnamed): Number of items: 0
+Table (unnamed): Estimated number of bytes: 0
+Table (unnamed): Precise number of bytes: (not computed)
 30 update/query pairs; elements: 30; average result set size: 1
+Memory consumption for table: (unnamed)
+Table (unnamed): Number of items: 30
+Table (unnamed): Estimated number of bytes: 0
+Table (unnamed): Precise number of bytes: (not computed)
+Memory consumption for table: (unnamed)
+Table (unnamed): Number of items: 0
+Table (unnamed): Estimated number of bytes: 0
+Table (unnamed): Precise number of bytes: (not computed)
 1 update/query pairs; elements: 1; average result set size: 1
+Memory consumption for table: (unnamed)
+Table (unnamed): Number of items: 1
+Table (unnamed): Estimated number of bytes: 0
+Table (unnamed): Precise number of bytes: (not computed)
 Frequent updates of few IDs
 OK
 Arbitrary result set size
-100000 update/query pairs; elements: 63211; average result set size: 5.62742
-100000 update/query pairs; elements: 86681; average result set size: 10.6539
-100000 update/query pairs; elements: 95061; average result set size: 12.4798
-100000 update/query pairs; elements: 98279; average result set size: 13.1721
-100000 update/query pairs; elements: 99351; average result set size: 13.427
-100000 update/query pairs; elements: 99752; average result set size: 13.4918
-100000 update/query pairs; elements: 99908; average result set size: 13.5281
-100000 update/query pairs; elements: 99967; average result set size: 13.5357
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 0
+Table Test table 2: Estimated number of bytes: 0
+Table Test table 2: Precise number of bytes: (not computed)
+100000 update/query pairs; elements: 63183; average result set size: 5.60634
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 63183
+Table Test table 2: Estimated number of bytes: 2.52732e+06
+Table Test table 2: Precise number of bytes: (not computed)
+100000 update/query pairs; elements: 86369; average result set size: 10.6349
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 86369
+Table Test table 2: Estimated number of bytes: 3.45476e+06
+Table Test table 2: Precise number of bytes: (not computed)
+100000 update/query pairs; elements: 94974; average result set size: 12.4583
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 94974
+Table Test table 2: Estimated number of bytes: 3.79896e+06
+Table Test table 2: Precise number of bytes: (not computed)
+100000 update/query pairs; elements: 98161; average result set size: 13.1583
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 98161
+Table Test table 2: Estimated number of bytes: 3.92644e+06
+Table Test table 2: Precise number of bytes: (not computed)
+100000 update/query pairs; elements: 99306; average result set size: 13.3923
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 99306
+Table Test table 2: Estimated number of bytes: 3.97224e+06
+Table Test table 2: Precise number of bytes: (not computed)
+100000 update/query pairs; elements: 99752; average result set size: 13.5179
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 99752
+Table Test table 2: Estimated number of bytes: 3.99008e+06
+Table Test table 2: Precise number of bytes: (not computed)
+100000 update/query pairs; elements: 99917; average result set size: 13.5187
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 99917
+Table Test table 2: Estimated number of bytes: 3.99668e+06
+Table Test table 2: Precise number of bytes: (not computed)
+100000 update/query pairs; elements: 99971; average result set size: 13.548
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 99971
+Table Test table 2: Estimated number of bytes: 3.99884e+06
+Table Test table 2: Precise number of bytes: (not computed)
 Result size: Maximum 3
-100000 update/query pairs; elements: 63211; average result set size: 2.72928
-100000 update/query pairs; elements: 86681; average result set size: 2.9988
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 0
+Table Test table 2: Estimated number of bytes: 0
+Table Test table 2: Precise number of bytes: (not computed)
+100000 update/query pairs; elements: 63183; average result set size: 2.72686
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 63183
+Table Test table 2: Estimated number of bytes: 2.52732e+06
+Table Test table 2: Precise number of bytes: (not computed)
+100000 update/query pairs; elements: 86369; average result set size: 2.99869
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 86369
+Table Test table 2: Estimated number of bytes: 3.45476e+06
+Table Test table 2: Precise number of bytes: (not computed)
 Avg. result size: 250.5 (only even time values)
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 0
+Table Test table 2: Estimated number of bytes: 0
+Table Test table 2: Precise number of bytes: (not computed)
 1000 update/query pairs; elements: 1000; average result set size: 250.5
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 1000
+Table Test table 2: Estimated number of bytes: 40000
+Table Test table 2: Precise number of bytes: (not computed)
 Avg. result size: ~6 (only even time values)
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 0
+Table Test table 2: Estimated number of bytes: 0
+Table Test table 2: Precise number of bytes: (not computed)
 1000 update/query pairs; elements: 1000; average result set size: 5.97
+Memory consumption for table: Test table 2
+Table Test table 2: Number of items: 1000
+Table Test table 2: Estimated number of bytes: 40000
+Table Test table 2: Precise number of bytes: (not computed)
 Creating 100000 random points
 Performing 10000 k-nearest-neighbor queries with k = 100
 Creating 100000 random points

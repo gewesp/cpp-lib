@@ -21,6 +21,7 @@
 #ifndef CPP_SPATIAL_INDEX_H
 #define CPP_SPATIAL_INDEX_H
 
+#include "cpp-lib/assert.h"
 #include "cpp-lib/bg-typedefs.h"
 #include "cpp-lib/database.h"
 
@@ -118,6 +119,11 @@ template<typename ID, typename T, typename TR = spatial_index_traits<T>,
   // The tree type used for the spatial index
   typedef boost::geometry::index::rtree<tree_element, STRAT> tree_type;
 
+  /// Constructor.  Sets table name.
+  spatial_index(const std::string& name = "(unnamed)")
+  : name_(name)
+  {}
+
   // Validate structure, currently size only
   void validate(char const* const msg) const {
     if (tr.size() != map.size()) {
@@ -136,6 +142,9 @@ template<typename ID, typename T, typename TR = spatial_index_traits<T>,
   bool empty() const {
     return map.empty();
   }
+
+  /// @return Table statistics
+  cpl::db::table_statistics get_table_statistics() const;
 
   // Support for traversal of the whole primary index
   // TODO: This is a hack as it allows clients to mess up invariants!
@@ -332,6 +341,13 @@ template<typename ID, typename T, typename TR = spatial_index_traits<T>,
     map.clear();
   }
 
+  /// Sets estimated number of bytes per entry for table
+  /// statistics calculation
+  void set_bytes_per_entry(double b) {
+    always_assert(b >= 0);
+    bytes_per_entry_ = b;
+  }
+
 private:
   // Insert value and back reference into tree
   void insert_tree(value_type const& p,
@@ -349,8 +365,22 @@ private:
 
   tree_type tr;
   id_map map;
+
+  std::string name_;
+  double bytes_per_entry_ = 0;
 };
 
+
+template<typename T1, typename T2, typename T3, typename T4>
+cpl::db::table_statistics spatial_index<T1, T2, T3, T4>::get_table_statistics() const {
+  cpl::db::table_statistics ret;
+  ret.name = name_;
+  ret.size = size();
+  ret.bytes_estimate = bytes_per_entry_ * size();
+  ret.bytes_precise = -1;
+
+  return ret;
+}
 
 } // end namespace math
 

@@ -23,9 +23,12 @@
 
 void cpl::db::write(std::ostream& os, const cpl::db::table_statistics& stats) {
   os << "Memory consumption for table: " << stats.name << std::endl;
-  os << "Number of items: " << stats.size << std::endl;
-  os << "Estimated number of bytes: " << stats.bytes_estimate << std::endl;
-  os << "Precise number of bytes: ";
+  os << "Table " << stats.name 
+     << ": Number of items: " << stats.size << std::endl;
+  os << "Table " << stats.name 
+     << ": Estimated number of bytes: " << stats.bytes_estimate << std::endl;
+  os << "Table " << stats.name 
+     << ": Precise number of bytes: ";
   if (stats.bytes_precise >= 0) {
     os << stats.bytes_precise << std::endl;
   } else {

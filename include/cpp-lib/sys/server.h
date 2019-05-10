@@ -30,7 +30,7 @@
 #include <boost/optional.hpp>
 
 #include <functional>
-#include <iostream>
+#include <iosfwd>
 
 
 namespace cpl {

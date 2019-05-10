@@ -418,8 +418,11 @@ void ddb_stats(std::ostream& os, std::string const& source) {
                           || "DF" == v.id.substr(0, 2));
         });
 
+  const auto table_stats = cpl::ogn::get_table_statistics(vdb);
+
   os << "Open Glider Network DDB statistics" << std::endl;
   os << "Date: " << cpl::util::format_datetime(cpl::util::utc()) << std::endl;
+  cpl::db::write(os, table_stats);
   os << "Total number of registered devices: " << vdb.size() << std::endl;
   os << "Number of FLARM IDs (D{DEF}xxxx): " 
      << n_flarm_from_id << std::endl; 

@@ -50,6 +50,7 @@
 #include "cpp-lib/assert.h"
 #include "cpp-lib/http.h"
 #include "cpp-lib/math-util.h"
+#include "cpp-lib/memory.h"
 #include "cpp-lib/registry.h"
 #include "cpp-lib/units.h"
 #include "cpp-lib/util.h"
@@ -301,6 +302,34 @@ cpl::ogn::ddb_handler::~ddb_handler() {
         << std::endl;
     query_thread.join();
   }
+}
+
+cpl::db::table_statistics
+cpl::ogn::get_table_statistics(const cpl::ogn::vehicle_db& vdb) {
+  cpl::db::table_statistics ret;
+  ret.name = "OGN Device Database";
+
+  ret.size = vdb.size();
+  
+  // Iterate using ID index
+  for (const auto& el : by_id(vdb)) {
+    ret.bytes_precise += cpl::util::memory_consumption(el.id);
+
+    const auto& data = el.data;
+    ret.bytes_precise +=
+        cpl::util::memory_consumption(data.name1);
+    ret.bytes_precise +=
+        cpl::util::memory_consumption(data.name2);
+    ret.bytes_precise +=
+        cpl::util::memory_consumption(data.type);
+    ret.bytes_precise +=
+        cpl::util::memory_consumption(data.tracking);
+    ret.bytes_precise +=
+        cpl::util::memory_consumption(data.id_type_probably_wrong);
+  }
+
+  ret.bytes_estimate = ret.bytes_precise;
+  return ret;
 }
 
 void cpl::ogn::ddb_handler::set_vdb(

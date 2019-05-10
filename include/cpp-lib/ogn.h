@@ -31,6 +31,7 @@
 #ifndef CPP_LIB_OGN_H
 #define CPP_LIB_OGN_H
 
+#include "cpp-lib/database.h"
 #include "cpp-lib/gnss.h"
 #include "cpp-lib/map.h"
 #include "cpp-lib/math-util.h"
@@ -489,6 +490,14 @@ inline vdb_by_name1 const& by_name1(vehicle_db const& vdb)
 { return vdb.get<tag_name1>(); }
 inline vdb_by_name2 const& by_name2(vehicle_db const& vdb)
 { return vdb.get<tag_name2>(); }
+
+////////////////////////////////////////////////////////////////////////
+// Statistics
+////////////////////////////////////////////////////////////////////////
+
+/// @return Table statistics (sizes) for the DB
+cpl::db::table_statistics
+get_table_statistics(const vehicle_db&);
 
 ////////////////////////////////////////////////////////////////////////
 // API

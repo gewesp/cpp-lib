@@ -18,6 +18,8 @@
 // Exception types extending the C++ standard exceptions:
 //   http://en.cppreference.com/w/cpp/error/exception
 //
+// Low-level API.  Prefer the functions in error.h instead.
+//
 
 
 #ifndef CPP_LIB_EXCEPTION_H

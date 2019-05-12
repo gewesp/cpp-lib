@@ -42,7 +42,7 @@
 #include <boost/multi_index/global_fun.hpp>
 #include <boost/multi_index/hashed_index.hpp>
 
-#include <iostream>
+#include <iosfwd>
 #include <thread>
 
 namespace cpl {
@@ -609,10 +609,9 @@ bool parse_aprs_aircraft(
   // i.e. set its callsign from the ID.
   void apply(aircraft_rx_info_and_name&) const;
 
-  // Writes ID, name1 or name2 into a JSON array on the given stream,
-  // which is a stringstream to avoid deadlocks.
+  // Writes ID, name1 or name2 into a JSON array on the given stream.
   // which == 1: name1, which == 2: name2, which == 3: ID, 
-  void write_names_json(std::ostringstream&, int which = 1) const;
+  void write_names_json(std::ostream&, int which = 1) const;
 
   // Returns the entry associated with the given qualified id.  If
   // not found, throws or returns a default-constructed vehicle_data.

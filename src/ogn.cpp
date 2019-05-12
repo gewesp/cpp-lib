@@ -973,7 +973,7 @@ void cpl::ogn::ddb_handler::apply(
 }
 
 void cpl::ogn::ddb_handler::write_names_json(
-    std::ostringstream& oss,
+    std::ostream& oss,
     const int which) const {
   oss << "[\n";
   cpl::util::verify_bounds(which, "which parameter", 1, 3);

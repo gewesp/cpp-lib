@@ -215,9 +215,17 @@ void cpl::util::run_server(
         server_thread st(std::move(acc), handler, welcome, params);
 
         if (params.background) {
+          *sl << prio::NOTICE 
+              << "Starting server in background and detaching..." 
+              << std::endl;
           std::thread t(std::move(st));
           t.detach();
         } else {
+          // TODO: Change once server termination is implemented
+          *sl << prio::NOTICE 
+              << "Starting server in foreground and looping forever "
+                 "to accept connections..." 
+              << std::endl;
           st();
         }
         break;

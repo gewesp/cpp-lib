@@ -18,6 +18,8 @@
 
 #include "cpp-lib/database.h"
 
+#include "cpp-lib/math-util.h"
+
 #include <iostream>
 
 
@@ -28,10 +30,24 @@ void cpl::db::write(std::ostream& os, const cpl::db::table_statistics& stats) {
      << ": Number of items: " << stats.size << std::endl;
   os << "Table " << stats.name 
      << ": Estimated number of bytes: " << stats.bytes_estimate << std::endl;
+  os << "Table " << stats.name
+     << ": Estimated number of bytes per item: "
+     << cpl::math::safe_divide(stats.bytes_estimate, stats.size)
+     << std::endl;
+
   os << "Table " << stats.name 
      << ": Precise number of bytes: ";
   if (stats.bytes_precise >= 0) {
     os << stats.bytes_precise << std::endl;
+  } else {
+    os << "(not computed)" << std::endl;
+  }
+
+  os << "Table " << stats.name
+     << ": Precise number of bytes per item: ";
+  if (stats.bytes_precise >= 0) {
+    os << cpl::math::safe_divide(stats.bytes_precise, stats.size)
+       << std::endl;
   } else {
     os << "(not computed)" << std::endl;
   }

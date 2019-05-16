@@ -294,6 +294,15 @@ struct aircraft_rx_info {
   rx_info rx;
 };
 
+/// @return Estimated memory consumption [bytes]
+long memory_consumption(const vehicle_data&    );
+/// @return Estimated memory consumption [bytes]
+long memory_consumption(const versions&        );
+/// @return Estimated memory consumption [bytes]
+long memory_consumption(const rx_info&         );
+/// @return Estimated memory consumption [bytes]
+long memory_consumption(const aircraft_rx_info&);
+
 // Parameters for thermal detection from tracked gliders
 struct thermal_detector_params {
   thermal_detector_params(int const method);

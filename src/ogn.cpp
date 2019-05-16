@@ -1354,6 +1354,46 @@ void cpl::ogn::update(cpl::ogn::thermal_detector_params const& params,
   }
 }
 
+long cpl::ogn::memory_consumption(const cpl::ogn::vehicle_data& d) {
+  return   cpl::util::memory_consumption(d.name1)
+         + cpl::util::memory_consumption(d.name2)
+         + cpl::util::memory_consumption(d.type )
+ 
+         + cpl::util::memory_consumption(d.tracking)
+         + cpl::util::memory_consumption(d.identify)
+         + cpl::util::memory_consumption(d.id_type_probably_wrong)
+         ;
+}
+
+long cpl::ogn::memory_consumption(const versions& v) {
+  return   cpl::util::memory_consumption(v.hardware)
+         + cpl::util::memory_consumption(v.software)
+         ;
+}
+
+long cpl::ogn::memory_consumption(const rx_info& r) {
+  return   cpl::util::memory_consumption(r.received_by)
+         + cpl::util::memory_consumption(r.rssi)
+         + cpl::util::memory_consumption(r.frequency_deviation)
+         + cpl::util::memory_consumption(r.errors)
+         + cpl::util::memory_consumption(r.is_relayed)
+         ;
+}
+
+long cpl::ogn::memory_consumption(const aircraft_rx_info& a) {
+  return   cpl::util::memory_consumption(a.id_type)
+         + cpl::util::memory_consumption(a.vehicle_type)
+         + cpl::util::memory_consumption(a.process)
+         + cpl::util::memory_consumption(a.stealth)
+         +            memory_consumption(a.ver)
+         +            memory_consumption(a.data)
+         + cpl::util::memory_consumption(a.pta)
+         + cpl::util::memory_consumption(a.mot)
+         + cpl::util::memory_consumption(a.baro_alt)
+         +            memory_consumption(a.rx)
+         ;
+}
+
 namespace {
 
 void test_q(
@@ -1398,4 +1438,11 @@ void cpl::ogn::unittests(std::ostream& os) {
 
   test_q(os, "OGFLARM-1,qAS,LFLE", "OGFLARM-1", "", "LFLE");
   test_q(os, "APRS,RELAY*,qAS,EPLR", "APRS", "RELAY*", "EPLR");
+
+  os << "Memory consumption of empty vehicle_data: "
+     << cpl::ogn::memory_consumption(cpl::ogn::vehicle_data())
+     << std::endl;
+  os << "Memory consumption of aircraft_rx_info: "
+     << cpl::ogn::memory_consumption(cpl::ogn::aircraft_rx_info())
+     << std::endl;
 }

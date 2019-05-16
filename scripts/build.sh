@@ -13,5 +13,5 @@ rm -rf build CMakeCache.txt CMakeFiles/
 mkdir build
 cd build
 echo "Configuring for $build_type ..."
-cmake -D CMAKE_CXX_COMPILER=clang++ -D CMAKE_BUILD_TYPE=$build_type ..
+cmake -D CMAKE_CXX_COMPILER=clang++-6.0 -D CMAKE_BUILD_TYPE=$build_type ..
 make -j6

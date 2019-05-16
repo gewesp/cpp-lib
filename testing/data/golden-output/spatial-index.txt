@@ -3,103 +3,143 @@ Crash regression test
 Table (unnamed): Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table (unnamed): Number of items: 0
 Table (unnamed): Estimated number of bytes: 0
+Table (unnamed): Estimated number of bytes per item: 0
 Table (unnamed): Precise number of bytes: (not computed)
+Table (unnamed): Precise number of bytes per item: (not computed)
 30 update/query pairs; elements: 30; average result set size: 1
 Table (unnamed): Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table (unnamed): Number of items: 30
 Table (unnamed): Estimated number of bytes: 0
+Table (unnamed): Estimated number of bytes per item: 0
 Table (unnamed): Precise number of bytes: (not computed)
+Table (unnamed): Precise number of bytes per item: (not computed)
 Table (unnamed): Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table (unnamed): Number of items: 0
 Table (unnamed): Estimated number of bytes: 0
+Table (unnamed): Estimated number of bytes per item: 0
 Table (unnamed): Precise number of bytes: (not computed)
+Table (unnamed): Precise number of bytes per item: (not computed)
 1 update/query pairs; elements: 1; average result set size: 1
 Table (unnamed): Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table (unnamed): Number of items: 1
 Table (unnamed): Estimated number of bytes: 0
+Table (unnamed): Estimated number of bytes per item: 0
 Table (unnamed): Precise number of bytes: (not computed)
+Table (unnamed): Precise number of bytes per item: (not computed)
 Frequent updates of few IDs
 OK
 Arbitrary result set size
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 0
 Table Test table 2: Estimated number of bytes: 0
+Table Test table 2: Estimated number of bytes per item: 0
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 100000 update/query pairs; elements: 63183; average result set size: 5.60634
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 63183
 Table Test table 2: Estimated number of bytes: 2.52732e+06
+Table Test table 2: Estimated number of bytes per item: 40
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 100000 update/query pairs; elements: 86369; average result set size: 10.6349
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 86369
 Table Test table 2: Estimated number of bytes: 3.45476e+06
+Table Test table 2: Estimated number of bytes per item: 40
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 100000 update/query pairs; elements: 94974; average result set size: 12.4583
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 94974
 Table Test table 2: Estimated number of bytes: 3.79896e+06
+Table Test table 2: Estimated number of bytes per item: 40
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 100000 update/query pairs; elements: 98161; average result set size: 13.1583
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 98161
 Table Test table 2: Estimated number of bytes: 3.92644e+06
+Table Test table 2: Estimated number of bytes per item: 40
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 100000 update/query pairs; elements: 99306; average result set size: 13.3923
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 99306
 Table Test table 2: Estimated number of bytes: 3.97224e+06
+Table Test table 2: Estimated number of bytes per item: 40
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 100000 update/query pairs; elements: 99752; average result set size: 13.5179
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 99752
 Table Test table 2: Estimated number of bytes: 3.99008e+06
+Table Test table 2: Estimated number of bytes per item: 40
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 100000 update/query pairs; elements: 99917; average result set size: 13.5187
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 99917
 Table Test table 2: Estimated number of bytes: 3.99668e+06
+Table Test table 2: Estimated number of bytes per item: 40
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 100000 update/query pairs; elements: 99971; average result set size: 13.548
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 99971
 Table Test table 2: Estimated number of bytes: 3.99884e+06
+Table Test table 2: Estimated number of bytes per item: 40
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 Result size: Maximum 3
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 0
 Table Test table 2: Estimated number of bytes: 0
+Table Test table 2: Estimated number of bytes per item: 0
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 100000 update/query pairs; elements: 63183; average result set size: 2.72686
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 63183
 Table Test table 2: Estimated number of bytes: 2.52732e+06
+Table Test table 2: Estimated number of bytes per item: 40
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 100000 update/query pairs; elements: 86369; average result set size: 2.99869
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 86369
 Table Test table 2: Estimated number of bytes: 3.45476e+06
+Table Test table 2: Estimated number of bytes per item: 40
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 Avg. result size: 250.5 (only even time values)
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 0
 Table Test table 2: Estimated number of bytes: 0
+Table Test table 2: Estimated number of bytes per item: 0
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 1000 update/query pairs; elements: 1000; average result set size: 250.5
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 1000
 Table Test table 2: Estimated number of bytes: 40000
+Table Test table 2: Estimated number of bytes per item: 40
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 Avg. result size: ~6 (only even time values)
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 0
 Table Test table 2: Estimated number of bytes: 0
+Table Test table 2: Estimated number of bytes per item: 0
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 1000 update/query pairs; elements: 1000; average result set size: 5.97
 Table Test table 2: Type: SPATIAL_INDEX (two dimensional latitude/longitude)
 Table Test table 2: Number of items: 1000
 Table Test table 2: Estimated number of bytes: 40000
+Table Test table 2: Estimated number of bytes per item: 40
 Table Test table 2: Precise number of bytes: (not computed)
+Table Test table 2: Precise number of bytes per item: (not computed)
 Creating 100000 random points
 Performing 10000 k-nearest-neighbor queries with k = 100
 Creating 100000 random points

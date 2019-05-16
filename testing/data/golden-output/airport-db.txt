@@ -16,8 +16,8 @@ Table Airport database data/input/airfields.csv: Type: GEODB (ECEF based; optimi
 Table Airport database data/input/airfields.csv: Number of items: 754
 Table Airport database data/input/airfields.csv: Estimated number of bytes: 69368
 Table Airport database data/input/airfields.csv: Estimated number of bytes per item: 92
-Table Airport database data/input/airfields.csv: Precise number of bytes: (not computed)
-Table Airport database data/input/airfields.csv: Precise number of bytes per item: (not computed)
+Table Airport database data/input/airfields.csv: Precise number of bytes: 69368
+Table Airport database data/input/airfields.csv: Precise number of bytes per item: 92
 query: 47 8 800; nearest: LSPG/1; alt: 464.82; dist: 21849.67314
 query: 47.649445 8.387971 800; nearest: LSPF/1; alt: 462.9912; dist: 11386.54198
 query: 47.148548 9.043032 400; nearest: LSZX/1; alt: 416.052; dist: 2591.731783

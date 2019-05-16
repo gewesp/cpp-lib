@@ -47,16 +47,16 @@ namespace util {
 /// @return Estimate of memory used by the given object
 template <typename T>
 long memory_consumption(const T& x) {
-  if (std::is_trivially_copyable<T>::value) {
+  if constexpr(std::is_trivially_copyable<T>::value) {
     return sizeof(T);
+  } else if constexpr(std::is_same<typename std::remove_cv<T>::type, std::string>::value) {
+    return ::cpl::detail_::memory_consumption_overloaded(x);
   } else {
+    // Doesn't work ... Did the committee not consider static_assert
+    // in conjunction with constexpr if()?
+    // static_assert(false, "memory_consumption() called for unsupported type");
     always_assert(not "memory_consumption() called for unsupported type");
   }
-}
-
-/// @return Estimate of memory used by the given string
-template <> inline long memory_consumption<std::string>(const std::string& x) {
-  return ::cpl::detail_::memory_consumption_overloaded(x);
 }
 
 /// @return Estimate of memory consumption for containers (slow)

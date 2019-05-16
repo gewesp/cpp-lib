@@ -142,10 +142,10 @@ meaningful `what()` message.
 
 ## Supported platforms
 
-  Cpp-lib is written in ISO C++ and makes use of C++14 features.
+  Cpp-lib is written in ISO C++ and makes use of C++17 features.
 We recommend clang++ to compile cpp-lib.
 
-- clang++: Based on LLVM 3.5.0 or higher (Tested: Linux).
+- clang++: Version 5.0 or higher (tested: Versions 6 and 7)
 - The Microsoft Visual Studio Express (C++) and CYGWIN builds are looking
   for maintainers.
 
@@ -157,7 +157,7 @@ for embedded applications.
 
 ### Dependencies
 
-- A C++ compiler supporting C++14 or later (Recommended: clang++)
+- A C++ compiler supporting C++17 or later (Recommended: clang++)
 - [CMake], version 3.1 or later
 - The [BOOST] libraries, version 1.58.0 or later
 - The [Eigen] library
@@ -179,7 +179,7 @@ __Boost, png++ and Eigen are currently used in a header-only way.__
 
 ### Tested versions
 
-- Boost: 1.58.0, 1.60.0 1.65.1(`#include "boost/version.hpp"`)
+- Boost: 1.58.0, 1.60.0, 1.65.1 (`#include "boost/version.hpp"`)
 - libpng: 1.2.50, 1.6.18, 1.6.34 (`libpng-config --version`)
 - png++: 0.2.5, 0.2.9 (`dpkg --status libpng++-dev`)
 - Eigen: 3.2.5, 3.3.4-4 (`dpkg --status libeigen3-dev`)

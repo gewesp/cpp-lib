@@ -1,12 +1,15 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.5)
 
 message("-- Cpp-lib cmake file")
 message("-- Project source directory: ${PROJECT_SOURCE_DIR}")
 
-# This is a C++14 project
-set (CMAKE_CXX_STANDARD 14)
+# This is a C++17 project
+# Argh.  Cmake 3.5 doesn't support 17 for this variable.  Currently
+# done in the CXXFLAGS by consequence...
+# set (CMAKE_CXX_STANDARD 17)
 
 project(cpp-lib VERSION 0.19.1)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
 # Some of our own modules
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")

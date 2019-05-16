@@ -40,6 +40,8 @@ long memory_consumption_overloaded(const std::string&);
 namespace util {
 
 // TODO: Add overloads for lots of containers...
+// Make it fast iff container elements are PODs or otherwise
+// have constant size...
 // Use constexpr if (C++17).
 
 /// @return Estimate of memory used by the given object
@@ -55,6 +57,27 @@ long memory_consumption(const T& x) {
 /// @return Estimate of memory used by the given string
 template <> inline long memory_consumption<std::string>(const std::string& x) {
   return ::cpl::detail_::memory_consumption_overloaded(x);
+}
+
+/// @return Estimate of memory consumption for containers (slow)
+template <typename C>
+long memory_consumption_container(const C& c) {
+  long ret = 0;
+  for (const auto& el : c) {
+    ret += memory_consumption(el);
+  }
+  return ret;
+}
+
+/// @return Estimate of memory consumption for a std::map (slow)
+template <typename M>
+long memory_consumption_map(const M& m) {
+  long ret = 0;
+  for (const auto& el : m) {
+    ret += memory_consumption(el.first )
+        +  memory_consumption(el.second);
+  }
+  return ret;
 }
 
 } // util

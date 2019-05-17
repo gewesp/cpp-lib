@@ -57,6 +57,7 @@
 #include "cpp-lib/util.h"
 
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 using namespace cpl::util::log;
 
@@ -559,8 +560,31 @@ std::string cpl::ogn::qualified_id(std::string const& id, short id_type) {
     case cpl::ogn::ID_TYPE_FLARM : return "flarm:"   + id;
     case cpl::ogn::ID_TYPE_ICAO  : return "icao:"    + id;
     case cpl::ogn::ID_TYPE_OGN   : return "ogn:"     + id;
-    default:                       return "unknown:" + id;
+
+    case cpl::ogn::ID_TYPE_PILOT_AWARE: return "pilotaware:" + id;
+    case cpl::ogn::ID_TYPE_FLYMASTER  : return "flymaster:"  + id;
+    case cpl::ogn::ID_TYPE_FANET      : return "fanet:"      + id;
+
+    default: return "unknown:" + id;
   }
+}
+
+short cpl::ogn::id_type(
+    const std::string& station_id,
+    const cpl::ogn::aprs_info& aprs) {
+  if (boost::starts_with(station_id, "PAW")) {
+    return cpl::ogn::ID_TYPE_PILOT_AWARE;
+  }
+
+  if (boost::starts_with(station_id, "FMT")) {
+    return cpl::ogn::ID_TYPE_FLYMASTER;
+  }
+
+  if (boost::starts_with(station_id, "FNT")) {
+    return cpl::ogn::ID_TYPE_FANET;
+  }
+
+  return cpl::ogn::ID_TYPE_UNKNOWN;
 }
 
 std::string cpl::ogn::unqualified_id(std::string const& id) {
@@ -831,13 +855,14 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
 
   assert('h' == hhmmss_or_ddhhmm[0]);
 
-  // Want at least 6 'special' conversions.
-  // gpsNxM not there for OGN trackers
-  // TODO: This needs to be more flexible
+  // TODO: This needs to be more flexible.  We should check each field
+  // for its content and assign accordingly.  For now we assume
+  // a certain order (implicit in the scanf() sequence below), and
+  // some elements may be missing.
   int const special_converted = conversions - n_normal;
 
   acft.second.rx.is_relayed = not acft.second.rx.aprs.relay.empty();
-  int const min_special_converted = acft.second.rx.is_relayed ? 4 : 6;
+  int const min_special_converted = 4;
   if (special_converted < min_special_converted) {
     if (exceptions) {
       util::throw_parse_error(
@@ -905,50 +930,39 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
     ++shift;
   }
 
-  if (shift >= special_converted) { goto postprocess; }
-  assert(shift < special_converted);
-  if (2 != std::sscanf(special[shift], "id%2x%7s", &id_and_type, id_v)) {
-    if (exceptions) {
-      util::throw_parse_error(std::string("ID type/ID: ") + special[shift]);
-    } else {
-      return false;
-    }
-  }
-  if (6 != std::strlen(id_v)) {
-    if (exceptions) {
-      util::throw_parse_error(
-          std::string("ID: Expected 6 characters: ") + id_v);
-    } else {
-      return false;
-    }
-  }
-  ++shift;
+  bool         id_parsed = false;
+  bool climb_rate_parsed = false;
+  bool  turn_rate_parsed = false;
 
   if (shift >= special_converted) { goto postprocess; }
   assert(shift < special_converted);
-  if (1 != std::sscanf(special[shift], "%lffpm", &climb_rate_fpm)) {
-    if (exceptions) {
-      util::throw_parse_error(
-          std::string("Climb rate: ") + special[shift]);
-    } else {
-      return false;
+  if (2 == std::sscanf(special[shift], "id%2x%7s", &id_and_type, id_v)) {
+    id_parsed = true;
+    ++shift;
+    if (6 != std::strlen(id_v)) {
+      if (exceptions) {
+        util::throw_parse_error(
+            std::string("ID: Expected 6 characters: ") + id_v);
+      } else {
+        return false;
+      }
     }
   }
-  ++shift;
 
   if (shift >= special_converted) { goto postprocess; }
   assert(shift < special_converted);
-  if (1 != std::sscanf(special[shift], "%lfrot", &turn_rate_rot)) {
-    if (exceptions) {
-      util::throw_parse_error(
-          std::string("Turn rate: ") + special[shift]);
-    } else {
-      return false;
-    }
+  if (1 == std::sscanf(special[shift], "%lffpm", &climb_rate_fpm)) {
+    climb_rate_parsed = true;
+    ++shift;
   }
-  ++shift;
 
-  // Value may be missing on FLARMs
+  if (shift >= special_converted) { goto postprocess; }
+  assert(shift < special_converted);
+  if (1 == std::sscanf(special[shift], "%lfrot", &turn_rate_rot)) {
+    turn_rate_parsed = true;
+    ++shift;
+  }
+
   if (shift >= special_converted) { goto postprocess; }
   assert(shift < special_converted);
   if (1 == std::sscanf(special[shift], "FL%lf", &baro_alt_fl)) {
@@ -1005,28 +1019,54 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
 
   // Post processing of values (units etc.)
 postprocess:
-  // STttttaa
-  // stealth mode S, no-tracking flag T, aircraft type tttt, address type aa
-  acft.second.id_type      =   id_and_type       & 0x3  ;
-  acft.second.vehicle_type =  (id_and_type >> 2) & 0xf  ;
-  acft.second.stealth =   id_and_type       & 0x80 ;
-  acft.second.process = !(id_and_type       & 0x40);
-  // acft.second.data.track and acft.second.data.identify set in
-  // by caller.
 
-  // Primary key ID: 'first' element of the pair.
-  acft.first = qualified_id(id_v, acft.second.id_type);
+  if (id_parsed) {
+    // STttttaa
+    // stealth mode S, no-tracking flag T, aircraft type tttt, address type aa
+    acft.second.id_type      =   id_and_type       & 0x3  ;
+    acft.second.vehicle_type =  (id_and_type >> 2) & 0xf  ;
+    acft.second.stealth =   id_and_type       & 0x80 ;
+    acft.second.process = !(id_and_type       & 0x40);
+    // acft.second.data.track and acft.second.data.identify set in
+    // by caller.
 
-  acft.second.mot.vertical_speed =
-    climb_rate_fpm * cpl::units::foot() / cpl::units::minute();
+    // Primary key ID: 'first' element of the pair.
+    acft.first = qualified_id(id_v, acft.second.id_type);
+  } else {
+    const std::string station_id = station_id_v;
 
-  // http://wiki.glidernet.org/wiki:subscribe-to-ogn-data
-  // OGN doc is unclear here:
-  // "1rot is the standard aircraft rotation rate of 1 half-turn per two
-  // minutes.".  We assume 1rot indicates a standard procedure turn rate
-  // which is 3 degrees/second.
-  // Pawel June 22, 2015: Standard turn 180deg/min == 3deg/sec.
-  acft.second.mot.turnrate = 3 * turn_rate_rot;
+    acft.second.id_type = cpl::ogn::id_type(station_id, acft.second.rx.aprs);
+    acft.first = qualified_id(
+        station_id.substr(3, std::string::npos), acft.second.id_type);
+
+    if (cpl::ogn::ID_TYPE_FLYMASTER == acft.second.id_type) {
+      acft.second.vehicle_type = cpl::ogn::VEHICLE_TYPE_PARAGLIDER;
+    } else {
+      acft.second.vehicle_type = cpl::ogn::VEHICLE_TYPE_UNKNOWN;
+    }
+
+    acft.second.stealth = false;
+    acft.second.process = true;
+  }
+
+  if (climb_rate_parsed) {
+    acft.second.mot.vertical_speed =
+      climb_rate_fpm * cpl::units::foot() / cpl::units::minute();
+  } else {
+    acft.second.mot.vertical_speed = 0;
+  }
+
+  if (turn_rate_parsed) {
+    // http://wiki.glidernet.org/wiki:subscribe-to-ogn-data
+    // OGN doc is unclear here:
+    // "1rot is the standard aircraft rotation rate of 1 half-turn per two
+    // minutes.".  We assume 1rot indicates a standard procedure turn rate
+    // which is 3 degrees/second.
+    // Pawel June 22, 2015: Standard turn 180deg/min == 3deg/sec.
+    acft.second.mot.turnrate = 3 * turn_rate_rot;
+  } else {
+    acft.second.mot.turnrate = 0;
+  }
 
   apply(acft);
 

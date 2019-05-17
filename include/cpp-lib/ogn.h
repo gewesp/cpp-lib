@@ -54,13 +54,26 @@ namespace bmi = boost::multi_index;
 
 // FLARM random hopping, still?!
 short constexpr ID_TYPE_RANDOM = 0;
+/// A (FLARM or other) device with an ICAO address programmed
 short constexpr ID_TYPE_ICAO   = 1;
+/// A FLARM device with the FLARM device address (DDxxxx etc.)
 short constexpr ID_TYPE_FLARM  = 2;
+/// An OGN tracker device with the OGN tracker address
 short constexpr ID_TYPE_OGN    = 3;
 
 // https://pilotaware.com/
-// TODO: Implement.  Use when IDs start with "PAW".
+// A PilotAware device (PAWxxxxxx)
 short constexpr ID_TYPE_PILOT_AWARE = 10;
+
+// https://www.flymaster.net/
+// A FLYMASTER device (FMTxxxxxx, paragliders)
+short constexpr ID_TYPE_FLYMASTER = 11;
+
+// FANET (FNTxxxxxx)
+short constexpr ID_TYPE_FANET = 12;
+
+// Unknown ID type, should probably be ignored
+short constexpr ID_TYPE_UNKNOWN = -1;
 
 // http://www.ediatec.ch/pdf/FLARM_DataportManual_v6.00E.pdf
 short constexpr VEHICLE_TYPE_GLIDER      = 1;
@@ -78,6 +91,10 @@ short constexpr VEHICLE_TYPE_AIRSHIP     = 12;
 short constexpr VEHICLE_TYPE_UAV         = 13;
 // 14 not assigned
 short constexpr VEHICLE_TYPE_STATIC      = 15;
+
+// Unknown vehicle type, should probably be ignored
+short constexpr VEHICLE_TYPE_UNKNOWN     = -1;
+
 
 /*
 On Tue, 29 Aug 2017, Angel Casado wrote:
@@ -150,6 +167,13 @@ bool parse_qas_construct(const std::string&, aprs_info&);
 inline bool parse_q_construct(const std::string& s, aprs_info& qc) {
   return parse_qas_construct(s, qc);
 }
+
+/// Attempts to determine an ID type from the station ID (i.e.
+/// the first string in an APRS message, e.g. FLR....,
+/// PAW...., FMT.... and associated info in aprs_info.  Intended
+/// use is when the ID isn't present in an id.... field.
+/// This is very much work in progress.
+short id_type(const std::string& station_id, const aprs_info&);
 
 // OGN station information:
 // - Network name

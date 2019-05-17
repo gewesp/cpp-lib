@@ -352,9 +352,9 @@ KEEPALIVE Not yet supported: SPIDER
 # WARNING: Couldn't parse: FLRDDFAF8>OGSPID,qAS,SPIDER:/185030h3256.71S07021.47W'313/015/A=016076 GPS id300234060668560 FIX3D +1dB : Parse error: Failed to parse position: Number of successful conversions: 7
 # WARNING: Couldn't parse: FLRDDFAEE>OGSPID,qAS,SPIDER:/185400h3322.78S07034.82W'000/000/A=002201 GPS id300234010611060 FIX3D +9dB : Parse error: Failed to parse position: Number of successful conversions: 7
 KEEPALIVE Not yet supported: LT24:
-# WARNING: Couldn't parse: FLRDDE48A>OGLT24,qAS,LT24:/161040h4030.47N/00338.38W'000/000/A=002253 +000fpm GPS id25387 0.0AGL: Parse error: Expected at least 6 parameter(s) after basic info, found 4
-# WARNING: Couldn't parse: FLRDDE48A>OGLT24,qAS,LT24:/161123h4030.46N/00338.39W'256/001/A=002240 +000fpm GPS id25387 -2.0AGL: Parse error: Expected at least 6 parameter(s) after basic info, found 4
-# WARNING: Couldn't parse: FLRDDE48A>OGLT24,qAS,LT24:/161124h4030.46N/00338.39W'000/001/A=002240 +000fpm GPS id25387 -6.0AGL: Parse error: Expected at least 6 parameter(s) after basic info, found 4
+AIRCRAFT unknown:DDE48A -1 -1 0 1 0 - - - 1437149440 40.50783333 -3.639666667 686.7144 0 0 0 0 0 0 LT24 0 -1.797693135e+308 -1.797693135e+308 -1
+AIRCRAFT unknown:DDE48A -1 -1 0 1 0 - - - 1437149483 40.50766667 -3.639833333 682.752 0 256 0.5144444444 0 0 0 LT24 0 -1.797693135e+308 -1.797693135e+308 -1
+AIRCRAFT unknown:DDE48A -1 -1 0 1 0 - - - 1437149484 40.50766667 -3.639833333 682.752 0 0 0.5144444444 0 0 0 LT24 0 -1.797693135e+308 -1.797693135e+308 -1
 KEEPALIVE Need to de-dupe these somehow (ICAO and FlightAware), reported by P. Rus.
 KEEPALIVE First string used to be callsign and is ignored in parser, cf. 
 KEEPALIVE parse_aprs_aircraft()
@@ -368,66 +368,68 @@ AIRCRAFT ogn:036A01 3 1 0 1 0 - - - 1437146368 -33.37938333 -70.57585 690.6768 3
 AIRCRAFT ogn:036A01 3 1 0 1 0 - - - 1437146368 -33.37938333 -70.57585 690.6768 3 0 0 0.1016 0 639.1655884 SANRAMON1 1 10.5 -9.8 3
 AIRCRAFT ogn:036A01 3 1 0 1 0 - - - 1437146368 -33.37938333 -70.57585 690.6768 3 0 0 0.1016 0 639.1655884 VITACURA2 1 17.2 -9.8 0
 AIRCRAFT ogn:036A01 3 1 0 1 0 - - - 1437146368 -33.37938333 -70.57585 690.6768 3 0 0 0.1016 0 639.1655884 SANRAMON2 1 5.2 -9.8 4
-# WARNING: Couldn't parse: OGNF42DB5>APRS,qAS,NAVITER:/151933h5146.51N/01328.22E'060/000/A=000499 !W34! id06F42DB5 +000fpm +0.0rot: Parse error: Expected at least 6 parameter(s) after basic info, found 4
+AIRCRAFT flarm:F42DB5 2 1 0 1 0 - - - 1437146373 51.77521667 13.4704 152.0952 0 60 0 0 0 0 NAVITER 0 -1.797693135e+308 -1.797693135e+308 -1
 AIRCRAFT ogn:1A5A06 3 1 0 1 0 - - - 1437146370 -33.37941667 -70.57616667 696.7728 3 0 0 0.1016 0 0 SANRAMON2 1 8 0.9 2
 AIRCRAFT ogn:1A5A06 3 1 0 1 0 - - - 1437146370 -33.37941667 -70.57616667 696.7728 3 0 0 0.1016 0 0 PoloCL 1 -1.797693135e+308 -1.797693135e+308 -1
-# WARNING: Couldn't parse: FMT787575>OGFLYM,qAS,FLYMASTER:/151934h4414.92N/00550.10E^000/000/A=001758 !W82!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-# WARNING: Couldn't parse: FMT676827>OGFLYM,qAS,FLYMASTER:/151931h4920.29N/00906.02E^048/019/A=002191 !W77!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT787575>OGFLYM,qAS,FLYMASTER:/151934h4414.92N/00550.10E^000/000/A=001758 !W82!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT676827>OGFLYM,qAS,FLYMASTER:/151931h4920.29N/00906.02E^048/019/A=002191 !W77!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
 AIRCRAFT ogn:8E3198 3 1 0 1 0 - - - 1437146373 50.84795 21.76551667 728.7768 2 68 31.38111111 3.82016 12.3 737.0064087 EGC2019 1 -1.797693135e+308 -1.797693135e+308 -1
-# WARNING: Couldn't parse: FMT004420>OGFLYM,qAS,FLYMASTER:/151940h6052.51N/02243.91E^000/000/A=000314 !W76!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT004420>OGFLYM,qAS,FLYMASTER:/151940h6052.51N/02243.91E^000/000/A=000314 !W76!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
 AIRCRAFT ogn:8E3198 3 1 0 1 0 - - - 1437146374 50.84788333 21.76605 730.9104 2 90 29.83777778 2.7178 17.1 739.1400146 EGC2019 1 -1.797693135e+308 -1.797693135e+308 -1
-# WARNING: Couldn't parse: FMT125486>OGFLYM,qAS,FLYMASTER:/151938h4553.19N/01357.55E^000/000/A=002811 !W88!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-# WARNING: Couldn't parse: FMT002217>OGFLYM,qAS,FLYMASTER:/151933h4947.26N/00117.63E^326/000/A=000482 !W60!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT125486>OGFLYM,qAS,FLYMASTER:/151938h4553.19N/01357.55E^000/000/A=002811 !W88!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT002217>OGFLYM,qAS,FLYMASTER:/151933h4947.26N/00117.63E^326/000/A=000482 !W60!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
 AIRCRAFT ogn:036A01 3 1 0 1 0 - - - 1437146378 -33.37938333 -70.57585 689.7624 3 0 0 -0.19812 0 639.1655884 VITACURA1 1 43 -9.7 0
 AIRCRAFT ogn:036A01 3 1 0 1 0 - - - 1437146378 -33.37938333 -70.57585 689.7624 3 0 0 -0.19812 0 639.1655884 SCLC 1 32.5 -9.7 0
-# WARNING: Couldn't parse: OGNF42DB5>APRS,qAS,NAVITER:/151943h5146.51N/01328.22E'060/000/A=000499 !W34! id06F42DB5 +000fpm +0.0rot: Parse error: Expected at least 6 parameter(s) after basic info, found 4
+KEEPALIVE TODO We need to figure out the NAVITER stuff!  It is now parsed, but
+KEEPALIVE the semantics is unclear.
+AIRCRAFT flarm:F42DB5 2 1 0 1 0 - - - 1437146383 51.77521667 13.4704 152.0952 0 60 0 0 0 0 NAVITER 0 -1.797693135e+308 -1.797693135e+308 -1
 AIRCRAFT ogn:036A01 3 1 0 1 0 - - - 1437146378 -33.37938333 -70.57585 689.7624 3 0 0 -0.19812 0 639.1655884 VITACURA2 1 15.5 -9.7 0
 AIRCRAFT ogn:036A01 3 1 0 1 0 - - - 1437146378 -33.37938333 -70.57585 689.7624 3 0 0 -0.19812 0 639.1655884 SANRAMON2 1 2.8 -9.8 3
 AIRCRAFT ogn:036A01 3 1 0 1 0 - - - 1437146378 -33.37938333 -70.57585 689.7624 3 0 0 -0.19812 0 639.1655884 PoloCL 1 -1.797693135e+308 -1.797693135e+308 -1
 AIRCRAFT ogn:036A01 3 1 0 1 0 - - - 1437146378 -33.37938333 -70.57585 689.7624 3 0 0 -0.19812 0 639.1655884 COLORADO 1 4.8 -9.4 2
-# WARNING: Couldn't parse: FMT952267>OGFLYM,qAS,FLYMASTER:/151946h4644.62N/00830.49E^000/000/A=005298 !W41!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT952267>OGFLYM,qAS,FLYMASTER:/151946h4644.62N/00830.49E^000/000/A=005298 !W41!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
 AIRCRAFT ogn:1A5A06 3 1 0 1 0 - - - 1437146383 -33.37941667 -70.57613333 697.6872 3 0 0 0.1016 0 0 SANRAMON1 1 2.8 0.9 3
-# WARNING: Couldn't parse: FMT003147>OGFLYM,qAS,FLYMASTER:/151945h4711.97N/01528.58E^258/025/A=004560 !W30!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-# WARNING: Couldn't parse: FMT440123>OGFLYM,qAS,FLYMASTER:/151949h4414.93N/00550.11E^000/001/A=001758 !W58!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-# WARNING: Couldn't parse: FNT1102AE>OGNFNT,qAS,FNB1102AE:/151949h4644.38N/01211.24Eg020/001/A=003940 !W31! id1E1102AE -246fpm: Parse error: Expected at least 6 parameter(s) after basic info, found 3
+# WARNING: Couldn't parse: FMT003147>OGFLYM,qAS,FLYMASTER:/151945h4711.97N/01528.58E^258/025/A=004560 !W30!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT440123>OGFLYM,qAS,FLYMASTER:/151949h4414.93N/00550.11E^000/001/A=001758 !W58!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FNT1102AE>OGNFNT,qAS,FNB1102AE:/151949h4644.38N/01211.24Eg020/001/A=003940 !W31! id1E1102AE -246fpm: Parse error: Expected at least 4 parameter(s) after basic info, found 3
 # WARNING: Couldn't parse: PAW401C86>APRS,qAS,PWFordham:/1#0051952h5153.38N\00005.02W^004/114/A=002145 !W65! id23401C86 +000fpm +0.0rot 20.0dB 0e -6.0kHz gps1x1: Parse error: Failed to parse position: Number of successful conversions: 4
-# WARNING: Couldn't parse: FMT181629>OGFLYM,qAS,FLYMASTER:/151951h4554.74N/01354.67E^320/054/A=003959 !W86!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-# WARNING: Couldn't parse: FMT152440>OGFLYM,qAS,FLYMASTER:/151950h4733.90N/01034.47E^000/000/A=002739 !W55!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT181629>OGFLYM,qAS,FLYMASTER:/151951h4554.74N/01354.67E^320/054/A=003959 !W86!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT152440>OGFLYM,qAS,FLYMASTER:/151950h4733.90N/01034.47E^000/000/A=002739 !W55!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
 AIRCRAFT ogn:1A5A06 3 1 0 1 0 - - - 1437146387 -33.37941667 -70.57613333 698.9064 3 0 0 0 0 0 PoloCL 1 -1.797693135e+308 -1.797693135e+308 -1
-# WARNING: Couldn't parse: OGNF42DB5>APRS,qAS,NAVITER:/151953h5146.51N/01328.22E'060/000/A=000499 !W34! id06F42DB5 +000fpm +0.0rot: Parse error: Expected at least 6 parameter(s) after basic info, found 4
-# WARNING: Couldn't parse: FMT005615>OGFLYM,qAS,FLYMASTER:/151951h4053.11N/00829.14W^000/000/A=000734 !W14!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-# WARNING: Couldn't parse: FMT322112>OGFLYM,qAS,FLYMASTER:/151954h4552.06N/01355.96E^000/000/A=000318 !W56!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
+AIRCRAFT flarm:F42DB5 2 1 0 1 0 - - - 1437146393 51.77521667 13.4704 152.0952 0 60 0 0 0 0 NAVITER 0 -1.797693135e+308 -1.797693135e+308 -1
+# WARNING: Couldn't parse: FMT005615>OGFLYM,qAS,FLYMASTER:/151951h4053.11N/00829.14W^000/000/A=000734 !W14!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT322112>OGFLYM,qAS,FLYMASTER:/151954h4552.06N/01355.96E^000/000/A=000318 !W56!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
 AIRCRAFT flarm:DDF967 2 1 0 1 0 - - - 1437146387 -33.3795 -70.57665 690.6768 2 0 0 0 0 0 SCLC 1 40.2 1 0
-# WARNING: Couldn't parse: FMT169049>OGFLYM,qAS,FLYMASTER:/151953h4553.90N/01353.26E^000/000/A=000459 !W88!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT169049>OGFLYM,qAS,FLYMASTER:/151953h4553.90N/01353.26E^000/000/A=000459 !W88!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
 AIRCRAFT ogn:1A5A06 3 1 0 1 0 - - - 1437146391 -33.37941667 -70.57613333 697.6872 3 0 0 -0.09652 0 0 SCLC 1 34.5 1 0
 AIRCRAFT ogn:1A5A06 3 1 0 1 0 - - - 1437146391 -33.37941667 -70.57613333 697.6872 3 0 0 -0.09652 0 0 VITACURA1 1 36.2 1 0
 AIRCRAFT ogn:1A5A06 3 1 0 1 0 - - - 1437146391 -33.37941667 -70.57613333 697.6872 3 0 0 -0.09652 0 0 VITACURA2 1 19.5 1 0
 AIRCRAFT ogn:1A5A06 3 1 0 1 0 - - - 1437146391 -33.37941667 -70.57613333 697.6872 3 0 0 -0.09652 0 0 SANRAMON2 1 5.5 0.9 1
-# WARNING: Couldn't parse: FMT001852>OGFLYM,qAS,FLYMASTER:/151956h4553.90N/01353.27E^298/000/A=000469 !W30!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-# WARNING: Couldn't parse: FMT005379>OGFLYM,qAS,FLYMASTER:/151953h4701.86N/01335.77E^312/000/A=003900 !W74!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-# WARNING: Couldn't parse: FMT381146>OGFLYM,qAS,FLYMASTER:/151958h4920.78N/00906.11E^218/061/A=001338 !W05!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-# WARNING: Couldn't parse: FMT003775>OGFLYM,qAS,FLYMASTER:/151957h4855.76N/01239.24E^158/041/A=001177 !W77!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT001852>OGFLYM,qAS,FLYMASTER:/151956h4553.90N/01353.27E^298/000/A=000469 !W30!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT005379>OGFLYM,qAS,FLYMASTER:/151953h4701.86N/01335.77E^312/000/A=003900 !W74!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT381146>OGFLYM,qAS,FLYMASTER:/151958h4920.78N/00906.11E^218/061/A=001338 !W05!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT003775>OGFLYM,qAS,FLYMASTER:/151957h4855.76N/01239.24E^158/041/A=001177 !W77!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
 AIRCRAFT flarm:DDF967 2 1 0 1 0 - - - 1437146387 -33.3795 -70.57665 690.6768 2 0 0 0 0 0 SANRAMON2 1 16.8 0.9 1
 AIRCRAFT flarm:DDF967 2 1 0 1 0 - - - 1437146387 -33.3795 -70.57665 690.6768 2 0 0 0 0 0 SANRAMON1 1 12 0.9 1
-# WARNING: Couldn't parse: FMT178736>OGFLYM,qAS,FLYMASTER:/151956h4553.20N/01357.55E^000/000/A=002801 !W31!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-# WARNING: Couldn't parse: FLRDD964A>APRS,qAS,SPOT:/151922h4714.98N/01126.49E'000/000/A=011335 id06DD964A: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-# WARNING: Couldn't parse: FLRDDF9D8>OGSPID,qAS,SPIDER:/143330h3322.79S/07034.86W'100/001/A=002414 id300234010749360 +30dB PQV 3D: Parse error: Expected at least 6 parameter(s) after basic info, found 4
+# WARNING: Couldn't parse: FMT178736>OGFLYM,qAS,FLYMASTER:/151956h4553.20N/01357.55E^000/000/A=002801 !W31!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FLRDD964A>APRS,qAS,SPOT:/151922h4714.98N/01126.49E'000/000/A=011335 id06DD964A: Parse error: Expected at least 4 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FLRDDF9D8>OGSPID,qAS,SPIDER:/143330h3322.79S/07034.86W'100/001/A=002414 id300234010749360 +30dB PQV 3D: Parse error: ID: Expected 6 characters: 0234010
 AIRCRAFT flarm:DDF967 2 1 0 1 0 - - - 1437146387 -33.3795 -70.57665 690.6768 2 0 0 0 0 0 COLORADO 1 8 1.8 0
 AIRCRAFT ogn:1A5A06 3 1 0 1 0 - - - 1437146394 -33.37941667 -70.57613333 697.6872 3 0 0 -0.09652 0 0 COLORADO 1 1.5 1.7 6
-# WARNING: Couldn't parse: OGNF42DB5>APRS,qAS,NAVITER:/152003h5146.51N/01328.22E'060/000/A=000499 !W34! id06F42DB5 +000fpm +0.0rot: Parse error: Expected at least 6 parameter(s) after basic info, found 4
+AIRCRAFT flarm:F42DB5 2 1 0 1 0 - - - 1437146403 51.77521667 13.4704 152.0952 0 60 0 0 0 0 NAVITER 0 -1.797693135e+308 -1.797693135e+308 -1
 AIRCRAFT  0 1 0 1 0 - - - 0 4727.07 0 0 0 0 0 0 0 0  0 -1.797693135e+308 -1.797693135e+308 -1
 AIRCRAFT  0 1 0 1 0 - - - 0 4725.95 0 0 0 0 0 0 0 0  0 -1.797693135e+308 -1.797693135e+308 -1
-# WARNING: Couldn't parse: FMT781587>OGFLYM,qAS,FLYMASTER:/152005h4851.37N/01301.14E^106/024/A=002916 !W00!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT781587>OGFLYM,qAS,FLYMASTER:/152005h4851.37N/01301.14E^106/024/A=002916 !W00!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
 AIRCRAFT  0 1 0 1 0 - - - 0 4836.64 0 0 0 0 0 0 0 0  0 -1.797693135e+308 -1.797693135e+308 -1
 # WARNING: Couldn't parse: PAW401C86>APRS,qAS,PWFordham:/1#0052012h5154.02N\00004.92W^005/115/A=002135 !W65! id23401C86 +000fpm +0.0rot 20.0dB 0e -6.0kHz gps1x1: Parse error: Failed to parse position: Number of successful conversions: 4
-# WARNING: Couldn't parse: FMT208423>OGFLYM,qAS,FLYMASTER:/152010h4713.70N/01545.74E^000/000/A=003008 !W83!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-# WARNING: Couldn't parse: FNT1102AE>OGNFNT,qAS,FNB1102AE:/152011h4644.38N/01211.24Eg124/000/A=003940 !W32! id1E1102AE +64fpm: Parse error: Expected at least 6 parameter(s) after basic info, found 3
-# WARNING: Couldn't parse: FMT676827>OGFLYM,qAS,FLYMASTER:/152009h4920.37N/00906.08E^016/014/A=002194 !W98!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-# WARNING: Couldn't parse: FMT981091>OGFLYM,qAS,FLYMASTER:/152011h4414.93N/00550.10E^000/002/A=001784 !W55!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-# WARNING: Couldn't parse: OGNF42DB5>APRS,qAS,NAVITER:/152013h5146.51N/01328.22E'060/000/A=000499 !W34! id06F42DB5 +000fpm +0.0rot: Parse error: Expected at least 6 parameter(s) after basic info, found 4
-# WARNING: Couldn't parse: FMT002217>OGFLYM,qAS,FLYMASTER:/152012h4947.26N/00117.63E^326/000/A=000482 !W60!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-# WARNING: Couldn't parse: FMT152040>OGFLYM,qAS,FLYMASTER:/152011h4549.71N/01357.39E^000/000/A=000357 !W17!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT208423>OGFLYM,qAS,FLYMASTER:/152010h4713.70N/01545.74E^000/000/A=003008 !W83!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FNT1102AE>OGNFNT,qAS,FNB1102AE:/152011h4644.38N/01211.24Eg124/000/A=003940 !W32! id1E1102AE +64fpm: Parse error: Expected at least 4 parameter(s) after basic info, found 3
+# WARNING: Couldn't parse: FMT676827>OGFLYM,qAS,FLYMASTER:/152009h4920.37N/00906.08E^016/014/A=002194 !W98!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT981091>OGFLYM,qAS,FLYMASTER:/152011h4414.93N/00550.10E^000/002/A=001784 !W55!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
+AIRCRAFT flarm:F42DB5 2 1 0 1 0 - - - 1437146413 51.77521667 13.4704 152.0952 0 60 0 0 0 0 NAVITER 0 -1.797693135e+308 -1.797693135e+308 -1
+# WARNING: Couldn't parse: FMT002217>OGFLYM,qAS,FLYMASTER:/152012h4947.26N/00117.63E^326/000/A=000482 !W60!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT152040>OGFLYM,qAS,FLYMASTER:/152011h4549.71N/01357.39E^000/000/A=000357 !W17!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
 AIRCRAFT ogn:8E3198 3 1 0 1 0 - - - 1437146409 50.84871667 21.76293333 772.668 2 73 32.41 4.42468 11.7 780.897583 SP9WPN 1 -1.797693135e+308 -1.797693135e+308 -1
-# WARNING: Couldn't parse: FMT200901>OGFLYM,qAS,FLYMASTER:/152010h4553.20N/01357.53E^000/000/A=002801 !W74!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
+# WARNING: Couldn't parse: FMT200901>OGFLYM,qAS,FLYMASTER:/152010h4553.20N/01357.53E^000/000/A=002801 !W74!: Parse error: Expected at least 4 parameter(s) after basic info, found 1
 AIRCRAFT ogn:8E3198 3 1 0 1 0 - - - 1437146410 50.8487 21.76346667 773.8872 2 87 31.38111111 3.31724 13.5 783.9456177 EGC2019 1 -1.797693135e+308 -1.797693135e+308 -1
 AIRCRAFT ogn:8E3198 3 1 0 1 0 - - - 1437146411 50.84871667 21.76391667 779.6784 2 85 30.86666667 4.22656 5.4 789.1271973 EGC2019 1 -1.797693135e+308 -1.797693135e+308 -1

@@ -698,6 +698,8 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
 
   long hhmmss = 0;
 
+  char hhmmss_or_ddhhmm[2] = "";
+
   double climb_rate_fpm = 0, turn_rate_rot = 0;
   double alt_ft = 0;
   double baro_alt_fl = 0;
@@ -716,7 +718,7 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
   char EW[2] = "";
 
   // Normal, special conversions
-  int constexpr n_normal  = 10;
+  int constexpr n_normal  = 11;
   int constexpr n_special = 11;
   char special[n_special][31];
 
@@ -733,7 +735,12 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
       "%1[/>]"    // slash_or_greater; ':/' or ':>'.  Only ':/' is supported.
                   // The second results in an empty name.
       "%ld"      // hhmmss
-      "%*1[hz]"   // h or z, local or zulu time?
+      "%1[hz]"    // h or z / HHMMSS or DDHHMM
+                  // TODO: Support the 'z', although it should be rare
+                  // Pawel 5/2019 (skype): "After APRS specification, the "z" time 
+                  // is DDHHMMz where DD is day-of-the-month"
+                  // "It does happen sometimes... when the station looses internet 
+                  // conenction and then it comes back"
       "%lf"       // latitude
       "%1[NS]"    // north/south
       "%*[/\\]"   // separator, may be slash or backslash (!)
@@ -761,6 +768,7 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
       q_construct_v,
       slash_or_greater,
       &hhmmss,
+      hhmmss_or_ddhhmm,
       &acft.second.pta.lat,
       NS,
       lon_v,
@@ -813,6 +821,14 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
       return false;
     }
   }
+
+  // Ignore 'z' for time (DDHHMM), should be rare
+  if ('z' == hhmmss_or_ddhhmm[0]) {
+    acft.first = "";
+    return true;
+  }
+
+  assert('h' == hhmmss_or_ddhhmm[0]);
 
   // Want at least 6 'special' conversions.
   // gpsNxM not there for OGN trackers

@@ -346,11 +346,11 @@ KEEPALIVE Receiver version 0.2.7
 AIRCRAFT flarm:DF0837 2 2 0 1 0 - - - 1437210639 51.6115 -0.7999833333 156.972 4 0 0 0.1016 0 0 Booker 0 28.8 -4.3 0
 AIRCRAFT flarm:DF0837 2 2 0 1 0 - - - 1437210666 51.61156667 -0.7999833333 164.8968 2 0 0 -0.09652 0 0 Booker 0 25.8 -4.3 0
 KEEPALIVE Not yet supported: SPIDER
-# WARNING: Couldn't parse: FLRDDFAEE>OGSPID,qAS,SPIDER:/182400h3322.78S07034.82W'000/000/A=002175 GPS id300234010611060 FIX3D +11dB : Parse error: Failed to parse position: Number of successful conversions: 6
-# WARNING: Couldn't parse: FLRDDFAF8>OGSPID,qAS,SPIDER:/183530h3259.41S07018.76W'334/015/A=015564 GPS id300234060668560 FIX3D +1dB : Parse error: Failed to parse position: Number of successful conversions: 6
-# WARNING: Couldn't parse: FLRDDFAEE>OGSPID,qAS,SPIDER:/183900h3322.78S07034.82W'041/000/A=002194 GPS id300234010611060 FIX3D +8dB : Parse error: Failed to parse position: Number of successful conversions: 6
-# WARNING: Couldn't parse: FLRDDFAF8>OGSPID,qAS,SPIDER:/185030h3256.71S07021.47W'313/015/A=016076 GPS id300234060668560 FIX3D +1dB : Parse error: Failed to parse position: Number of successful conversions: 6
-# WARNING: Couldn't parse: FLRDDFAEE>OGSPID,qAS,SPIDER:/185400h3322.78S07034.82W'000/000/A=002201 GPS id300234010611060 FIX3D +9dB : Parse error: Failed to parse position: Number of successful conversions: 6
+# WARNING: Couldn't parse: FLRDDFAEE>OGSPID,qAS,SPIDER:/182400h3322.78S07034.82W'000/000/A=002175 GPS id300234010611060 FIX3D +11dB : Parse error: Failed to parse position: Number of successful conversions: 7
+# WARNING: Couldn't parse: FLRDDFAF8>OGSPID,qAS,SPIDER:/183530h3259.41S07018.76W'334/015/A=015564 GPS id300234060668560 FIX3D +1dB : Parse error: Failed to parse position: Number of successful conversions: 7
+# WARNING: Couldn't parse: FLRDDFAEE>OGSPID,qAS,SPIDER:/183900h3322.78S07034.82W'041/000/A=002194 GPS id300234010611060 FIX3D +8dB : Parse error: Failed to parse position: Number of successful conversions: 7
+# WARNING: Couldn't parse: FLRDDFAF8>OGSPID,qAS,SPIDER:/185030h3256.71S07021.47W'313/015/A=016076 GPS id300234060668560 FIX3D +1dB : Parse error: Failed to parse position: Number of successful conversions: 7
+# WARNING: Couldn't parse: FLRDDFAEE>OGSPID,qAS,SPIDER:/185400h3322.78S07034.82W'000/000/A=002201 GPS id300234010611060 FIX3D +9dB : Parse error: Failed to parse position: Number of successful conversions: 7
 KEEPALIVE Not yet supported: LT24:
 # WARNING: Couldn't parse: FLRDDE48A>OGLT24,qAS,LT24:/161040h4030.47N/00338.38W'000/000/A=002253 +000fpm GPS id25387 0.0AGL: Parse error: Expected at least 6 parameter(s) after basic info, found 4
 # WARNING: Couldn't parse: FLRDDE48A>OGLT24,qAS,LT24:/161123h4030.46N/00338.39W'256/001/A=002240 +000fpm GPS id25387 -2.0AGL: Parse error: Expected at least 6 parameter(s) after basic info, found 4
@@ -415,10 +415,10 @@ AIRCRAFT flarm:DDF967 2 1 0 1 0 - - - 1437146387 -33.3795 -70.57665 690.6768 2 0
 AIRCRAFT flarm:DDF967 2 1 0 1 0 - - - 1437146387 -33.3795 -70.57665 690.6768 2 0 0 0 0 0 COLORADO 1 8 1.8 0
 AIRCRAFT ogn:1A5A06 3 1 0 1 0 - - - 1437146394 -33.37941667 -70.57613333 697.6872 3 0 0 -0.09652 0 0 COLORADO 1 1.5 1.7 6
 # WARNING: Couldn't parse: OGNF42DB5>APRS,qAS,NAVITER:/152003h5146.51N/01328.22E'060/000/A=000499 !W34! id06F42DB5 +000fpm +0.0rot: Parse error: Expected at least 6 parameter(s) after basic info, found 4
-AIRCRAFT icao:4B0652 1 8 0 1 0 - - - 1437153320 47.45116667 8.223066667 628.8024 1 73 39.61222222 1.40716 4.5 0 LSZF 0 31 -10.6 0
-AIRCRAFT flarm:DF0EFB 2 1 0 1 0 - - - 1437153320 47.43258333 8.25165 629.7168 2 63 30.35222222 0.2032 -1.5 0 LSZF 0 14.8 -11.5 0
+AIRCRAFT  0 1 0 1 0 - - - 0 4727.07 0 0 0 0 0 0 0 0  0 -1.797693135e+308 -1.797693135e+308 -1
+AIRCRAFT  0 1 0 1 0 - - - 0 4725.95 0 0 0 0 0 0 0 0  0 -1.797693135e+308 -1.797693135e+308 -1
 # WARNING: Couldn't parse: FMT781587>OGFLYM,qAS,FLYMASTER:/152005h4851.37N/01301.14E^106/024/A=002916 !W00!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
-AIRCRAFT flarm:DF0DBA 2 1 0 1 0 - - - 1437153320 48.61075 9.470983333 361.7976 3 0 0 -0.09652 0 0 EDTN 0 54 -12.5 0
+AIRCRAFT  0 1 0 1 0 - - - 0 4836.64 0 0 0 0 0 0 0 0  0 -1.797693135e+308 -1.797693135e+308 -1
 # WARNING: Couldn't parse: PAW401C86>APRS,qAS,PWFordham:/1#0052012h5154.02N\00004.92W^005/115/A=002135 !W65! id23401C86 +000fpm +0.0rot 20.0dB 0e -6.0kHz gps1x1: Parse error: Failed to parse position: Number of successful conversions: 4
 # WARNING: Couldn't parse: FMT208423>OGFLYM,qAS,FLYMASTER:/152010h4713.70N/01545.74E^000/000/A=003008 !W83!: Parse error: Expected at least 6 parameter(s) after basic info, found 1
 # WARNING: Couldn't parse: FNT1102AE>OGNFNT,qAS,FNB1102AE:/152011h4644.38N/01211.24Eg124/000/A=003940 !W32! id1E1102AE +64fpm: Parse error: Expected at least 6 parameter(s) after basic info, found 3

@@ -618,9 +618,10 @@ bool parse_aprs_aircraft(
   // i.e. set its callsign from the ID.
   void apply(aircraft_rx_info_and_name&) const;
 
-  // Writes ID, name1 or name2 into a JSON array on the given stream.
-  // which == 1: name1, which == 2: name2, which == 3: ID, 
-  void write_names_json(std::ostream&, int which = 1) const;
+  /// Writes ID, name1 or name2 into a JSON array on the given stream.
+  /// which == 1: name1, which == 2: name2, which == 3: ID, 
+  /// @return Number of items written
+  long write_names_json(std::ostream&, int which = 1) const;
 
   // Returns the entry associated with the given qualified id.  If
   // not found, throws or returns a default-constructed vehicle_data.

@@ -972,7 +972,7 @@ void cpl::ogn::ddb_handler::apply(
 
 }
 
-void cpl::ogn::ddb_handler::write_names_json(
+long cpl::ogn::ddb_handler::write_names_json(
     std::ostream& oss,
     const int which) const {
   oss << "[\n";
@@ -983,9 +983,11 @@ void cpl::ogn::ddb_handler::write_names_json(
 
   std::lock_guard<std::mutex> lock(vdb_mutex);
 
+  long ret = 0;
   for (auto it  = by_id(vdb).begin(); 
             it != by_id(vdb).end  (); /* no increment */) {
     oss << '"' << extract(*it) << '"';
+    ++ret;
     ++it;
     if (by_id(vdb).end() == it) {
       break;
@@ -993,6 +995,7 @@ void cpl::ogn::ddb_handler::write_names_json(
     oss << ",\n";
   }
   oss << ']';
+  return ret;
 }
 
 cpl::ogn::vehicle_data cpl::ogn::ddb_handler::lookup(

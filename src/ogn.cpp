@@ -925,43 +925,24 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
     acft.second.baro_alt = baro_alt_fl * cpl::units::flight_level();
   }
 
+  // Value may be missing.
   if (shift >= special_converted) { goto postprocess; }
   assert(shift < special_converted);
-  if (1 != std::sscanf(special[shift], "%lfdB", &acft.second.rx.rssi)) {
-    if (exceptions) {
-      util::throw_parse_error(
-          std::string("RSSI: ") + special[shift]);
-    } else {
-      return false;
-    }
-  } else {
+  if (1 == std::sscanf(special[shift], "%lfdB", &acft.second.rx.rssi)) {
     ++shift;
   }
 
-  // 0e, 1e, 2e etc. (errors)
+  // 0e, 1e, 2e etc. (errors).  May be missing.
   if (shift >= special_converted) { goto postprocess; }
   assert(shift < special_converted);
-  if (1 != std::sscanf(special[shift], "%hde", &acft.second.rx.errors)) {
-    if (exceptions) {
-      util::throw_parse_error(std::string("Bit errors: ") + special[shift]);
-    } else {
-      return false;
-    }
-  } else {
+  if (1 == std::sscanf(special[shift], "%hde", &acft.second.rx.errors)) {
     ++shift;
   }
 
   if (shift >= special_converted) { goto postprocess; }
   assert(shift < special_converted);
-  if (1 != std::sscanf(special[shift], "%lfkHz", 
+  if (1 == std::sscanf(special[shift], "%lfkHz", 
                        &acft.second.rx.frequency_deviation)) {
-    if (exceptions) {
-      util::throw_parse_error(
-          std::string("Frequency deviation: ") + special[shift]);
-    } else {
-      return false;
-    }
-  } else {
     ++shift;
   }
 

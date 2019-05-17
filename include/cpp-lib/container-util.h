@@ -378,12 +378,6 @@ void erase_if( C& items, P const& predicate ) {
     if( predicate( *it ) ) { it = items.erase( it ) ; }
     else                   { ++it ;                   }
   }
-  // TODO: This is a workaround for a boost.rtree bug present in Boost
-  // 1.58.0 that causes a crash when all elements are removed from
-  // an rtree.  See snippets/rtree-crash.cpp
-  if (items.empty()) {
-    items.clear();
-  }
 }
 
 

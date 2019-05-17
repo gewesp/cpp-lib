@@ -726,14 +726,14 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
   // q construct: TOCALL,[(relay)*],qAS,FROM
   // See struct q_construct in ogn.h
   const char* const format = 
-      "%40[^>]"
+      "%40[^>]"   // station_id_v
       ">"
       "%80[^:]"   // q_construct_v
       ":"
       "%1[/>]"    // slash_or_greater; ':/' or ':>'.  Only ':/' is supported.
                   // The second results in an empty name.
-      "%ldh"
-      "%lf"
+      "%ldh"      // hhmmss
+      "%lf"       // latitude
       "%1[NS]"    // north/south
       "%*[/\\]"   // separator, may be slash or backslash (!)
       "%20[0-9.]"
@@ -780,7 +780,9 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
 
   if (conversions < 4) {
     if (exceptions) {
-      cpl::util::throw_parse_error("Initial part");
+      cpl::util::throw_parse_error(
+          "Failed to parse basic info: "
+          "Number of successful conversions: " + std::to_string(conversions));
     } else {
       return false;
     }
@@ -801,18 +803,29 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
     return true;
   }
 
+  if (conversions < n_normal) {
+    if (exceptions) {
+      cpl::util::throw_parse_error(
+          "Failed to parse position: "
+          "Number of successful conversions: " + std::to_string(conversions));
+    } else {
+      return false;
+    }
+  }
+
   // Want at least 6 'special' conversions.
   // gpsNxM not there for OGN trackers
   // TODO: This needs to be more flexible
   int const special_converted = conversions - n_normal;
 
-  acft.second.rx.is_relayed = !q.relay.empty();
+  acft.second.rx.is_relayed = not q.relay.empty();
   int const min_special_converted = acft.second.rx.is_relayed ? 4 : 6;
   if (special_converted < min_special_converted) {
     if (exceptions) {
       util::throw_parse_error(
             "Expected at least " + std::to_string(min_special_converted)
-          + " parameters after basic info");
+          + " parameter(s) after basic info, found "
+          + std::to_string(special_converted));
     } else {
       return false;
     }

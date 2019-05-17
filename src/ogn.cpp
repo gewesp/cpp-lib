@@ -863,7 +863,7 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
   int const special_converted = conversions - n_normal;
 
   acft.second.rx.is_relayed = not acft.second.rx.aprs.relay.empty();
-  int const min_special_converted = 4;
+  int const min_special_converted = 1;
   if (special_converted < min_special_converted) {
     if (exceptions) {
       util::throw_parse_error(
@@ -1035,6 +1035,12 @@ postprocess:
     // be careful and override ID type.
     if ("NAVITER" == acft.second.rx.aprs.from) {
       acft.second.id_type = cpl::ogn::ID_TYPE_NAVITER;
+    }
+
+    // Similar with FANET, but here we look at the TOCALL.  FANET
+    // itself would claim FLARM...
+    if ("OGNFNT" == acft.second.rx.aprs.tocall) {
+      acft.second.id_type = cpl::ogn::ID_TYPE_FANET;
     }
 
     // Primary key ID: 'first' element of the pair.

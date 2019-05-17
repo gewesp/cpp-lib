@@ -89,11 +89,11 @@ void output( registry const& reg ) {
 
   // Yes, you can use a reference here!
 
-  std::vector< boost::any > const& v = reg.check_vector_any( "list" , 3 ) ;
+  std::vector< std::any > const& v = reg.check_vector_any( "list" , 3 ) ;
 
   //
   // The convert< T > template can be used to access the value stored
-  // in a boost::any.  It will throw a human-readable error message if
+  // in a std::any.  It will throw a human-readable error message if
   // the stored object's type does not match T.
   //
 

@@ -34,11 +34,11 @@ int main() {
 
   while ( cpl::util::END != lex.peek_token()) {
 
-    boost::any a ;
+    std::any a ;
     p.parse_term( a ) ;
 
-    std::vector< boost::any > const& va = 
-      convert< std::vector< boost::any > >( a ) ;
+    std::vector< std::any > const& va = 
+      convert< std::vector< std::any > >( a ) ;
 
     table< double > t ;
 

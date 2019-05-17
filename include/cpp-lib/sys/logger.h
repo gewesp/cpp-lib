@@ -17,13 +17,12 @@
 #ifndef CPP_LIB_LOGGER_H
 #define CPP_LIB_LOGGER_H
 
+#include <any>
 #include <string>
 #include <vector>
 #include <map>
 #include <algorithm>
 #include <memory>
-
-#include "boost/any.hpp"
 
 #include "cpp-lib/util.h"
 #include "cpp-lib/registry.h"
@@ -168,7 +167,7 @@ struct Logger {
   //   int
   //
 
-  static bool checkType( boost::any const& a ) ;
+  static bool checkType( std::any const& a ) ;
 
   
   //
@@ -185,11 +184,11 @@ struct Logger {
 
 private:
 
-  typedef std::map< std::string , boost::any > known_map ;
+  typedef std::map< std::string , std::any > known_map ;
 
   std::unique_ptr< cpl::util::network::datagram_socket > s ;
   cpl::util::network::datagram_socket::address_type destination ;
-  std::map< std::string , boost::any > known ;
+  std::map< std::string , std::any > known ;
   std::vector< known_map::const_iterator > to_log ;
 
   cpl::util::simple_scheduler ss ;

@@ -15,12 +15,11 @@
 //
 
 
+#include <any>
 #include <vector>
 
 #include <cassert>
 #include <cstdlib>
-
-#include "boost/any.hpp"
 
 #include "cpp-lib/registry.h"
 #include "cpp-lib/container-util.h"
@@ -97,7 +96,7 @@ void cpl::math::index_mapper::map
 
 
 void cpl::math::convert( 
-  std::vector< boost::any > const& v , 
+  std::vector< std::any > const& v , 
   table< double >& t 
 ) {
 
@@ -107,11 +106,11 @@ void cpl::math::convert(
 
   if( 0 == v.size() ) { throw std::runtime_error( "empty (sub)table" ); }
 
-  if( boost::any_cast< double >( &v[ 0 ] ) ) {
+  if( std::any_cast< double >( &v[ 0 ] ) ) {
 
     for( std::size_t i = 0 ; i < v.size() ; ++i ) {
 
-      if( double const* const d = boost::any_cast< double const >( &v[ i ] ) ) {
+      if( double const* const d = std::any_cast< double const >( &v[ i ] ) ) {
         t.push_back( *d ) ;
       } else { throw std::runtime_error( "not a block or nonnumeric" ) ; }
 
@@ -123,8 +122,8 @@ void cpl::math::convert(
 
     for( std::size_t i = 0 ; i < v.size() ; ++i ) {
 
-      if( std::vector< boost::any > const* const vv =
-          boost::any_cast< std::vector< boost::any > >( &v[ i ] ) ) {
+      if( std::vector< std::any > const* const vv =
+          std::any_cast< std::vector< std::any > >( &v[ i ] ) ) {
 
         table< double > tt ;
 

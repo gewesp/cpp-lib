@@ -26,7 +26,6 @@
 #include <climits>
 
 #include "boost/lexical_cast.hpp"
-#include "boost/any.hpp"
 #include "boost/cast.hpp"
 // .h, not .hpp like everything else in boost.  WTF.
 #include "boost/predef.h"

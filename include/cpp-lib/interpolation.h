@@ -201,6 +201,7 @@ is initialized by n breakpoints and the respective function values.
 #ifndef CPP_LIB_INTERPOLATION_H
 #define CPP_LIB_INTERPOLATION_H
 
+#include <any>
 #include <functional>
 #include <iterator>
 #include <stdexcept>
@@ -211,7 +212,6 @@ is initialized by n breakpoints and the respective function values.
 #include <cstdlib>
 #include <cmath>
 
-#include "boost/any.hpp"
 #include "boost/shared_ptr.hpp"
 #include "boost/lexical_cast.hpp"
 #include "boost/iterator/transform_iterator.hpp"
@@ -599,7 +599,7 @@ private:
 // Convert a vector of any's to a d-dimensional table of doubles.
 //
 
-void convert( std::vector< boost::any > const& v , table< double >& t ) ;
+void convert( std::vector< std::any > const& v , table< double >& t ) ;
 
 
 //
@@ -767,7 +767,7 @@ private:
 
 template< typename alg >
 interpolator< alg > const
-make_interpolator( boost::any const& breakpoints , boost::any const& table ) ;
+make_interpolator( std::any const& breakpoints , std::any const& table ) ;
 
 
 //
@@ -801,7 +801,7 @@ struct recursive_interpolation
   //   { { b_0 ... b_{ n - 1 } } g_0 ... g_{ n - 1 } }
   //
 
-  recursive_interpolation( boost::any const& ) ;
+  recursive_interpolation( std::any const& ) ;
 
   virtual T const operator()( 
     argument_type const& begin ,
@@ -1219,12 +1219,12 @@ cpl::math::interpolator< alg >::operator()
 
 template< typename T >
 cpl::math::recursive_interpolation< T >::recursive_interpolation
-( boost::any const& a ) {
+( std::any const& a ) {
 
   try {
 
-  std::vector< boost::any > const& va = 
-    cpl::util::convert< std::vector< boost::any > >( a ) ;
+  std::vector< std::any > const& va = 
+    cpl::util::convert< std::vector< std::any > >( a ) ;
 
   unsigned long n = va.size() ;
 
@@ -1248,7 +1248,7 @@ cpl::math::recursive_interpolation< T >::recursive_interpolation
   for( unsigned long i = 0 ; i < ys.size() ; ++i ) {
 
     double const* const p = 
-      boost::any_cast< double >( &va.at( i + 1 ) ) ;
+      std::any_cast< double >( &va.at( i + 1 ) ) ;
 
     if( !p ) { recurse = true ; break ; }
 
@@ -1342,15 +1342,15 @@ T const cpl::math::recursive_interpolation< T >::operator()(
 template< typename alg >
 cpl::math::interpolator< alg > const
 cpl::math::make_interpolator
-( boost::any const& breakpoints , boost::any const& values ) {
+( std::any const& breakpoints , std::any const& values ) {
     
   cpl::math::table< typename alg::result_type > t ;
   std::vector< std::vector< double > > bp ;
 
   try {
 
-    std::vector< boost::any > const &va =
-      cpl::util::convert< std::vector< boost::any > >( values ) ;
+    std::vector< std::any > const &va =
+      cpl::util::convert< std::vector< std::any > >( values ) ;
     
     convert( va , t ) ;
 
@@ -1365,8 +1365,8 @@ cpl::math::make_interpolator
 
   try { 
     
-    std::vector< boost::any > const& va =
-      cpl::util::convert< std::vector< boost::any > >( breakpoints ) ;
+    std::vector< std::any > const& va =
+      cpl::util::convert< std::vector< std::any > >( breakpoints ) ;
 
     std::vector< double > bp1 ;
 
@@ -1409,7 +1409,7 @@ cpl::math::interpolator< alg > const
 cpl::math::make_interpolator
 ( cpl::util::registry const& reg , std::string const& key ) {
 
-  std::vector< boost::any > const& v = reg.check_vector_any( key , 2 ) ;
+  std::vector< std::any > const& v = reg.check_vector_any( key , 2 ) ;
 
   try {
 

@@ -19,6 +19,7 @@
 #ifndef CPP_LIB_VARLIST_H
 #define CPP_LIB_VARLIST_H
 
+#include <any>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -27,8 +28,6 @@
 #include <typeinfo>
 #include <istream>
 #include <ostream>
-
-#include "boost/any.hpp"
 
 #include "cpp-lib/util.h"
 
@@ -101,7 +100,7 @@ struct varlist {
   // bound to name.
   //
 
-  boost::any const& any_reference( std::string const& name ) const ;
+  std::any const& any_reference( std::string const& name ) const ;
 
   //
   // Return true iff name was bound to a variable.
@@ -113,11 +112,11 @@ struct varlist {
 
 private:
 
-  typedef std::map< std::string , boost::any > known_map ;
+  typedef std::map< std::string , std::any > known_map ;
   typedef known_map::const_iterator it ;
 
   // The any values contain *pointers* to the variables.
-  std::map< std::string , boost::any > known ;
+  std::map< std::string , std::any > known ;
 
 } ;
 
@@ -169,7 +168,7 @@ struct stream_serializer {
 private:
 
   // The any values contain *pointers* to the variables.
-  std::vector< boost::any > vars ;
+  std::vector< std::any > vars ;
 
   // Strings to prepend and append at each operation.
   std::string prefix, postfix ;
@@ -200,9 +199,9 @@ T& cpl::util::varlist::reference( std::string const& name ) const {
 
   try {
 
-    return *boost::any_cast< T* >( any_reference( name ) ) ;
+    return *std::any_cast< T* >( any_reference( name ) ) ;
 
-  } catch( boost::bad_any_cast const& e ) {
+  } catch( std::bad_any_cast const& e ) {
 
     throw std::logic_error( name + ": bad type: " + e.what() ) ;
 
@@ -212,7 +211,7 @@ T& cpl::util::varlist::reference( std::string const& name ) const {
 
 template <typename T>
 T * cpl::util::varlist::pointer(std::string const & name) const {
-  if (T * const * p = boost::any_cast<T *>(&any_reference(name)))
+  if (T * const * p = std::any_cast<T *>(&any_reference(name)))
     return *p;
   else
     return NULL;

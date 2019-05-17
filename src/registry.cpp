@@ -140,7 +140,7 @@ void cpl::util::registry::check_key( const key_type& key ) {
 }
 
 
-boost::any const& 
+std::any const& 
 cpl::util::registry::get_any( key_type const& key ) const {
 
   map_type::const_iterator i = kv_map.find( key ) ;
@@ -175,7 +175,7 @@ cpl::util::registry::key_defined_at( key_type const& key ) const
 
 void cpl::util::registry::add_any(
   key_type const& key ,
-  boost::any   const& value ,
+  std::any   const& value ,
   std::string  const& defined_at ,
   bool throw_on_redefinition
 ) {
@@ -266,7 +266,7 @@ cpl::util::registry::check_vector_vector_double(
 
   std::vector< std::vector< double > > ret ;
 
-  boost::any const& a = get_any( key ) ;
+  std::any const& a = get_any( key ) ;
 
   try { convert( a , ret , rows , columns ) ; }
   catch( std::runtime_error const& e )
@@ -278,7 +278,7 @@ cpl::util::registry::check_vector_vector_double(
 
 
 void cpl::util::convert(
-  boost::any const& a ,
+  std::any const& a ,
   std::vector< std::vector< double > >& ret ,
   long const rows ,
   long const columns 
@@ -287,8 +287,8 @@ void cpl::util::convert(
   assert( rows >= -1 ) ;
   assert( columns >= -2 ) ;
 
-  std::vector< boost::any > const& v =
-    convert< std::vector< boost::any > >( a ) ;
+  std::vector< std::any > const& v =
+    convert< std::vector< std::any > >( a ) ;
 
   if( rows >= 0 && v.size() != static_cast< unsigned long >( rows ) ) 
   { throw_should_have( rows , "row(s)" ) ; }
@@ -342,7 +342,7 @@ std::vector< std::string > const
 cpl::util::registry::check_vector_string
 ( key_type const& key , long n ) const {
 
-  boost::any const& a = get_any( key ) ;
+  std::any const& a = get_any( key ) ;
   
   std::vector< std::string > ret ;
 
@@ -359,7 +359,7 @@ std::vector< double > const
 cpl::util::registry::check_vector_double
 ( key_type const& key , long n ) const {
 
-  boost::any const& a = get_any( key ) ;
+  std::any const& a = get_any( key ) ;
   
   std::vector< double > ret ;
 
@@ -371,7 +371,7 @@ cpl::util::registry::check_vector_double
 
 }
 
-std::vector< boost::any > const&
+std::vector< std::any > const&
 cpl::util::registry::check_vector_any
 ( key_type const& key , long const n ) const {
 
@@ -379,8 +379,8 @@ cpl::util::registry::check_vector_any
 
   try {
 
-    std::vector< boost::any > const& ret = 
-      convert< std::vector< boost::any > >( get_any( key ) ) ;
+    std::vector< std::any > const& ret = 
+      convert< std::vector< std::any > >( get_any( key ) ) ;
 
     if( n >= 0 && ret.size() != static_cast< unsigned long >( n ) ) 
     { throw_should_have( n , "element(s)" ) ; }
@@ -440,7 +440,7 @@ void cpl::util::registry::read_from(
   parser p( lex , ps ) ;
 
   key_type key ;
-  boost::any   val ;
+  std::any   val ;
 
   std::size_t line_no  ;
   std::string filename ;
@@ -725,7 +725,7 @@ std::string cpl::util::lexer::location() const {
 
 parser& cpl::util::parser::parse_pair(
   key_type& key ,
-  boost::any  & val ,
+  std::any  & val ,
   std::size_t & line_no ,
   std::string & filename
 ) {
@@ -750,9 +750,9 @@ parser& cpl::util::parser::parse_pair(
 }
 
 
-std::vector< boost::any > parser::parse_list( token const close ) {
+std::vector< std::any > parser::parse_list( token const close ) {
 
-  std::vector< boost::any > v ;
+  std::vector< std::any > v ;
 
   bool first = true ;
 
@@ -771,7 +771,7 @@ std::vector< boost::any > parser::parse_list( token const close ) {
 
     else { lex.putback() ; }
 
-    v.push_back( boost::any() ) ;
+    v.push_back( std::any() ) ;
     parse_term( v.back() ) ;
 
     first = false ;
@@ -783,7 +783,7 @@ std::vector< boost::any > parser::parse_list( token const close ) {
 }
 
 
-parser& cpl::util::parser::parse_term( boost::any& val ) {
+parser& cpl::util::parser::parse_term( std::any& val ) {
 
   lex.get_token() ;
 

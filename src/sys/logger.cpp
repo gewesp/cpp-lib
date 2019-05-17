@@ -15,6 +15,7 @@
 //
 
 
+#include <any>
 #include <iostream>
 
 #include <vector>
@@ -22,7 +23,6 @@
 #include <map>
 #include <algorithm>
 
-#include <boost/any.hpp>
 #include "boost/lexical_cast.hpp"
 
 #include "cpp-lib/registry.h"
@@ -36,12 +36,12 @@ using namespace cpl::util          ;
 using namespace cpl::util::network ;
 
 
-bool cpl::util::Logger::checkType( boost::any const& a ) {
+bool cpl::util::Logger::checkType( std::any const& a ) {
 
   return
-       boost::any_cast< double const* >( &a ) 
-    || boost::any_cast< float  const* >( &a )
-    || boost::any_cast< int    const* >( &a )
+       std::any_cast< double const* >( &a ) 
+    || std::any_cast< float  const* >( &a )
+    || std::any_cast< int    const* >( &a )
   ;
 
 }
@@ -113,9 +113,9 @@ namespace {
 
 
 template< typename T >
-bool write( std::ostream& os , boost::any const& a ) {
+bool write( std::ostream& os , std::any const& a ) {
 
-  T const* const* const p = boost::any_cast< T const* >( &a ) ;
+  T const* const* const p = std::any_cast< T const* >( &a ) ;
 
   if( !p ) { return false ; }
 
@@ -125,7 +125,7 @@ bool write( std::ostream& os , boost::any const& a ) {
 }
 
 
-bool write_any( std::ostream& os , boost::any const& a ) {
+bool write_any( std::ostream& os , std::any const& a ) {
 
   return 
        write< double >( os , a )

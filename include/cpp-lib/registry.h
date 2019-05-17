@@ -19,9 +19,10 @@
 #ifndef CPP_LIB_REGISTRY_H
 #define CPP_LIB_REGISTRY_H
 
-#include <fstream>
+#include <any>
 #include <string>
 #include <vector>
+#include <iosfwd>
 #include <map>
 #include <limits>
 #include <stdexcept>
@@ -30,8 +31,6 @@
 
 #include <cassert>
 #include <cstdlib>
-
-#include "boost/any.hpp"
 
 #include "cpp-lib/util.h"
 
@@ -489,7 +488,7 @@ typedef std::string key_type ;
 struct expression {
 
   std::string head ;
-  std::vector< boost::any > tail ;
+  std::vector< std::any > tail ;
 
 } ;
 
@@ -505,20 +504,20 @@ struct parser {
     state( true ) 
   {}
 
-  // Parse a key/expression pair.  Expression is returned in boost::any,
+  // Parse a key/expression pair.  Expression is returned in std::any,
   // definition location in line_no and filename.
   parser& parse_pair(
     key_type& ,
-    boost::any& ,
+    std::any& ,
     std::size_t& line_no ,
     std::string& filename
   ) ;
 
   // Parse a term.
-  parser& parse_term( boost::any& ) ;
+  parser& parse_term( std::any& ) ;
 
   // Parse a list until the given closing token.
-  std::vector< boost::any > parse_list( token close ) ;
+  std::vector< std::any > parse_list( token close ) ;
 
   operator bool() const { return state ; }
 
@@ -658,7 +657,7 @@ struct registry {
 
   void add_any(
     key_type const& key ,
-    boost::any const& val ,
+    std::any const& val ,
     std::string const& defined_at ,
     bool throw_on_redefinition = true
   ) ;
@@ -728,9 +727,9 @@ struct registry {
   template< typename T > T const& get( key_type const& key ) const ;
 
 
-  /// Lookup by key and return the boost::any.
+  /// Lookup by key and return the std::any.
 
-  boost::any const& get_any( key_type const& key ) const ;
+  std::any const& get_any( key_type const& key ) const ;
 
 
   /// Look up and return a positive numerical value.
@@ -792,7 +791,7 @@ struct registry {
   //
   // If n >= 0, check that the list has n elements.
 
-  std::vector< boost::any > const& 
+  std::vector< std::any > const& 
   check_vector_any( key_type const& key , long const n = -1 ) const ;
 
 
@@ -876,7 +875,7 @@ struct registry {
 
 private:
 
-  struct mapped { boost::any value ; std::string defined_at ; } ;
+  struct mapped { std::any value ; std::string defined_at ; } ;
 
   // The key/value map type.  Stores key, value, and location of
   // (for error messages).
@@ -903,7 +902,7 @@ private:
 // if the type does not match \a T.
 //
 
-template< typename T > T const& convert( boost::any const& a ) ;
+template< typename T > T const& convert( std::any const& a ) ;
 
 //
 // Check that \a a is a list of lists containing doubles.
@@ -915,7 +914,7 @@ template< typename T > T const& convert( boost::any const& a ) ;
 //
 
 void convert(
-  boost::any const& a ,
+  std::any const& a ,
   std::vector< std::vector< double > >& v ,
   long const rows = -1 ,
   long const columns = -1
@@ -931,15 +930,15 @@ void convert(
 
 template< typename T >
 void convert(
-  boost::any const& a ,
+  std::any const& a ,
   std::vector< T >& ret ,
   long const n = -1
 ) {
 
   always_assert( n >= -1 ) ;
 
-  std::vector< boost::any > const& v =
-    convert< std::vector< boost::any > >( a ) ;
+  std::vector< std::any > const& v =
+    convert< std::vector< std::any > >( a ) ;
 
   if( n >= 0 && v.size() != static_cast< unsigned long >( n ) )
   { cpl::detail_::throw_should_have( n , "element(s)" ) ; }
@@ -1002,7 +1001,7 @@ inline std::string const hr_type< cpl::util::expression >()
 { return "expression" ; }
 
 template<>
-inline std::string const hr_type< std::vector< boost::any > >()
+inline std::string const hr_type< std::vector< std::any > >()
 { return "list"       ; }
 
 template<>
@@ -1010,7 +1009,7 @@ inline std::string const hr_type< std::vector< double > >()
 { return "list of double" ; }
 
 template<>
-inline std::string const hr_type< std::vector< std::vector< boost::any > > >()
+inline std::string const hr_type< std::vector< std::vector< std::any > > >()
 { return "nested list" ; }
 
 template<>
@@ -1030,9 +1029,9 @@ inline std::string const hr_type< std::vector< std::string > >()
 
 
 template< typename T >
-T const& cpl::util::convert( boost::any const& a ) {
+T const& cpl::util::convert( std::any const& a ) {
 
-  T const* ret = boost::any_cast< T >( &a ) ;
+  T const* ret = std::any_cast< T >( &a ) ;
 
   if( !ret )
   { throw std::runtime_error( "should be a " + cpl::util::detail_::hr_type< T >() ) ; }
@@ -1057,7 +1056,7 @@ T const& cpl::util::registry::get_default_internal(
 template< typename T >
 T const& cpl::util::registry::get( key_type const& key ) const {
 
-  boost::any const& a = get_any( key ) ;
+  std::any const& a = get_any( key ) ;
 
   try {
 

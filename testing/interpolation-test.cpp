@@ -15,6 +15,7 @@
 //
 
 
+#include <any>
 #include <iostream>
 #include <exception>
 #include <stdexcept>
@@ -235,10 +236,10 @@ int main( int const argc , char const * const * const argv ) {
       reg.check_vector_vector_double( "interpolation" , 2 , -2 )
     ) ;
 
-  std::vector< boost::any > i1 = reg.check_vector_any( "interpolation" , 2 ) ;
+  std::vector< std::any > i1 = reg.check_vector_any( "interpolation" , 2 ) ;
 
   //
-  // Construct hypercubic and simplicial interpolators from boost::anys
+  // Construct hypercubic and simplicial interpolators from std::anys
   // which contain the breakpoint table (d lists of breakpoints) and the
   // d-dimensional value table.
   //
@@ -278,8 +279,8 @@ int main( int const argc , char const * const * const argv ) {
   // check_ndim    ( reg ) ;
 
 
-  std::vector< boost::any > v2 = reg.check_vector_any( "interp_2" , 2 ) ;
-  std::vector< boost::any > v3 = reg.check_vector_any( "interp_3" , 2 ) ;
+  std::vector< std::any > v2 = reg.check_vector_any( "interp_2" , 2 ) ;
+  std::vector< std::any > v3 = reg.check_vector_any( "interp_3" , 2 ) ;
 
   interpolator< hypercubic< double > > const f2 = 
     make_interpolator< hypercubic< double > >( v2[ 0 ] , v2[ 1 ] ) ;

@@ -14,11 +14,10 @@
 // limitations under the License.
 //
 
+#include <any>
 #include <vector>
 #include <string>
 #include <map>
-
-#include "boost/any.hpp"
 
 #include "cpp-lib/varlist.h"
 #include "cpp-lib/util.h"
@@ -46,9 +45,9 @@ cpl::util::stream_serializer::stream_serializer(
 namespace {
 
 template< typename T >
-bool write_type( std::ostream& os , boost::any const& a ) {
+bool write_type( std::ostream& os , std::any const& a ) {
 
-  T const * const * const p = boost::any_cast< T* >( &a ) ;
+  T const * const * const p = std::any_cast< T* >( &a ) ;
   if( !p ) { return false ; }
 
   os << **p ;
@@ -58,9 +57,9 @@ bool write_type( std::ostream& os , boost::any const& a ) {
 }
 
 template< typename T >
-bool read_type( std::istream& is , boost::any const& a ) {
+bool read_type( std::istream& is , std::any const& a ) {
 
-  T * const * const p = boost::any_cast< T* >( &a ) ;
+  T * const * const p = std::any_cast< T* >( &a ) ;
   if( !p ) { return false ; }
 
   is >> **p ;
@@ -124,7 +123,7 @@ std::istream& cpl::util::operator>>(
 }
 
 
-boost::any const&
+std::any const&
 cpl::util::varlist::any_reference( std::string const& name ) const {
 
   known_map::const_iterator const i = known.find( name ) ;

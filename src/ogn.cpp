@@ -671,7 +671,9 @@ char const* cpl::ogn::thermal_format_comment() {
 std::ostream& cpl::ogn::operator<<(
     std::ostream& os, cpl::ogn::rx_info const& rx) {
   os <<        rx.received_by
+     << " " << rx.aprs.tocall
      << " " << rx.is_relayed
+     << " " << rx.aprs.relay
      << " " << rx.rssi
      << " " << rx.frequency_deviation
      << " " << rx.errors

@@ -1,4 +1,4 @@
-# AIRCRAFT id id_type vehicle_type stealth tracking identify callsign hwver swver time lat lon alt accuracy course speed vertical_speed turn_rate baro_alt received_by relayed rssi frequency_deviation errors 
+# AIRCRAFT id id_type vehicle_type stealth tracking identify callsign hwver swver time lat lon alt accuracy course speed vertical_speed turn_rate baro_alt received_by tocall relayed relay rssi frequency_deviation errors 
 # STATION id version network time lat lon alt cpu ram_used ram_max ntp_difference ntp_ppm temperature
 KEEPALIVE New format as of 0.2.6, from Angel Casado
 KEEPALIVE TODO: Update OGN parsing to understand that format and incorporate in

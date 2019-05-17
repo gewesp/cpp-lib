@@ -52,7 +52,7 @@ long memory_consumption_container(const C& c) {
   using ::cpl::util::memory_consumption;
 
   if constexpr(std::is_trivially_copyable<typename C::value_type>::value) {
-    return sizeof(C::value_type) * c.size();
+    return sizeof(typename C::value_type) * c.size();
   } else {
     long ret = 0;
     for (const auto& el : c) {

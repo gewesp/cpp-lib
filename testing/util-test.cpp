@@ -26,8 +26,10 @@
 
 #include "cpp-lib/cgi.h"
 #include "cpp-lib/container-util.h"
+#include "cpp-lib/error.h"
 #include "cpp-lib/random.h"
 #include "cpp-lib/safe_queue.h"
+#include "cpp-lib/type_traits.h"
 #include "cpp-lib/util.h"
 #include "cpp-lib/xdr.h"
 
@@ -192,18 +194,51 @@ void test_xdr(std::ostream& os) {
   test_xdr_string(os);
 }
 
+template <typename T>
+void is_container_test(const bool expected) {
+  if (::cpl::util::is_container<T>::value != expected) {
+    ::cpl::util::throw_error(
+        std::string("is_container<> failed for ") + typeid(T).name());
+  }
+}
 
+template <typename T>
+void is_pair_test(const bool expected) {
+  if (::cpl::util::is_pair<T>::value != expected) {
+    ::cpl::util::throw_error(
+        std::string("is_pair<> failed for ") + typeid(T).name());
+  }
+}
 
-void testChop(int i)
-{
-	std::string s("...X ");
-    std::size_t n = s.size();
-	s[3] = i;
-	cpl::util::chop(s);
-	if (i == ' ' || i == '\t' || i == '\n' || i == '\v' || i == '\f' || i == '\r')
-		always_assert(s.size() == n-2);
-	else
-		always_assert(s.size() == n-1);
+void test_type_traits() {
+  is_container_test<int>(false);
+  is_container_test<double>(false);
+  is_container_test<void>(false);
+  is_container_test<std::pair<int, int>>(false);
+
+  is_container_test<std::vector<int>>(true);
+  is_container_test<std::map<int, double>>(true);
+  is_container_test<std::map<int, double>>(true);
+
+  is_pair_test<int>(false);
+  is_pair_test<double>(false);
+  is_pair_test<void>(false);
+  is_pair_test<std::vector<int>>(false);
+  is_pair_test<std::map<int, double>>(false);
+
+  is_pair_test<std::pair<int, int>>(true);
+  is_pair_test<std::pair<int*, double>>(true);
+}
+
+void testChop(int i) {
+  std::string s("...X ");
+  std::size_t n = s.size();
+  s[3] = i;
+  cpl::util::chop(s);
+  if (i == ' ' || i == '\t' || i == '\n' || i == '\v' || i == '\f' || i == '\r')
+    always_assert(s.size() == n-2);
+  else
+    always_assert(s.size() == n-1);
 }
 
 void test_cgi(std::ostream& os, std::string const& query) {
@@ -347,14 +382,14 @@ void check_ascending() {
   try { check_strictly_ascending( l.begin() , l.end() ) ; }
   catch( std::exception const& e ) {
 
-	ok = true ;
-	std::cout << "check_strictly_ascending() works: " << e.what() << '\n' ;
+        ok = true ;
+        std::cout << "check_strictly_ascending() works: " << e.what() << '\n' ;
 
   }
 
   if( !ok ) {
 
-	std::cout << "check_strictly_ascending() failed\n" ;
+        std::cout << "check_strictly_ascending() failed\n" ;
 
   }
 
@@ -632,6 +667,8 @@ int main(int argc, const char* const* const argv) {
   test_safe_queue_destructor();
   test_safe_queue(100000);
 
+  test_type_traits();
+
   test_cgi(std::cout);
 
   test_stringutils(std::cout);
@@ -642,31 +679,31 @@ int main(int argc, const char* const* const argv) {
 
   test_xdr(std::cout);
 
-	{
-		int a1[20];
+        {
+                int a1[20];
                 int a2[1];
                 int a3[0];
-		always_assert(20 == cpl::util::size(a1));
-		always_assert(1  == cpl::util::size(a2));
-		always_assert(0  == cpl::util::size(a3));
-	}
+                always_assert(20 == cpl::util::size(a1));
+                always_assert(1  == cpl::util::size(a2));
+                always_assert(0  == cpl::util::size(a3));
+        }
 
-	{
-		for (int i=1; i < 256; ++i)
-			testChop(i);
-	}
+        {
+                for (int i=1; i < 256; ++i)
+                        testChop(i);
+        }
 
-	std::cout << "check_iterator< std::list  < int > >()\n" ;
-	check_iterator< std::list  < int > >() ;
+        std::cout << "check_iterator< std::list  < int > >()\n" ;
+        check_iterator< std::list  < int > >() ;
 
-	std::cout << "check_iterator< std::vector< int > >()\n" ;
-	check_iterator< std::vector< int > >() ;
+        std::cout << "check_iterator< std::vector< int > >()\n" ;
+        check_iterator< std::vector< int > >() ;
 
-	{
-		always_assert(2+2==4);
+        {
+                always_assert(2+2==4);
                 std::cout << "The next assertion should fail:\n";
-		always_assert(2+2==5);
-		/*NOTREACHED*/
-	}
+                always_assert(2+2==5);
+                /*NOTREACHED*/
+        }
         return 0;
 }

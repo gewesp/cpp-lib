@@ -24,6 +24,10 @@ void cpl::util::throw_error(const char* const message) {
   throw std::runtime_error(message);
 }
 
+void cpl::util::throw_error(const std::string& message) {
+  throw std::runtime_error(message);
+}
+
 void cpl::util::throw_parse_error(const char* const message) {
   throw cpl::util::parse_error(std::string("Parse error: ") + message);
 }

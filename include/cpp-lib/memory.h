@@ -39,11 +39,6 @@ long memory_consumption_overloaded(const std::string&);
 
 namespace util {
 
-// TODO: Add overloads for lots of containers...
-// Make it fast iff container elements are PODs or otherwise
-// have constant size...
-// Use constexpr if (C++17).
-
 /// @return Estimate of memory used by the given object
 template <typename T>
 long memory_consumption(const T& x) {

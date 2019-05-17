@@ -23,12 +23,17 @@
 #ifndef CPP_LIB_ERROR_H
 #define CPP_LIB_ERROR_H
 
+#include <string>
+
 namespace cpl {
 
 namespace util {
 
 /// @throw A std::execption with the given message
 void throw_error(const char* message);
+
+/// @throw A std::execption with the given message
+void throw_error(const std::string& message);
 
 /// @throw A std::exception with "Parse error: " + message
 void throw_parse_error(const char* message);

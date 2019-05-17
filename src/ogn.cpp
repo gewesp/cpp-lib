@@ -48,6 +48,7 @@
 #include "cpp-lib/sys/util.h"
 
 #include "cpp-lib/assert.h"
+#include "cpp-lib/error.h"
 #include "cpp-lib/http.h"
 #include "cpp-lib/math-util.h"
 #include "cpp-lib/memory.h"
@@ -690,7 +691,8 @@ bool cpl::ogn::parse_qas_construct(
 bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
     const std::string& line, 
     cpl::ogn::aircraft_rx_info_and_name& acft,
-    double const utc) {
+    double const utc,
+    const bool exceptions) {
   unsigned id_and_type = 0;
   char id_v[8] = "";
 
@@ -777,12 +779,20 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
       special[10]);
 
   if (conversions < 4) {
-    return false;
+    if (exceptions) {
+      cpl::util::throw_parse_error("Initial part");
+    } else {
+      return false;
+    }
   }
 
   q_construct q;
   if (not parse_qas_construct(q_construct_v, q)) {
-    return false;
+    if (exceptions) {
+      cpl::util::throw_parse_error(std::string("q construct: ") + q_construct_v);
+    } else {
+      return false;
+    }
   }
 
   // Ignore ':>' lines with status info.
@@ -800,7 +810,13 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
   acft.second.rx.is_relayed = !q.relay.empty();
   int const min_special_converted = acft.second.rx.is_relayed ? 4 : 6;
   if (special_converted < min_special_converted) {
-    return false;
+    if (exceptions) {
+      util::throw_parse_error(
+            "Expected at least " + std::to_string(min_special_converted)
+          + " parameters after basic info");
+    } else {
+      return false;
+    }
   }
   {
     // "sub-parser" for cse/speed
@@ -814,7 +830,11 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
       // TODO: Is this really in knots?
       acft.second.mot.speed  = speed_kt * cpl::units::knot();
     } else {
-      return false;
+      if (exceptions) {
+        util::throw_parse_error(std::string("Course/speed: ") + cse_spd);
+      } else {
+        return false;
+      }
     }
   }
 
@@ -823,14 +843,23 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
   acft.second.pta.time = adapt_utc(hhmmss_to_seconds(hhmmss), utc);
 
   if (!my_double_cast(lon_v, acft.second.pta.lon)) {
-    return false;
+    if (exceptions) {
+      util::throw_parse_error(std::string("Longitude: ") + lon_v);
+    } else {
+      return false;
+    }
   }
 
   set_latlon(NS, EW, acft.second.pta.lat, acft.second.pta.lon);
   acft.second.pta.alt = alt_ft * cpl::units::foot();
 
   if (acft.second.pta.alt > MAX_PLAUSIBLE_ALTITUDE) {
-    return false;
+    if (exceptions) {
+      util::throw_parse_error("Implausible altitude: " 
+            + std::to_string(acft.second.pta.alt));
+    } else {
+      return false;
+    }
   }
 
   int shift = 0;

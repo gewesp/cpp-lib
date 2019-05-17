@@ -251,7 +251,17 @@ void process(
                << stat.first << " " << stat.second << std::endl;
           }
         } else {
-          os << "# WARNING: Couldn't parse: " << line << std::endl;
+          std::string what;
+          try {
+            parser.parse_aprs_aircraft(line, acft, utc_now, true);
+          } catch (const std::exception& e) {
+            what = e.what();
+          }
+          os << "# WARNING: Couldn't parse: " << line;
+          if (not what.empty()) {
+            os << ": " << what;
+          }
+          os << std::endl;
         }
       }
     }

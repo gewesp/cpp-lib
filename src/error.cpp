@@ -29,5 +29,9 @@ void cpl::util::throw_error(const std::string& message) {
 }
 
 void cpl::util::throw_parse_error(const char* const message) {
-  throw cpl::util::parse_error(std::string("Parse error: ") + message);
+  cpl::util::throw_parse_error(std::string("Parse error: ") + message);
+}
+
+void cpl::util::throw_parse_error(const std::string& message) {
+  throw cpl::util::parse_error("Parse error: " + message);
 }

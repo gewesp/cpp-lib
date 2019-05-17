@@ -38,6 +38,9 @@ void throw_error(const std::string& message);
 /// @throw A std::exception with "Parse error: " + message
 void throw_parse_error(const char* message);
 
+/// @throw A std::exception with "Parse error: " + message
+void throw_parse_error(const std::string& message);
+
 } // namespace util
 
 } // namespace cpl

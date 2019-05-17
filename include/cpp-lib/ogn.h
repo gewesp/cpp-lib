@@ -593,10 +593,13 @@ struct ddb_handler {
 // is attached to the (time-only) HHMMSS field from the APRS packet
 // to compute acft.second.pta.time.  If utc < 0, the date in
 // acft.second.pta.time will be January 1st, 1970.  
+//
+// If exceptions is true, throws on parse error instead of returning false.
 bool parse_aprs_aircraft(
     std::string const& line, 
     aircraft_rx_info_and_name& acft,
-    double const utc = -1);
+    double const utc = -1,
+    const bool exceptions = false);
 
   // Instantiate the parser, logging to log (only used during construction).
   // If query_interval > 0 [s], starts a background thread that queries

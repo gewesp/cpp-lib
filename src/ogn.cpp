@@ -955,10 +955,14 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
   assert(shift < special_converted);
   if (1 != std::sscanf(special[shift], "%lfkHz", 
                        &acft.second.rx.frequency_deviation)) {
-    return false;
+    if (exceptions) {
+      util::throw_parse_error(
+          std::string("Frequency deviation: ") + special[shift]);
+    } else {
+      return false;
+    }
   } else {
     ++shift;
-    if (acft.second.rx.is_relayed) { return false; }
   }
 
   if (shift >= special_converted) { goto postprocess; }

@@ -145,7 +145,7 @@ meaningful `what()` message.
   Cpp-lib is written in ISO C++ and makes use of C++17 features.
 We recommend clang++ to compile cpp-lib.
 
-- clang++: Version 5.0 or higher (tested: Versions 6 and 7)
+- clang++: Version 5.0 or higher (tested: Version 7)
 - The Microsoft Visual Studio Express (C++) and CYGWIN builds are looking
   for maintainers.
 
@@ -158,8 +158,8 @@ for embedded applications.
 ### Dependencies
 
 - A C++ compiler supporting C++17 or later (Recommended: clang++)
-- [CMake], version 3.1 or later
-- The [BOOST] libraries, version 1.58.0 or later
+- [CMake], version 3.10 or later
+- The [BOOST] libraries, version 1.65.0 or later
 - The [Eigen] library
 - The [libpng] and [libpng++] libraries
 
@@ -167,7 +167,7 @@ See Tested Versions below.
 
 __Boost, png++ and Eigen are currently used in a header-only way.__
 
-- Installing dependencies on Ubuntu:
+- Installing dependencies on Ubuntu (version 18 or later):
   * `sudo apt install libeigen3-dev`
   * `sudo apt install libpng++-dev`
   * `sudo apt install libboost1.65-dev`
@@ -179,9 +179,9 @@ __Boost, png++ and Eigen are currently used in a header-only way.__
 
 ### Tested versions
 
-- Boost: 1.58.0, 1.60.0, 1.65.1 (`#include "boost/version.hpp"`)
+- Boost: 1.65.1 (`#include "boost/version.hpp"`)
 - libpng: 1.2.50, 1.6.18, 1.6.34 (`libpng-config --version`)
-- png++: 0.2.5, 0.2.9 (`dpkg --status libpng++-dev`)
+- png++: 0.2.9 (`dpkg --status libpng++-dev`)
 - Eigen: 3.2.5, 3.3.4-4 (`dpkg --status libeigen3-dev`)
 
 ### Tested hardware platforms

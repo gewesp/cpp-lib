@@ -803,10 +803,9 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
 
   // Want at least 6 'special' conversions.
   // gpsNxM not there for OGN trackers
+  // TODO: This needs to be more flexible
   int const special_converted = conversions - n_normal;
 
-  // Relayed packets don't have kHz, dB and error count, so only
-  // 3 'specials'.  Others should have at least 6.
   acft.second.rx.is_relayed = !q.relay.empty();
   int const min_special_converted = acft.second.rx.is_relayed ? 4 : 6;
   if (special_converted < min_special_converted) {
@@ -865,8 +864,12 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
   int shift = 0;
 
   if ('!' == special[0][0]) {
-    if (!set_latlon_dao(special[0], acft.second.pta.lat, acft.second.pta.lon)) {
-      return false;
+    if (not set_latlon_dao(special[0], acft.second.pta.lat, acft.second.pta.lon)) {
+      if (exceptions) {
+        util::throw_parse_error(std::string("DAO construct: ") + special[0]);
+      } else {
+        return false;
+      }
     }
     ++shift;
   }
@@ -874,24 +877,43 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
   if (shift >= special_converted) { goto postprocess; }
   assert(shift < special_converted);
   if (2 != std::sscanf(special[shift], "id%2x%7s", &id_and_type, id_v)) {
-    return false;
+    if (exceptions) {
+      util::throw_parse_error(std::string("ID type/ID: ") + special[shift]);
+    } else {
+      return false;
+    }
   }
   if (6 != std::strlen(id_v)) {
-    return false;
+    if (exceptions) {
+      util::throw_parse_error(
+          std::string("ID: Expected 6 characters: ") + id_v);
+    } else {
+      return false;
+    }
   }
   ++shift;
 
   if (shift >= special_converted) { goto postprocess; }
   assert(shift < special_converted);
   if (1 != std::sscanf(special[shift], "%lffpm", &climb_rate_fpm)) {
-    return false;
+    if (exceptions) {
+      util::throw_parse_error(
+          std::string("Climb rate: ") + special[shift]);
+    } else {
+      return false;
+    }
   }
   ++shift;
 
   if (shift >= special_converted) { goto postprocess; }
   assert(shift < special_converted);
   if (1 != std::sscanf(special[shift], "%lfrot", &turn_rate_rot)) {
-    return false;
+    if (exceptions) {
+      util::throw_parse_error(
+          std::string("Turn rate: ") + special[shift]);
+    } else {
+      return false;
+    }
   }
   ++shift;
 
@@ -906,20 +928,27 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
   if (shift >= special_converted) { goto postprocess; }
   assert(shift < special_converted);
   if (1 != std::sscanf(special[shift], "%lfdB", &acft.second.rx.rssi)) {
-    return false;
+    if (exceptions) {
+      util::throw_parse_error(
+          std::string("RSSI: ") + special[shift]);
+    } else {
+      return false;
+    }
   } else {
     ++shift;
-    if (acft.second.rx.is_relayed) { return false; }
   }
 
   // 0e, 1e, 2e etc. (errors)
   if (shift >= special_converted) { goto postprocess; }
   assert(shift < special_converted);
   if (1 != std::sscanf(special[shift], "%hde", &acft.second.rx.errors)) {
-    return false;
+    if (exceptions) {
+      util::throw_parse_error(std::string("Bit errors: ") + special[shift]);
+    } else {
+      return false;
+    }
   } else {
     ++shift;
-    if (acft.second.rx.is_relayed) { return false; }
   }
 
   if (shift >= special_converted) { goto postprocess; }

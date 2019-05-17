@@ -43,6 +43,7 @@
 #include <boost/multi_index/hashed_index.hpp>
 
 #include <iosfwd>
+#include <limits>
 #include <thread>
 
 namespace cpl {
@@ -232,21 +233,26 @@ struct versions {
 
 // Radio signal reception information
 struct rx_info {
-  rx_info() : rssi(0), frequency_deviation(0) {}
   // Received by (station name)
   std::string received_by;
 
-  // Received signal strength indication [dB]
-  double rssi;
+  // Received signal strength indication at last hop
+  // (i.e. ground station) [dB]
+  // A large negative value means: Not defined.
+  double rssi = -std::numeric_limits<double>::max();
 
-  // Frequency deviation [kHz]; TODO: Define sign.
-  double frequency_deviation;
+  // Frequency deviation at last hop [kHz]; TODO: Define sign.
+  // A large negative value means: Not defined.
+  double frequency_deviation = -std::numeric_limits<double>::max();
 
-  // Bit errors (0e, 1e, field)
-  short errors;
+  // Bit errors at last hop (the 0e, 1e, field)
+  // -1: Not defined
+  short errors = -1;
 
   // Is this a relayed packet?
   bool is_relayed = false;
+  
+  // TODO: Add q construct here!
 };
 
 // Aircraft reception information:

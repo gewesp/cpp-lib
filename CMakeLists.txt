@@ -23,7 +23,7 @@ endif()
 
 # Required 3rd party stuff
 # png++ is found using stuff in CMAKE_MODULE_PATH
-find_package(Boost 1.58.0 REQUIRED)
+find_package(Boost 1.65.0 REQUIRED)
 
 # Eigen3, png++ isn't cmake compliant yet on my system.  Argh.
 # Please provide env variables.

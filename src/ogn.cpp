@@ -564,6 +564,7 @@ std::string cpl::ogn::qualified_id(std::string const& id, short id_type) {
     case cpl::ogn::ID_TYPE_PILOT_AWARE: return "pilotaware:" + id;
     case cpl::ogn::ID_TYPE_FLYMASTER  : return "flymaster:"  + id;
     case cpl::ogn::ID_TYPE_FANET      : return "fanet:"      + id;
+    case cpl::ogn::ID_TYPE_NAVITER    : return "naviter:"    + id;
 
     default: return "unknown:" + id;
   }
@@ -1029,6 +1030,12 @@ postprocess:
     acft.second.process = !(id_and_type       & 0x40);
     // acft.second.data.track and acft.second.data.identify set in
     // by caller.
+
+    // NAVITER messes with the data.  Until we know what's going on,
+    // be careful and override ID type.
+    if ("NAVITER" == acft.second.rx.aprs.from) {
+      acft.second.id_type = cpl::ogn::ID_TYPE_NAVITER;
+    }
 
     // Primary key ID: 'first' element of the pair.
     acft.first = qualified_id(id_v, acft.second.id_type);

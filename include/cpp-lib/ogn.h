@@ -72,6 +72,10 @@ short constexpr ID_TYPE_FLYMASTER = 11;
 // FANET (FNTxxxxxx)
 short constexpr ID_TYPE_FANET = 12;
 
+// NAVITER.  These pretend to be FLARM, but appear to be injected
+// somehow (5/2019).
+short constexpr ID_TYPE_NAVITER = 13;
+
 // Unknown ID type, should probably be ignored
 short constexpr ID_TYPE_UNKNOWN = -1;
 

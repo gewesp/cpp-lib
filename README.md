@@ -171,7 +171,8 @@ __Boost, png++ and Eigen are currently used in a header-only way.__
   * `sudo apt install libeigen3-dev libpng++-dev libboost1.65-dev`
 
 - Installing clang++ on Ubuntu:
-  * `sudo apt install clang-7 libc++-7-dev libc++abi-7-dev`
+  * For clang++ version 7: `sudo apt install clang-7 libc++-7-dev libc++abi-7-dev`
+  * For clang++ version 6 (not recommended): `sudo apt install clang-6.0 libc++1 libc++abi1`
 
 ### Tested versions
 

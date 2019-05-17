@@ -732,7 +732,8 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
       ":"
       "%1[/>]"    // slash_or_greater; ':/' or ':>'.  Only ':/' is supported.
                   // The second results in an empty name.
-      "%ldh"      // hhmmss
+      "%ld"      // hhmmss
+      "%*1[hz]"   // h or z, local or zulu time?
       "%lf"       // latitude
       "%1[NS]"    // north/south
       "%*[/\\]"   // separator, may be slash or backslash (!)

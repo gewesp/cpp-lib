@@ -76,6 +76,10 @@ short constexpr ID_TYPE_FANET = 12;
 // somehow (5/2019).
 short constexpr ID_TYPE_NAVITER = 13;
 
+// SPOT.  Also pretends to be a FLARM?!
+// (5/2019).
+short constexpr ID_TYPE_SPOT = 14;
+
 // Unknown ID type, should probably be ignored
 short constexpr ID_TYPE_UNKNOWN = -1;
 

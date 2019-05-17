@@ -565,6 +565,7 @@ std::string cpl::ogn::qualified_id(std::string const& id, short id_type) {
     case cpl::ogn::ID_TYPE_FLYMASTER  : return "flymaster:"  + id;
     case cpl::ogn::ID_TYPE_FANET      : return "fanet:"      + id;
     case cpl::ogn::ID_TYPE_NAVITER    : return "naviter:"    + id;
+    case cpl::ogn::ID_TYPE_SPOT       : return "spot:"       + id;
 
     default: return "unknown:" + id;
   }
@@ -1035,8 +1036,10 @@ postprocess:
 
     // NAVITER messes with the data.  Until we know what's going on,
     // be careful and override ID type.
-    if ("NAVITER" == acft.second.rx.aprs.from) {
+    if        ("NAVITER" == acft.second.rx.aprs.from) {
       acft.second.id_type = cpl::ogn::ID_TYPE_NAVITER;
+    } else if ("SPOT" == acft.second.rx.aprs.from) {
+      acft.second.id_type = cpl::ogn::ID_TYPE_SPOT;
     }
 
     // Similar with FANET, but here we look at the TOCALL.  FANET

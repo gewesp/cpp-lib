@@ -20,8 +20,7 @@
 // Component: UTIL
 //
 
-#ifndef CPP_LIB_MEMORY_H
-#define CPP_LIB_MEMORY_H
+#pragma once
 
 #include "cpp-lib/assert.h"
 
@@ -29,15 +28,13 @@
 
 #include <type_traits>
 
-namespace cpl {
-
-namespace detail_ {
+namespace cpl::detail_ {
 
 long memory_consumption_overloaded(const std::string&);
 
-} // namespace detail_
+} // namespace cpl::detail_
 
-namespace util {
+namespace cpl::util {
 
 /// @return Estimate of memory used by the given object
 template <typename T>
@@ -75,8 +72,4 @@ long memory_consumption_map(const M& m) {
   return ret;
 }
 
-} // util
-
-} // cpl
-
-#endif // CPP_LIB_MEMORY_H
+} // namespace cpl::util

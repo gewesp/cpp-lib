@@ -657,7 +657,7 @@ std::ostream& cpl::ogn::operator<<(
 // Method: Search for qAS.  If it's 3 entries before that, we have a relay,
 // otherwise we don't
 bool cpl::ogn::parse_qas_construct(
-    const std::string& s, cpl::ogn::q_construct& q) {
+    const std::string& s, cpl::ogn::aprs_info& q) {
   
   cpl::util::splitter spl(s, ',');
 
@@ -797,8 +797,9 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
     }
   }
 
-  q_construct q;
-  if (not parse_qas_construct(q_construct_v, q)) {
+  if (not parse_qas_construct(q_construct_v, acft.second.rx.aprs)) {
+    // Roll back
+    acft.second.rx.aprs = ::cpl::ogn::aprs_info();
     if (exceptions) {
       cpl::util::throw_parse_error(std::string("q construct: ") + q_construct_v);
     } else {
@@ -835,7 +836,7 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
   // TODO: This needs to be more flexible
   int const special_converted = conversions - n_normal;
 
-  acft.second.rx.is_relayed = not q.relay.empty();
+  acft.second.rx.is_relayed = not acft.second.rx.aprs.relay.empty();
   int const min_special_converted = acft.second.rx.is_relayed ? 4 : 6;
   if (special_converted < min_special_converted) {
     if (exceptions) {
@@ -867,7 +868,7 @@ bool cpl::ogn::aprs_parser::parse_aprs_aircraft(
     }
   }
 
-  acft.second.rx.received_by = q.from;
+  acft.second.rx.received_by = acft.second.rx.aprs.from;
   acft.second.data.name1 = "-";
   acft.second.pta.time = adapt_utc(hhmmss_to_seconds(hhmmss), utc);
 
@@ -1479,7 +1480,7 @@ void test_q(
     const std::string& relay,
     const std::string& from) {
   os << "Testing q construct: " << s << std::endl;
-  cpl::ogn::q_construct q;
+  cpl::ogn::aprs_info q;
   always_assert(parse_qas_construct(s, q));
   always_assert(q.tocall == tocall);
   always_assert(q.relay  == relay );

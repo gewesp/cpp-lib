@@ -123,26 +123,31 @@ If the software can not find who was the relaying unit, it sets a
 generic RELAY* id. 
 */
 
-// Internal data structure, may be occasionally useful outside
-struct q_construct {
-  // TOCALL, see above
-  // May include version, e.g. OGADSB-1
+/// Info on how this was received in the APRS network
+struct aprs_info {
+  /// TOCALL, see above
+  /// May include version, e.g. OGADSB-1
   std::string tocall;
 
-  // RELAY---generic or the specific ID, with asterisk.
-  // Empty if received directly.
+  /// RELAY---generic or the specific ID, with asterisk.
+  /// Empty if received directly.
   std::string relay;
 
-  // Where does it come from: "SPOT", (OGN station name), "ADSBNET" (see above)
+  /// Where was this received / does it come from: 
+  /// "SPOT", "ADSBNET" (see above).  In most cases, it will be 
+  /// the OGN station name.
   std::string from;
 };
 
+/// DEPRECATED.  For backwards compatibility only.
+using q_construct = aprs_info;
+
 /// Parses a qAS construct, returns true on success
-bool parse_qas_construct(const std::string&, q_construct&);
+bool parse_qas_construct(const std::string&, aprs_info&);
 
 /// Deprecated, backwards compatibility only.  Use parse_qas_construct()
 /// instead.
-inline bool parse_q_construct(const std::string& s, q_construct& qc) {
+inline bool parse_q_construct(const std::string& s, aprs_info& qc) {
   return parse_qas_construct(s, qc);
 }
 
@@ -233,7 +238,7 @@ struct versions {
 
 // Radio signal reception information
 struct rx_info {
-  // Received by (station name)
+  // DEPRECATED: Use aprs.from instead.
   std::string received_by;
 
   // Received signal strength indication at last hop
@@ -252,7 +257,8 @@ struct rx_info {
   // Is this a relayed packet?
   bool is_relayed = false;
   
-  // TODO: Add q construct here!
+  /// APRS info
+  aprs_info aprs;
 };
 
 // Aircraft reception information:

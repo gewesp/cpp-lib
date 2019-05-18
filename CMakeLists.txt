@@ -80,7 +80,7 @@ set(TESTS
     crypt_stream-test
     dispatch-test
     error-test
-    # file-test
+    file-test
     gnss-test
     interpolation-test
     # iowait

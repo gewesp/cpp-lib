@@ -339,6 +339,8 @@ struct aircraft_rx_info {
 };
 
 /// @return Estimated memory consumption [bytes]
+long memory_consumption(const aprs_info&       );
+/// @return Estimated memory consumption [bytes]
 long memory_consumption(const vehicle_data&    );
 /// @return Estimated memory consumption [bytes]
 long memory_consumption(const versions&        );

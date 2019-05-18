@@ -1489,6 +1489,13 @@ void cpl::ogn::update(cpl::ogn::thermal_detector_params const& params,
   }
 }
 
+long cpl::ogn::memory_consumption(const cpl::ogn::aprs_info& a) {
+  return   cpl::util::memory_consumption(a.tocall)
+         + cpl::util::memory_consumption(a.relay )
+         + cpl::util::memory_consumption(a.from  )
+         ;
+}
+
 long cpl::ogn::memory_consumption(const cpl::ogn::vehicle_data& d) {
   return   cpl::util::memory_consumption(d.name1)
          + cpl::util::memory_consumption(d.name2)
@@ -1512,6 +1519,7 @@ long cpl::ogn::memory_consumption(const rx_info& r) {
          + cpl::util::memory_consumption(r.frequency_deviation)
          + cpl::util::memory_consumption(r.errors)
          + cpl::util::memory_consumption(r.is_relayed)
+         +            memory_consumption(r.aprs)
          ;
 }
 

@@ -13,4 +13,4 @@ hide_id("flarm342", 3, 'X') = "flarm342"
 Testing q construct: OGFLARM-1,qAS,LFLE
 Testing q construct: APRS,RELAY*,qAS,EPLR
 Memory consumption of empty vehicle_data: 100
-Memory consumption of aircraft_rx_info: 305
+Memory consumption of aircraft_rx_info: 401

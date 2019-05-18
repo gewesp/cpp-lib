@@ -265,4 +265,3 @@ iterator advance:
 6
 8
 check_strictly_ascending() works: sequence not strictly ascending
-The next assertion should fail:

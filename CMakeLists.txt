@@ -79,6 +79,7 @@ set(TESTS
     command_line-test
     crypt_stream-test
     dispatch-test
+    error-test
     # file-test
     gnss-test
     interpolation-test

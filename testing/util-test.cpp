@@ -699,11 +699,6 @@ int main(int argc, const char* const* const argv) {
         std::cout << "check_iterator< std::vector< int > >()\n" ;
         check_iterator< std::vector< int > >() ;
 
-        {
-                always_assert(2+2==4);
-                std::cout << "The next assertion should fail:\n";
-                always_assert(2+2==5);
-                /*NOTREACHED*/
-        }
+        always_assert(2+2==4);
         return 0;
 }

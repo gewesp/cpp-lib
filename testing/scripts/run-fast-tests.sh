@@ -62,3 +62,12 @@ __EOF__
 $BIN_DIR/file-test --fileops                > $GOLDEN_DIR/fileops.txt
 
 $BIN_DIR/syslogger-test                     > $GOLDEN_DIR/syslogger.txt
+
+diff=$(git diff | wc -l)
+
+if [ 0 = $diff ] ; then
+  echo "All fast tests passed OK"
+else
+  echo "Some fast tests failed, run git diff for details."
+  exit 1
+fi

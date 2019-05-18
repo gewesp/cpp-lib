@@ -598,6 +598,15 @@ std::string cpl::ogn::unqualified_id(std::string const& id) {
   }
 }
 
+std::string cpl::ogn::id_type(std::string const& id) {
+  auto const colon = id.find(':');
+  if (std::string::npos == colon) {
+    return "unknown";
+  } else {
+    return id.substr(0, colon);
+  }
+}
+
 std::string cpl::ogn::hide_id(
     std::string const& id,
     int const n,
@@ -1581,6 +1590,10 @@ void cpl::ogn::unittests(std::ostream& os) {
 
   test_q(os, "OGFLARM-1,qAS,LFLE", "OGFLARM-1", "", "LFLE");
   test_q(os, "APRS,RELAY*,qAS,EPLR", "APRS", "RELAY*", "EPLR");
+
+  always_assert("foo"     == cpl::ogn::id_type("foo:DEAB23"));
+  always_assert("unknown" == cpl::ogn::id_type("DEAB23"));
+  always_assert("DEAB23"  == cpl::ogn::unqualified_id("foo:DEAB23"));
 
   os << "Memory consumption of empty vehicle_data: "
      << cpl::ogn::memory_consumption(cpl::ogn::vehicle_data())

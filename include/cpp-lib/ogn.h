@@ -573,11 +573,14 @@ inline double default_ddb_query_interval() {
   return 600;
 }
 
-// Returns flarm:<id>, icao:<id> etc. depending on id_type
+/// @return flarm:<id>, icao:<id> etc. depending on id_type
 std::string qualified_id(std::string const& id, short id_type);
 
-// Returns <id> for flarm:<id>, etc.
-std::string unqualified_id(std::string const& id);
+/// @return <id> for flarm:<id>, etc.
+std::string unqualified_id(std::string const&);
+
+/// @return <id_type> for <id_type>:<id>
+std::string id_type(std::string const&);
 
 // Replaces the last n digits of <id> by <replacement>.  
 // E.g., returns e.g. flarm:DF0000 if passed flarm:DF48A3.

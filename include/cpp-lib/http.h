@@ -20,9 +20,8 @@
 #ifndef CPP_LIB_HTTP_H
 #define CPP_LIB_HTTP_H
 
-#include "cpp-lib/sys/network.h"
-
-#include <iostream>
+#include <iosfwd>
+#include <string>
 
 namespace cpl {
 
@@ -32,16 +31,36 @@ inline std::string json_header() {
   return "Content-Type: application/json\n\n";
 }
 
-// Default timeout [s]
+/// Default timeout for HTTP connections [s]
 inline double default_timeout() { return 60; }
 
-//
-// Gets the specified URL and pipes the result to os.  Logs to log.
-//
-
+/// Gets the specified URL and pipes the result to os.  Logs to log.
 void wget( std::ostream& log , std::ostream& os , std::string url , 
            double timeout = default_timeout() ) ;
 
+
+/// Data of an HTTP GET request
+/// https://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html
+struct get_request {
+  /// The HTTP version (1.0, 1.1 etc.)
+  std::string version;
+
+  /// The host field of the URI
+  std::string host;
+
+  /// The absolute path of the URI
+  std::string abs_path;
+
+  /// Contents of the 'User-Agent:' field
+  std::string user_agent;
+
+  /// Contents of the 'Accept:' field
+  std::string accept;
+};
+
+/// Parses a GET request from the given istream.  Parses up to the first empty
+/// line.
+get_request parse_get_request(std::istream&);
 
 } // namespace http
 

@@ -20,6 +20,11 @@
 
 #include "cpp-lib/sys/network.h"
 #include "cpp-lib/sys/syslogger.h"
+#include "cpp-lib/error.h"
+#include "cpp-lib/util.h"
+
+#include "boost/algorithm/string.hpp"
+
 
 using namespace cpl::util;
 using namespace cpl::util::network;
@@ -35,6 +40,10 @@ bool blank( std::string const& s ) {
 
   return std::string::npos == s.find_first_not_of( whitespace ) ;
 
+}
+
+void throw_get_parse_error(const std::string& what) {
+  cpl::util::throw_error("CPL HTTP GET request parser: " + what);
 }
 
 std::string default_user_agent() {
@@ -136,4 +145,59 @@ void cpl::http::wget( std::ostream& log, std::ostream& os , std::string url ,
 
   wget1( log, os , path , timeout , host , port ) ;
 
+}
+
+cpl::http::get_request
+cpl::http::parse_get_request(std::istream& is) {
+  cpl::http::get_request ret;
+  std::string line;
+  std::getline(is, line);
+  boost::trim(line);
+  {
+    std::istringstream iss(line);
+    std::string get, ver;
+    iss >> get >> ret.abs_path >> ver;
+    if (not iss) {
+      ::throw_get_parse_error("Malformed request: " + line);
+    }
+
+    if ("GET" != get) {
+      ::throw_get_parse_error("Not a GET request: " + line);
+    }
+
+    // Parse HTTP/x.y
+    std::vector<std::string> ver1;
+    cpl::util::split(ver1, ver, "/");
+
+    if (2 != ver1.size() or "HTTP" != ver1.at(0)) {
+      ::throw_get_parse_error("Bad version: " + ver);
+    }
+
+    ret.version = ver1.at(1);
+  }
+
+  while (std::getline(is, line)) {
+    boost::trim(line);
+    if (line.empty()) {
+      break;
+    }
+
+    std::vector<std::string> hh;
+    cpl::util::split(hh, line, " ");
+    if (2 != hh.size()) {
+      ::throw_get_parse_error("Bad header line: " + line);
+    }
+
+           if ("User-Agent:" == hh.at(0)) {
+      ret.user_agent = hh.at(1);
+    } else if ("Host:"       == hh.at(0)) {
+      ret.host       = hh.at(1);
+    } else if ("Accept:"     == hh.at(0)) {
+      ret.accept     = hh.at(1);
+    } else {
+      ::throw_get_parse_error("Unknown header field: " + hh.at(0));
+    }
+  }
+
+  return ret;
 }

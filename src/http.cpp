@@ -110,6 +110,16 @@ void cpl::http::write_content_type(std::ostream& os, const std::string& ct) {
   os << "Content-Type: " << ct << cpl::http::endl;
 }
 
+std::string cpl::http::content_type_from_file_name(const std::string& name) {
+         if (boost::ends_with(name, ".html")) {
+    return "text/html";
+  } else if (boost::ends_with(name, ".txt")) {
+    return "text/plain";
+  } else {
+    return "application/octet-stream";
+  }
+}
+
 void cpl::http::write_date(std::ostream& os, double now) {
   if (now < 0) {
     now = cpl::util::utc();

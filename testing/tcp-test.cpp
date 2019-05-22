@@ -126,17 +126,8 @@ bool http_service_handle_line(
   try {
     auto file = cpl::util::file::open_read("." + request.abs_path);
 
-    // TODO: Extend...
-    std::string content_type;
-           if (boost::ends_with(request.abs_path, ".html")) {
-      content_type = "text/html";
-    } else if (boost::ends_with(request.abs_path, ".txt")) {
-      content_type = "text/plain";
-    } else {
-      content_type = "application/octet-stream";
-    }
-
-    cpl::http::write_http_header_200(os, content_type);
+    cpl::http::write_http_header_200(
+        os, cpl::http::content_type_from_file_name(request.abs_path));
 
     cpl::util::stream_copy(file, os);
   } catch (const std::exception&) {

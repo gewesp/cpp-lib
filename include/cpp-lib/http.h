@@ -45,6 +45,16 @@ std::string default_server_identification();
 /// to os.
 void write_content_type(std::ostream& os, const std::string& content_type);
 
+///
+/// @return Content type associated with the extension of name:
+/// .html -> text/html
+/// .txt  -> text/plain
+/// others -> application/octet-stream
+/// @todo This is massively incomplete
+///
+
+std::string content_type_from_file_name(const std::string& name);
+
 /// Writes an HTTP 'Date:' header
 /// @param time Time since UNIX epoch [s] (UTC.)
 /// If < 0, uses cpl::util::utc().

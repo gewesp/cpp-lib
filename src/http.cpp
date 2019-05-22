@@ -111,6 +111,10 @@ void cpl::http::write_content_type(std::ostream& os, const std::string& ct) {
   os << "Content-Type: " << ct << cpl::http::endl;
 }
 
+void cpl::http::write_content_type_json(std::ostream& os) {
+  cpl::http::write_content_type(os, "application/json");
+}
+
 std::string cpl::http::content_type_from_file_name(const std::string& name) {
          if (boost::ends_with(name, ".html")) {
     return "text/html";

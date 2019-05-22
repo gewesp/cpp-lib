@@ -45,6 +45,9 @@ std::string default_server_identification();
 /// to os.
 void write_content_type(std::ostream& os, const std::string& content_type);
 
+/// Equivalent to write_content_type(os, "application/json");
+void write_content_type_json(std::ostream& os);
+
 ///
 /// @return Content type associated with the extension of name:
 /// .html -> text/html

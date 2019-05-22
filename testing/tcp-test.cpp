@@ -27,6 +27,7 @@
 
 #include <cassert>
 
+#include "cpp-lib/error.h"
 #include "cpp-lib/gnss.h"
 #include "cpp-lib/http.h"
 #include "cpp-lib/map.h"
@@ -55,6 +56,8 @@ void usage( std::string const& name ) {
 "daytime:             Connect to time.nist.gov at port 13 and report time.\n"
 "cat      port:       Wait for connection and copy TCP stream to stdout.\n"
 "reverse  port:       Start a reverse server, one thread per connection.\n"
+"httpd    port:       Start an HTTP server on given port.\n"
+"                     Serves .txt and .html files from current directory.\n"
 "hello    port:       Start a hello world server, immediately closes connection.\n"
 "source   port:       Starts a data source with two control commands.\n"
 "connect  host port:  Connect, copy stdin into connection and then\n"
@@ -116,7 +119,7 @@ bool http_service_handle_line(
     std::istream& is,
     std::ostream& os,
     std::ostream& log) {
-  const auto request = cpl::http::parse_get_request(line, is);
+  const auto request = cpl::http::parse_get_request(line, is, &log);
 
   log << prio::NOTICE << "Handling GET request; "
                       << "Path: " << request.abs_path
@@ -125,13 +128,22 @@ bool http_service_handle_line(
 
   try {
     auto file = cpl::util::file::open_read("." + request.abs_path);
+    // Try to read one character
+    file.peek();
+    if (file.bad() or file.fail()) {
+      cpl::util::throw_error("Failed to open: " + request.abs_path);
+    }
 
     cpl::http::write_http_header_200(
         os, cpl::http::content_type_from_file_name(request.abs_path));
 
+    // TODO: Handle read errors on file.  Not clear how HTTP handles
+    // an error *during* transmission...
     cpl::util::stream_copy(file, os);
-  } catch (const std::exception&) {
-    cpl::http::write_http_header_404(os);
+  } catch (const std::exception& e) {
+    log << prio::NOTICE << "GET request failed: " << e.what()
+        << std::endl;
+    cpl::http::write_http_header_404(os, e.what());
   }
 
   // Only one request per connection, tell framework to please close it.
@@ -441,6 +453,11 @@ int main( int argc , char const* const* const argv ) {
   
     if( 3 != argc ) { usage( argv[ 0 ] ) ; return 1 ; }
     run_reverse_server( argv[ 2 ] ) ;
+
+  } else if( "httpd" == command ) {
+  
+    if( 3 != argc ) { usage( argv[ 0 ] ) ; return 1 ; }
+    run_http_server( argv[ 2 ] ) ;
 
   } else if( "hello" == command ) {
     

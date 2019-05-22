@@ -15,6 +15,12 @@
 //
 // Component: SYSUTIL
 //
+// File system operations
+//
+// This was created before the addition of the C++ filesystem library.
+// Consider phasing out these functions in favor of the standard library
+// (filesystem).
+//
 
 
 #ifndef CPP_LIB_FILE_SYS_H

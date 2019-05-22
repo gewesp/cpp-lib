@@ -28,6 +28,7 @@
 
 using namespace cpl::util;
 using namespace cpl::util::network;
+using namespace cpl::util::log;
 
 namespace {
 
@@ -153,9 +154,10 @@ void cpl::http::write_http_header_200(
 
 void cpl::http::write_http_header_404(
     std::ostream& os,
+    const std::string& reason,
     double now,
     const std::string& server_id) {
-  os << "HTTP/1.1 404 Not Found" << cpl::http::endl;
+  os << "HTTP/1.1 404 Not Found (" << reason << ")" << cpl::http::endl;
   cpl::http::write_date        (os, now      );
   cpl::http::write_server      (os, server_id);
   cpl::http::write_connection  (os, "close"  );
@@ -211,7 +213,10 @@ void cpl::http::wget( std::ostream& log, std::ostream& os , std::string url ,
 }
 
 cpl::http::get_request
-cpl::http::parse_get_request(const std::string& first_line, std::istream& is) {
+cpl::http::parse_get_request(
+    const std::string& first_line,
+    std::istream& is,
+    std::ostream* log) {
   cpl::http::get_request ret;
   std::string line = first_line;
   boost::trim(line);
@@ -253,7 +258,11 @@ cpl::http::parse_get_request(const std::string& first_line, std::istream& is) {
     } else if ("Accept"     == hh.first) {
       ret.accept     = hh.second;
     } else {
-      ::throw_get_parse_error("Unknown header field: " + hh.first);
+      if (nullptr != log) {
+        *log << prio::WARNING
+             << "Ignoring HTTP header: " << line
+             << std::endl;
+      }
     }
   }
 

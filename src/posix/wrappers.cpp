@@ -35,6 +35,20 @@
 #include "cpp-lib/sys/file.h"
 #include "cpp-lib/sys/util.h"
 
+// This is .h, not .hpp like everything else in boost.  WTF.
+#include "boost/predef.h"
+
+namespace {
+
+#if (BOOST_OS_LINUX)
+// An extra flag for open() to indicate we want only normal files
+// Exists only on Linux.
+constexpr int OPEN_FLAGS_NORMAL_FILE = O_DIRECTORY;
+#elif (BOOST_OS_MACOS)
+constexpr int OPEN_FLAGS_NORMAL_FILE = 0;
+#endif
+
+} // anonymous namespace
 
 using namespace cpl::detail_ ;
 using namespace cpl::util    ;
@@ -167,6 +181,8 @@ int cpl::detail_::posix_open(
   if     ( std::ios_base::out == om ) { flags = O_WRONLY ; }
   else if( std::ios_base::in  == om ) { flags = O_RDONLY ; }
   else                                { flags = O_RDWR   ; }
+
+  flags |= ::OPEN_FLAGS_NORMAL_FILE;
 
   int fd = ::open( name.c_str() , flags ) ;
 

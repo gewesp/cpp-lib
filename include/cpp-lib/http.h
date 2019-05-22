@@ -88,11 +88,13 @@ void write_http_header_200(
 /// Writes an HTTP header for response code 404 (i.e. not found).
 /// No payload is expected after the header.
 ///
+/// @param reason A string to add after the 404 code
 /// @todo Add an HTML payload with error information
 ///
 
 void write_http_header_404(
     std::ostream& os,
+    const std::string& reason,
     double now = -1,
     const std::string& server = default_server_identification());
 
@@ -125,7 +127,11 @@ struct get_request {
 /// @param first_line Contains the actual request, e.g. "GET /foobar HTTP/1.1"
 /// @param is Contains the rest of the request, i.e. the headers, e.g.
 /// Host:, Accept: etc.
-get_request parse_get_request(const std::string& first_line, std::istream& is);
+/// @param log If not nullptr, logs some conditions to it
+get_request parse_get_request(
+    const std::string& first_line,
+    std::istream& is,
+    std::ostream* log = nullptr);
 
 } // namespace http
 

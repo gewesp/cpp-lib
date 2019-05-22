@@ -76,7 +76,7 @@ void handle_connection(
 
   std::string line;
   while (cpl::util::getline(is, line, max_line_length)) {
-    if (!handler(line, is, os, sl)) {
+    if (not handler(line, is, os, sl)) {
       break;
     }
   }
@@ -186,7 +186,7 @@ void cpl::util::run_server(
     server_parameters const& params,
     std::ostream* sl) {
   if ("test:stdio" == params.service) {
-    if (!sl) {
+    if (not sl) {
       sl = &std::cout;
     }
     assert(sl);
@@ -202,7 +202,7 @@ void cpl::util::run_server(
     }
   } else {
     std::unique_ptr<syslogger> sl_created;
-    if (!sl) {
+    if (not sl) {
       sl_created = std::make_unique<syslogger>(
           params.server_name + " accept " + this_thread_id_paren());
       sl = sl_created.get();

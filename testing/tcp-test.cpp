@@ -105,6 +105,47 @@ bool reverse_service_handle_line(
   return true;
 }
 
+/// Handles an HTTP GET request.
+/// @param line The GET request, e.g. "GET /foobar HTTP/1.1"
+/// @param is Stream which contains the rest of the request, will
+/// be parsed until the first empty line.
+/// @param os Stream for the response
+/// @param log Logging
+bool http_service_handle_line(
+    std::string const& line,
+    std::istream& is,
+    std::ostream& os,
+    std::ostream& log) {
+  const auto request = cpl::http::parse_get_request(line, is);
+
+  log << prio::NOTICE << "Handling GET request; "
+                      << "Path: " << request.abs_path
+                      << "; User agent: " << request.user_agent
+                      << std::endl;
+
+  try {
+    auto file = cpl::util::file::open_read("." + request.abs_path);
+
+    // TODO: Extend...
+    std::string content_type;
+           if (boost::ends_with(request.abs_path, ".html")) {
+      content_type = "text/html";
+    } else if (boost::ends_with(request.abs_path, ".txt")) {
+      content_type = "text/plain";
+    } else {
+      content_type = "application/octet-stream";
+    }
+
+    cpl::http::write_http_header_200(os, content_type);
+
+    cpl::util::stream_copy(file, os);
+  } catch (const std::exception&) {
+    cpl::http::write_http_header_404(os);
+  }
+
+  // Only one request per connection, tell framework to please close it.
+  return false;
+}
 
 void print_connection( connection const& c ) {
 
@@ -228,6 +269,15 @@ void run_reverse_server( std::string const& port ) {
       // Explicit cast necessary here because two steps are involved
       cpl::util::os_writer{reverse_service_welcome}, p);
   
+}
+
+void run_http_server(const std::string& port) {
+  cpl::util::server_parameters p;
+  p.service = port;
+  p.server_name = cpl::http::default_server_identification();
+
+  cpl::util::run_server(
+      http_service_handle_line, boost::none, p);
 }
 
 

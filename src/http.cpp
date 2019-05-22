@@ -47,7 +47,7 @@ void throw_get_parse_error(const std::string& what) {
 }
 
 std::string default_user_agent() {
-  return "CPL/0.9.1 httpclient/0.9.1 (EXPERIMENTAL)";
+  return "KISS CPL/0.9.1 httpclient/0.9.1 (EXPERIMENTAL)";
 }
 
 
@@ -100,6 +100,59 @@ void wget1(
 
 } // end anonymous namespace
 
+const char* const cpl::http::endl = "\r\n";
+
+std::string cpl::http::default_server_identification() {
+  return "KISS/CPL httpd/0.9.1 (Linux)";
+}
+
+void cpl::http::write_content_type(std::ostream& os, const std::string& ct) {
+  os << "Content-Type: " << ct << cpl::http::endl;
+}
+
+void cpl::http::write_date(std::ostream& os, double now) {
+  if (now < 0) {
+    now = cpl::util::utc();
+  }
+
+  os << "Date: " << cpl::util::format_datetime(now)
+     << cpl::http::endl;
+}
+
+void cpl::http::write_connection(std::ostream& os, const std::string& what) {
+  os << "Connection: " << what << cpl::http::endl;
+}
+
+void cpl::http::write_server(std::ostream& os, const std::string& server) {
+  os << "Server: " << server << cpl::http::endl;
+}
+
+void cpl::http::write_http_header_200(
+    std::ostream& os,
+    const std::string& ct,
+    double now,
+    const std::string& server_id) {
+  os << "HTTP/1.1 200 OK" << cpl::http::endl;
+  cpl::http::write_date        (os, now      );
+  cpl::http::write_server      (os, server_id);
+  cpl::http::write_connection  (os, "close"  );
+  cpl::http::write_content_type(os, ct       );
+
+  os << cpl::http::endl;
+}
+
+void cpl::http::write_http_header_404(
+    std::ostream& os,
+    double now,
+    const std::string& server_id) {
+  os << "HTTP/1.1 404 Not Found" << cpl::http::endl;
+  cpl::http::write_date        (os, now      );
+  cpl::http::write_server      (os, server_id);
+  cpl::http::write_connection  (os, "close"  );
+
+  os << cpl::http::endl;
+}
+
 void cpl::http::wget( std::ostream& log, std::ostream& os , std::string url ,
                       double const timeout ) {
 
@@ -148,10 +201,9 @@ void cpl::http::wget( std::ostream& log, std::ostream& os , std::string url ,
 }
 
 cpl::http::get_request
-cpl::http::parse_get_request(std::istream& is) {
+cpl::http::parse_get_request(const std::string& first_line, std::istream& is) {
   cpl::http::get_request ret;
-  std::string line;
-  std::getline(is, line);
+  std::string line = first_line;
   boost::trim(line);
   {
     std::istringstream iss(line);
@@ -182,20 +234,16 @@ cpl::http::parse_get_request(std::istream& is) {
       break;
     }
 
-    std::vector<std::string> hh;
-    cpl::util::split(hh, line, " ");
-    if (2 != hh.size()) {
-      ::throw_get_parse_error("Bad header line: " + line);
-    }
+    const auto hh = cpl::util::split_colon_blank(line);
 
-           if ("User-Agent:" == hh.at(0)) {
-      ret.user_agent = hh.at(1);
-    } else if ("Host:"       == hh.at(0)) {
-      ret.host       = hh.at(1);
-    } else if ("Accept:"     == hh.at(0)) {
-      ret.accept     = hh.at(1);
+           if ("User-Agent" == hh.first) {
+      ret.user_agent = hh.second;
+    } else if ("Host"       == hh.first) {
+      ret.host       = hh.second;
+    } else if ("Accept"     == hh.first) {
+      ret.accept     = hh.second;
     } else {
-      ::throw_get_parse_error("Unknown header field: " + hh.at(0));
+      ::throw_get_parse_error("Unknown header field: " + hh.first);
     }
   }
 

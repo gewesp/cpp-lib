@@ -40,6 +40,11 @@ std::string uri_decode(
 // Parse an individual "key=value" pair
 std::pair<std::string, std::string> parse_parameter(std::string const&);
 
+/// @return The URI split into the part before and after the '?',
+/// e.g. "http://www.google.com/?x=y" into
+/// ("http://www.google.com/", "x=y")
+std::pair<std::string, std::string> split_uri(std::string const&);
+
 // Parse a sequence of "key1=value1&key2=value2..."
 std::map<std::string, std::string> parse_query(std::string const&);
 

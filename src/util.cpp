@@ -129,6 +129,16 @@ std::vector<std::string> cpl::util::split(
   return ret;
 }
 
+std::pair<std::string, std::string> cpl::util::split_pair(
+    std::string const& s,
+    const char* const separators) {
+  std::vector<std::string> v;
+  cpl::util::split(v, s, separators);
+  cpl::util::verify(2 == v.size(),
+      "split_pair(): Expected 2 fields, got " + std::to_string(v.size()));
+  return std::make_pair(v[0], v[1]);
+}
+
 std::pair<std::string, std::string> cpl::util::split_colon_blank(
     std::string const& s) {
   std::pair<std::string, std::string> ret;

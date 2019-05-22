@@ -16,6 +16,8 @@
 
 #include "cpp-lib/cgi.h"
 
+#include "cpp-lib/util.h"
+
 #include "boost/algorithm/string.hpp"
 
 #include <vector>
@@ -37,6 +39,11 @@ cpl::cgi::parse_parameter(std::string const& s) {
 
   return std::make_pair(cpl::cgi::uri_decode(key), 
                         cpl::cgi::uri_decode(val));
+}
+
+std::pair<std::string, std::string>
+cpl::cgi::split_uri(std::string const& s) {
+  return cpl::util::split_pair(s, "?");
 }
 
 std::map<std::string, std::string> 

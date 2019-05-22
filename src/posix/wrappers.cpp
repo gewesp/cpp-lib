@@ -41,9 +41,8 @@
 namespace {
 
 #if (BOOST_OS_LINUX)
-// An extra flag for open() to indicate we want only normal files
-// Exists only on Linux.
-constexpr int OPEN_FLAGS_NORMAL_FILE = O_DIRECTORY;
+// TODO: We want a flag to indicate we require a normal file.
+constexpr int OPEN_FLAGS_NORMAL_FILE = 0;
 #elif (BOOST_OS_MACOS)
 constexpr int OPEN_FLAGS_NORMAL_FILE = 0;
 #endif

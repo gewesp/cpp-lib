@@ -391,6 +391,12 @@ template< typename Sequence > void split(
   boost::algorithm::split(seq, s, boost::algorithm::is_any_of(separators));
 }
 
+/// Splits strings of the form "<s1>: <s2>", <s1> is followed
+/// by a colon immediately, then there may be whitespace before
+/// value.  For example, split_colon_blank("Content-Type: text/html")
+/// would return a pair of "Content-Type" and "text/html".
+std::pair<std::string, std::string> split_colon_blank(std::string const& s);
+
 //
 // A string splitter returning the next string on each call.
 //

@@ -588,6 +588,23 @@ void test_stringutils(std::ostream& os) {
 
   verify_throws("invalid", cpl::util::verify_alnum, "adsf+", "");
   verify_throws("invalid", cpl::util::verify_alnum, "adsf+", "-");
+
+  using namespace std::string_literals;
+  always_assert(std::pair("k"s, "v"s) == cpl::util::split_colon_blank("k: v"));
+  always_assert(std::pair("k"s, "v"s) == cpl::util::split_colon_blank("k:v"));
+  always_assert(std::pair("k"s, "v"s) == cpl::util::split_colon_blank("k:  v"));
+  always_assert(std::pair("k"s, "v"s) == cpl::util::split_colon_blank("k:     v"));
+  always_assert(std::pair("k"s, "v "s) == cpl::util::split_colon_blank("k:     v "));
+  always_assert(std::pair("k "s, "v"s) == cpl::util::split_colon_blank("k :v"));
+  always_assert(std::pair(" k "s, "v"s) == cpl::util::split_colon_blank(" k :v"));
+  always_assert(std::pair(""s, "v"s) == cpl::util::split_colon_blank(":v"));
+  always_assert(std::pair(""s, ""s) == cpl::util::split_colon_blank(":"));
+  always_assert(std::pair(""s, ""s) == cpl::util::split_colon_blank(":  "));
+  always_assert(std::pair(" "s, ""s) == cpl::util::split_colon_blank(" :  "));
+
+  verify_throws("No colon found", cpl::util::split_colon_blank, "k;v");
+  verify_throws("No colon found", cpl::util::split_colon_blank, "k v");
+  verify_throws("No colon found", cpl::util::split_colon_blank, "");
 }
 
 void test_utf8_canonical() {

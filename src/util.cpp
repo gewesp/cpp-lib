@@ -33,6 +33,7 @@
 #include <cstring>
 #include <ctime>
 
+#include "cpp-lib/error.h"
 #include "cpp-lib/exception.h"
 
 #include "cpp-lib/detail/platform_wrappers.h"
@@ -128,6 +129,27 @@ std::vector<std::string> cpl::util::split(
   return ret;
 }
 
+std::pair<std::string, std::string> cpl::util::split_colon_blank(
+    std::string const& s) {
+  std::pair<std::string, std::string> ret;
+
+  const auto colon = s.find(':');
+  assert(s.end() != s.begin() + colon);
+
+  if (std::string::npos == colon) {
+    util::throw_error("split_colon_blank(): No colon found: " + s);
+  }
+
+  ret.first = s.substr(0, colon);
+
+  const auto second_start =
+      std::find_if(s.begin() + colon + 1, s.end(),
+          [] (const char c) { return not (' ' == c or '\t' == c); });
+
+  ret.second = std::string(second_start, s.end());
+
+  return ret;
+}
 
 death::death()
 : os( nullptr )

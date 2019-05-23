@@ -16,6 +16,7 @@
 
 #include "cpp-lib/cgi.h"
 
+#include "cpp-lib/error.h"
 #include "cpp-lib/util.h"
 
 #include "boost/algorithm/string.hpp"
@@ -43,7 +44,19 @@ cpl::cgi::parse_parameter(std::string const& s) {
 
 std::pair<std::string, std::string>
 cpl::cgi::split_uri(std::string const& s) {
-  return cpl::util::split_pair(s, "?");
+  std::vector<std::string> v;
+  cpl::util::split(v, s, "?");
+  if (v.size() >= 3) {
+    util::throw_error(
+        "split_uri(): Expected at most one question mark, got "
+        + std::to_string(v.size()));
+  }
+
+  if (1 == v.size()) {
+    return std::pair(v[0], std::string());
+  } else {
+    return std::pair(v[0], v[1]);
+  }
 }
 
 std::map<std::string, std::string> 

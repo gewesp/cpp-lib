@@ -43,6 +43,9 @@ std::pair<std::string, std::string> parse_parameter(std::string const&);
 /// @return The URI split into the part before and after the '?',
 /// e.g. "http://www.google.com/?x=y" into
 /// ("http://www.google.com/", "x=y")
+/// If no question mark is present, the entire string will be
+/// in the first part of the returned pair.
+/// @throw If more than one question mark is present.
 std::pair<std::string, std::string> split_uri(std::string const&);
 
 // Parse a sequence of "key1=value1&key2=value2..."

@@ -13,14 +13,14 @@
 
 # Future directions / TODO
 
-- Documentation:  Extract the comments from the header files and put them in a
-  printable document.
+- Add version() function and kick off a release process
 
-- Streamline the testing system and add a script that automatically runs the
-  unittests.
+- Documentation:  Doxygen
 
-- Use more C++11/C++14 features as they become available, e.g.
-  `<random>`
+- Add SCGI: <https://de.wikipedia.org/wiki/Simple_Common_Gateway_Interface>
+  with interface similar to `http.h`
+
+- Use more modern C++ features as they become available, e.g. `<random>`
 
 - Refactor `convert()/check_...` etc. in registry.h.  Too much overloading
   is going on.  Name `T const& convert( any& )` `extract`.  Name the template
@@ -28,8 +28,6 @@
 
 - Factor out crypt streambufs?  Stateful reader/writer classes
   generalizing `streambuf_traits`?
-
-- Replace symlinks by different include paths?
 
 - Revamp error handling: general `throw_os_exception()` function based on
   last error or `strerror_r()`, resp.  Get rid of `STRERROR_CHECK()`.
@@ -48,7 +46,7 @@
 
 - Add an AES implementation.
 
-- Templatize `table<>` on index type?
+- Templatize `table<>` on index type (could/should be std::array<>)
 
 - Logger: Base on varlist (currently, code is duplicated).
 

@@ -48,7 +48,7 @@ cpl::cgi::split_uri(std::string const& s) {
   cpl::util::split(v, s, "?");
   if (v.size() >= 3) {
     util::throw_error(
-        "split_uri(): Expected at most one question mark, got "
+          "split_uri(): Expected at most one question mark, got "
         + std::to_string(v.size()));
   }
 

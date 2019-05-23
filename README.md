@@ -53,6 +53,7 @@ or not ready for production.
 ### HTTP
 
 - A very simple HTTP client
+- An even simpler, but fully functional HTTP server (see tcp-test.cpp)
 
 ### MAP
 
@@ -76,6 +77,11 @@ or not ready for production.
 - Easy TCP/IP and UDP connections.  Iostreams implementation for TCP 
   streams.  See [README-networking](README-networking.md) for more information.
 - A framework for running TCP services, optionally using threads.
+
+### OGN (Open Glider Network)
+
+- OGN server connectivity
+- Parsing of OGN/APRS stream
 
 ### TABLE
 

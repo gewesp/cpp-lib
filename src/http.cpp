@@ -107,12 +107,26 @@ std::string cpl::http::default_server_identification() {
   return "KISS/CPL httpd/0.9.1 (Linux)";
 }
 
-void cpl::http::write_content_type(std::ostream& os, const std::string& ct) {
-  os << "Content-Type: " << ct << cpl::http::endl;
+void cpl::http::write_content_type(
+    std::ostream& os, const std::string& ct, const std::string& cs) {
+  os << "Content-Type: " << ct
+     << "; charset="     << cs
+     << cpl::http::endl;
 }
 
-void cpl::http::write_content_type_json(std::ostream& os) {
-  cpl::http::write_content_type(os, "application/json");
+void cpl::http::write_content_type_json(
+    std::ostream& os, const std::string& cs) {
+  cpl::http::write_content_type(os, "application/json", cs);
+}
+
+void cpl::http::write_content_type_text(
+    std::ostream& os, const std::string& cs) {
+  cpl::http::write_content_type(os, "text/plain", cs);
+}
+
+void cpl::http::write_content_type_csv(
+    std::ostream& os, const std::string& cs) {
+  cpl::http::write_content_type(os, "text/csv", cs);
 }
 
 std::string cpl::http::content_type_from_file_name(const std::string& name) {

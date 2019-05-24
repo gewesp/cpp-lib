@@ -28,9 +28,7 @@ namespace cpl {
 namespace http {
 
 /// Deprecated.  Use write_content_type() instead.
-inline std::string json_header() {
-  return "Content-Type: application/json\n\n";
-}
+std::string json_header();
 
 /// The constant "\r\n";
 extern const char* const endl;
@@ -41,12 +39,27 @@ inline double default_timeout() { return 60; }
 /// @return Default server identification
 std::string default_server_identification();
 
-/// Writes 'Content-type: <content_type>' and an empty line
+/// Writes 'Content-type: <content_type>; charset = <charset>' and an empty line
 /// to os.
-void write_content_type(std::ostream& os, const std::string& content_type);
+void write_content_type(
+    std::ostream& os, 
+    const std::string& content_type,
+    const std::string& charset = "utf-8");
 
-/// Equivalent to write_content_type(os, "application/json");
-void write_content_type_json(std::ostream& os);
+/// Equivalent to write_content_type(os, "application/json", charset);
+void write_content_type_json(
+    std::ostream& os,
+    const std::string& charset = "utf-8");
+
+/// Equivalent to write_content_type(os, "text/plain", charset);
+void write_content_type_text(
+    std::ostream& os,
+    const std::string& charset = "utf-8");
+
+/// Equivalent to write_content_type(os, "text/csv", charset);
+void write_content_type_csv(
+    std::ostream& os,
+    const std::string& charset = "utf-8");
 
 ///
 /// @return Content type associated with the extension of name:

@@ -101,6 +101,9 @@ void wget1(
 
 } // end anonymous namespace
 
+// https://www.w3.org/Protocols/rfc2616/rfc2616-sec2.html#sec2.2
+// "HTTP/1.1 defines the sequence CR LF as the end-of-line marker 
+// for all protocol elements except the entity-body"
 const char* const cpl::http::endl = "\r\n";
 
 std::string cpl::http::default_server_identification() {

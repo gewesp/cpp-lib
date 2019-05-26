@@ -44,7 +44,7 @@ struct satinfo {
   // Number of satellites used to compute the fix, -1 for an invalid fix
   int n_satellites;
 
-  // Horizontal accuracy [m].  The smaller, the better.
+  // Horizontal accuracy [m], always >= 0.  The smaller, the better.
   double horizontal_accuracy;
 };
 

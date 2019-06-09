@@ -1546,6 +1546,21 @@ long cpl::ogn::memory_consumption(const aircraft_rx_info& a) {
          ;
 }
 
+long cpl::ogn::memory_consumption(const station_info& si) {
+  return   cpl::util::memory_consumption(si.network)
+         + cpl::util::memory_consumption(si.pt)
+
+         + cpl::util::memory_consumption(si.cpu)
+         + cpl::util::memory_consumption(si.ram_used)
+         + cpl::util::memory_consumption(si.ram_max)
+         + cpl::util::memory_consumption(si.ntp_difference)
+         + cpl::util::memory_consumption(si.ntp_ppm)
+
+         + cpl::util::memory_consumption(si.temperature)
+         + cpl::util::memory_consumption(si.version)
+         ;
+}
+
 namespace {
 
 void test_q(

@@ -9,6 +9,7 @@ set -e
 
 sudo apt install                  \
   cmake                           \
+  exuberant-ctags                 \
   libeigen3-dev                   \
   libpng-dev libpng++-dev         \
   libboost1.65-dev                \

@@ -208,6 +208,13 @@ void cpl::util::die(
 )
 { death( die_output ).die( msg , name , exit_code ) ; }
 
+bool cpl::util::is_stdin(const std::string& f) {
+  return "-" == f or "stdin" == f or "STDIN" == f;
+}
+
+bool cpl::util::is_stdout(const std::string& f) {
+  return "-" == f or "stdout" == f or "STDOUT" == f;
+}
 
 void cpl::util::assertion(
   const bool expr ,

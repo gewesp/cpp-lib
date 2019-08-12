@@ -537,6 +537,19 @@ private:
 } ;
 
 
+///
+/// @return True iff name equals "-", "stdin" or "STDIN".
+///
+
+bool is_stdin (const std::string& name);
+
+///
+/// @return True iff name equals "-", "stdout" or "STDOUT".
+///
+
+bool is_stdout(const std::string& name);
+
+
 //
 // File helpers
 //

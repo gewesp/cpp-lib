@@ -173,12 +173,9 @@ See Tested Versions below.
 
 __Boost, png++ and Eigen are currently used in a header-only way.__
 
-- Installing dependencies on Ubuntu (version 18 or later):
-  * `sudo apt install libeigen3-dev libpng-dev libpng++-dev libboost1.65-dev`
+### Installing requirements on Ubuntu (version 18 or later)
 
-- Installing clang++ on Ubuntu:
-  * For clang++ version 7: `sudo apt install clang-7 libc++-7-dev libc++abi-7-dev`
-  * For clang++ version 6 (not recommended): `sudo apt install clang-6.0 libc++1 libc++abi1`
+From the main directory, run `scripts/install-requirements-ubuntu.sh`.
 
 ### Tested versions
 

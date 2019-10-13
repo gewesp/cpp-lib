@@ -5,7 +5,7 @@ set -e
 
 if [[ "" == $GITLAB_CI ]] ; then
   # Local compiler
-  cmake_compiler="CMAKE_CXX_COMPILER=clang++-7"
+  cmake_compiler="-D CMAKE_CXX_COMPILER=clang++-7"
 else
   # Gitlab CI: Use whatever is available
   cmake_compiler=""
@@ -21,5 +21,5 @@ rm -rf build CMakeCache.txt CMakeFiles/
 mkdir build
 cd build
 echo "Configuring for $build_type ..."
-cmake -D $cmake_compiler -D CMAKE_BUILD_TYPE=$build_type ..
+cmake $cmake_compiler -D CMAKE_BUILD_TYPE=$build_type ..
 make -j6

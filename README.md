@@ -175,7 +175,7 @@ __Boost, png++ and Eigen are currently used in a header-only way.__
 
 ### Installing requirements on Ubuntu (version 18 or later)
 
-From the main directory, run `scripts/install-requirements-ubuntu.sh`.
+From the main directory, run `sudo scripts/install-requirements-ubuntu.sh`.
 
 ### Tested versions
 

@@ -13,12 +13,12 @@ page, please follow the guidelines and principles below.
     Notice:  This probably means that your main function should look
     like this:
 ```
-int main(const int argc, const char* const* const argv)
+int main(const int argc, const char* const* const argv) { ... }
 ```
 * Lines no longer than 80 characters.
 * No tabs, use spaces instead.
 * UNIX line endings.
-* C++ style comments (//).
+* C++ style comments (`//`).
 
 
 ## Library design principles
@@ -31,10 +31,9 @@ int main(const int argc, const char* const* const argv)
 * RAII (resource acquisition is initialization).  Constructors
   either yield a ready-to-use object or throw.
 * Better safe than sorry.  Assertions even in tight loops.
-* Platform independency, not multiplatform dependency.  Avoid
+* Platform independence, not multiple platform dependency.  Avoid
   `#ifdef _LINUX_/WIN32/etc.` mess, but rather factor out minimal generic 
-  interfaces for platform-specific functionality (see e.g. posix/wrappers.cpp
-  and windows/wrappers.cpp)
+  interfaces for platform-specific functionality (check with maintainer).
 * Orthogonality/DRY: Don't repeat yourself
 * Add test cases for new functionality, modify test cases for modified
   functionality.
@@ -43,8 +42,8 @@ int main(const int argc, const char* const* const argv)
 
 ## Git usage
 
-* No branches unless absolutely necessary (check with maintainer; consider
-  using feature toggles etc.).
+* Only short-lived branches.  Experienced developers should commit to master.
+  Consider using feature toggles etc.  Check with maintainer.
 * Make baby steps.  Commits of even 1 or 2 lines are OK.  It's OK to
   commit incomplete work or even stubs, if clearly marked as such
   in the code.
@@ -64,6 +63,13 @@ optionally qualified with `NFC`.
 
 Examples:
 * ADD: Shiny new feature
-* MOD/NFC: Refactoring the xyz component (zero functional change)
+* MOD/NFC: Refactoring the `xyz` component (zero functional change)
 * ADD/NFC: Stub for function `abc()`
 * FIX: Fixed a bug in the `uvw` module causing the server to crash.
+
+Commit messages **MUST** have an issue reference (second line, after
+ADD/MOD/FIX).  If there is no issue, create one.  For example:
+```
+MOD/NFC: Mention required issue reference
+ISSUE: https://gitlab.com/gewesp/cpp-lib/issues/10
+```

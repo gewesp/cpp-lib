@@ -222,6 +222,12 @@ to compile using Visual Studio, cygwin or MinGW.
   The build should work, but installation of requirements may be different
 to Ubuntu.  Maintainers welcome.
 
+## Continuous Integration (CI)
+
+* TBD: Implement and document here
+* Keep `.gitlab-ci.yml` minimal.  Ideally, it should just call `run-all-tests.sh`, possibly
+  for debug and release.
+
 ## Using cpp-lib in your own code
 
   Headers for client code are in include/cpp-lib and include/cpp-lib/sys.

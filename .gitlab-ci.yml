@@ -1,7 +1,6 @@
 image: gcc
-
-# before_script:
-#   - apt install cmake
+ - apt-get update --yes
+ - apt-get install --yes cmake
 
 build:
   script:

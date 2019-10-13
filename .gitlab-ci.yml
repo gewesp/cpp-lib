@@ -1,5 +1,7 @@
-# before_script:
-#   - apt install g++
+image: gcc
+
+before_script:
+  - apt install cmake
 
 build:
   script:

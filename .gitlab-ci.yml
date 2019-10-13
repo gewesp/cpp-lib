@@ -5,11 +5,7 @@ before_script:
 
 # Actually, build *and* test in one stage.  Takes ca. 10 minutes
 # on Gitlab CI, so we need to save...
-#
-# git diff: Check for test result differences
-# TODO: This should be integrated into run-all-tests.sh
 build:
   script:
     - ./scripts/build.sh
     - (cd testing && ./run-all-tests.sh)
-    - git diff

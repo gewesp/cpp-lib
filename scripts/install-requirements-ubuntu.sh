@@ -18,6 +18,10 @@ apt-get install --yes cmake       \
   libpng-dev libpng++-dev         \
   libboost-dev
 
+# https://community.appdynamics.com/t5/Dynamic-Languages-Node-JS-Python/locale-facet-S-create-c-locale-name-not-valid/td-p/33693
+# Note: Argument of locale-gen undocumented in man page...
+locale-gen locale-gen en_US.UTF-8
+
 if [[ "" == $GITLAB_CI ]] ; then
   apt-get install --yes             \
   exuberant-ctags                   \

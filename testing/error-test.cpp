@@ -23,7 +23,7 @@
 int main() {
   always_assert(4 == 2 + 2);
 
-  std::cout << "The next assertion should faile and call die():" << std::endl;
+  std::cout << "The next assertion should fail and call die():" << std::endl;
   always_assert(5 == 2 + 2);
 
   /*NOTREACHED*/

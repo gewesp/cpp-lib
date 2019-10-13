@@ -1,9 +1,0 @@
-#
-# gcc 5.2, MacPorts (MacOS X)
-#
-
-CXX      = g++-mp-5 -std=c++14
-CXXFLAGS = -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-ignored-qualifiers
-MTFLAGS  =
-DEBUG    = -g -O0 -fno-inline
-OPTIMIZE = -O9 -DNDEBUG

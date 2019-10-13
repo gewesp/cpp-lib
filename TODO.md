@@ -1,3 +1,9 @@
+# TODO
+
+* Clean up
+* Convert TODOs into issues
+
+
 # BUGS
 
 ## Windows specific

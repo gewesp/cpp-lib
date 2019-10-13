@@ -11,9 +11,10 @@
 # Exit if any subprogram exits with an error
 set -e
 
+# Language-pack-en required to install en_US.utf-8 locale
 apt-get update --yes
 apt-get install --yes cmake       \
-  locales                         \
+  language-pack-en                \
   libeigen3-dev                   \
   libpng-dev libpng++-dev         \
   libboost-dev

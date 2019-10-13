@@ -1,7 +1,6 @@
-stages:
-  - build
+# before_script:
+#   - apt install g++
 
-Build stage:
-  - stage: build
-  - script:
+build:
+  script:
     - ./scripts/build.sh

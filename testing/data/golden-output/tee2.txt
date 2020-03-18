@@ -1,6 +1,0 @@
-All
-three 
-files
-should have
-the same
-contents!
